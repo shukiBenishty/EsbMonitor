@@ -1,5 +1,7 @@
 var path = require('path');
-var webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+var jsName = 'bundle.js';
 
 var BUILD_DIR = path.resolve(__dirname, 'assets');
 
@@ -9,28 +11,39 @@ var config = {
     path.resolve(__dirname, 'client.jsx')
   ],
   output: {
-    path: BUILD_DIR,
-    filename: 'bundle.js',
+      path: BUILD_DIR,
+      filename: 'bundle.js'
   },
   resolve: {
-    extensions: ['.js', '.jsx', 'css']
+      extensions: ['.js', '.jsx', '.css']
   },
   module: {
-    rules: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      use: {
+    loaders: [
+      {
+        test: /\.jsx$/,
         loader: 'babel-loader',
-        options: {
-          cacheDirectory: true
-        }
-      }
-    },
+        exclude: /node_modules/
+      },
+      {
+        test: /\.css$/,
+         loader: ExtractTextPlugin.extract({
+              loader: 'css-loader',
+              query: {
+                modules: false
+              }
+            })
+      },
     ]
   },
   node: {
-    fs: "empty"
-  }
+   fs: "empty"
+  },
+ plugins: [
+   new ExtractTextPlugin({
+     filename: 'styles.css',
+     allChunks: true
+   })
+ ]
 };
 
 module.exports = config;
