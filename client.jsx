@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {createStore} from 'redux';
-import {Provider} from 'react-redux';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
 import openSocket from 'socket.io-client';
 
@@ -10,23 +10,23 @@ import App from './App.jsx';
 
 let store = createStore(reducers);
 
-const socket = openSocket('http://localhost:8000');
+const socket = openSocket('http://10.60.10.150:8000');
 
-socket.on('esbevents', data => {
-  let payload = JSON.parse(data);
-  console.log('EsbEvent');
+socket.on('esbEvent', data => {
+
   store.dispatch({
     type: 'NEW_EVENT',
     data: {
-      eventId: payload.event_id,
-      issued: payload.event_time
+      storyId: data.storyId,
+      eventId: data.eventId,
+      issued: data.time,
+      status: data.status
     }
-  });
+  })
 });
-
-socket.emit('subscribeToEsbevents', '');
+socket.emit('subscribeToEsbEvents', ''); // no filter initially
 
 ReactDOM.render(<Provider store={store}>
                   <App />
-                </Provider>,
+                </Provider>  ,
                 document.getElementById('root'));
