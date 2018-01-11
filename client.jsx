@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
+import { BrowserRouter }  from 'react-router-dom';
 
 import openSocket from 'socket.io-client';
 
@@ -10,7 +11,7 @@ import App from './App.jsx';
 
 let store = createStore(reducers);
 
-const socket = openSocket('http://10.60.10.150:8000');
+const socket = openSocket('http://10.60.10.129:8000');
 
 socket.on('esbEvent', data => {
 
@@ -27,6 +28,8 @@ socket.on('esbEvent', data => {
 socket.emit('subscribeToEsbEvents', ''); // no filter initially
 
 ReactDOM.render(<Provider store={store}>
-                  <App />
+                  <BrowserRouter>
+                    <App />
+                  </BrowserRouter>
                 </Provider>  ,
                 document.getElementById('root'));
