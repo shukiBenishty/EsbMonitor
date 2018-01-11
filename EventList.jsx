@@ -10,6 +10,12 @@ import EsbStatus from './EsbStatus';
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
 
+const list = [
+  { name: 'Brian Vaughn', description: 'Software engineer' },
+  { name: 'Oleg', description: 'Software engineer' }
+  // And so on...
+];
+
 type Props = {
   eventId: number,
   issued: Date
@@ -35,7 +41,8 @@ class EventList extends React.Component<Props, State> {
 
     this.styles = {
       eventListFrame: {
-        height: "94%",
+        height: "81%",
+        minHeigth: "410px",
         display: "flex",
         flexDirection: "column"
       }
@@ -115,36 +122,35 @@ class EventList extends React.Component<Props, State> {
                     {({ height, width }) => (
 
                       <Table ref={c => { this.vTable = c; }}
-                        styles={this.styles.tableStyle}
                         width={width}
-                        height={height}
+                        height={400}
                         headerHeight={20}
                         rowHeight={30}
                         rowCount={this.state.esbEvents.length}
                         rowGetter={({ index }) => this.state.esbEvents[index]}
                         rowRenderer={this.rowRenderer}>
-                        <Column
-                          label='Correlation Id'
-                          dataKey='correlationid'
-                          width={120}
-                          flexGrow={1}/>
-                        <Column
-                            label='Status'
-                            dataKey='status'
-                            width={100}
-                            flexGrow={1} />
-                        <Column
-                          label='Issued'
-                          dataKey='issued'
-                          width={200}
-                          flexGrow={2}
-                        />
-                        <Column
-                          label='EventId'
-                          dataKey='eventid'
-                          width={100}
-                          flexGrow={1}
-                        />
+                            <Column
+                              label='Correlation Id'
+                              dataKey='correlationid'
+                              width={120}
+                              flexGrow={1}/>
+                            <Column
+                                label='Status'
+                                dataKey='status'
+                                width={100}
+                                flexGrow={1} />
+                            <Column
+                              label='Issued'
+                              dataKey='issued'
+                              width={200}
+                              flexGrow={2}
+                            />
+                            <Column
+                              label='EventId'
+                              dataKey='eventid'
+                              width={100}
+                              flexGrow={1}
+                            />
                       </Table>
                     )}
               </AutoSizer>
