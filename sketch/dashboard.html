@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html class="maxHeight">
+  <head>
+      <title>ESB Monitor - Dashboard</title>
+
+      <meta charset="utf-8">
+      <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+      <link href="../assets/themify-icons.css" rel='stylesheet' />
+      <link href='../assets/layout.css' rel='stylesheet' />
+
+      <style>
+        body {
+          margin: 0px;
+        }
+        .maxHeight {
+          height: 100%;
+        }
+      </style>
+  </head>
+  <body class="maxHeight">
+    <div id="root" class="maxHeight">
+      <div class="maxHeight">
+        <aside class="sidebar sidebar-expand-lg sidebar-light sidebar-sm sidebar-color-info">
+          <header class="sidebar-header bg-info">
+            <span class="logo">ESB Monitor</span>
+            <span class="idebar-toggle-fold"></span>
+          </header>
+          <nav class="sidebar-navigation ps-container">
+            <ul class="menu menu-sm">
+              <li class="menu-item active">
+                <a class="menu-link" href="#">
+                  <span class="icon ti-home">
+                  </span>
+                  <span class="title">Dashboard
+                  </span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" href="realtime.html">
+                  <span class="icon ti-view-list">
+                  </span>
+                  <span class="title">Realtime
+                  </span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" href="stat.html">
+                  <span class="icon ti-pulse">
+                  </span>
+                  <span class="title">Stats
+                  </span>
+                </a>
+              </li>
+              <li class="menu-item">
+                <a class="menu-link" href="a.html">
+                  <span class="icon ti-layers-alt">
+                  </span>
+                  <span class="title">Analytics
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </aside>
+        <header class="topbar">
+          <div class="topbar-right">
+            <ul>
+            </ul>
+            <form class="lookup lookup-circle lookup-right" target="index.html">
+              <input text="text" aria-hidden="true"></input>
+            </form>
+          </div>
+        </header>
+        <main class="main-container">
+          <div class="main-content">
+            <div class="row">
+              <div class="col-lg-4">
+                <div class="card card-body">
+                  <h6>
+                    <span class="text-uppercase">Total calls</span>
+                    <span class="float-right">
+                      <a class="btn btn-xs btn-primary" href="#">View</a>
+                    </span>
+                  </h6>
+                  <br />
+                  <p class="fs-28 fw-100">17.876</p>
+                  <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: 65%; height: 4px;">
+                    </div>
+                  </div>
+                  <div class="text-gray fs-12">
+                    <i class="ti-stats-down text-danger mr-1" aria-hidden="true"></i>%18 decrease from last day
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="card card-body">
+                  <h6>
+                    <span class="text-uppercase">Latency</span>
+                    <span class="float-right">
+                      <a class="btn btn-xs btn-primary" href="#">View</a>
+                    </span>
+                  </h6>
+                  <br />
+                  <p class="fs-28 fw-100">0.13 sec.</p>
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 65%; height: 4px;">
+                    </div>
+                  </div>
+                  <div class="text-gray fs-12">
+                    <i class="ti-stats-down text-danger mr-1"></i>%18 decrease from last hour
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div class="card card-body">
+                  <h6>
+                    <span class="text-uppercase">Errors</span>
+                    <span class="float-right">
+                      <a class="btn btn-xs btn-primary" href="#">View</a>
+                    </span>
+                  </h6>
+                  <br />
+                  <p class="fs-28 fw-100">3</p>
+                  <div class="progress">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 65%; height: 4px;">
+                    </div>
+                  </div>
+                  <div class="text-gray fs-12">
+                    <i class="ti-stats-down text-danger mr-1"></i>%18 decrease from last hour
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h5>
+                      <strong>Calls Distribution</strong>
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                      <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
+                      </div>
+                      <ul class="list-inline text-center gap-items-4 mb-30">
+                        <li class="list-inline-item">
+                          <span class="badge badge-lg badge-dot mr-1" style="background-color: rgba(51,202,185,1)"></span>
+                          <span>Calls</span>
+                        </li>
+                        <li class="list-inline-item">
+                          <span class="badge badge-lg badge-dot mr-1" style="background-color: rgba(243,245,246,1)"></span>
+                          <span>Response Time</span>
+                        </li>
+                      </ul>
+                      <canvas>
+                      </canvas>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <footer class="site-footer">
+            <div class="row">
+              </div>
+            </div>
+          </footer>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>
