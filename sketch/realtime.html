@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>ESB Monitor - Realtime</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+      <link href="../assets/themify-icons.css" rel='stylesheet' />
+      <link href='../assets/layout.css' rel='stylesheet' />
+  </head>
+  <body>
+    <i class="fa fa-car" style="font-size:60px;color:red;"></i>
+    <aside class="sidebar sidebar-expand-lg sidebar-light sidebar-sm sidebar-color-info">
+      <header class="sidebar-header bg-info">
+        <span class="logo">Esb Monitor</span>
+        <span class="idebar-toggle-fold"></span>
+      </header>
+      <nav class="sidebar-navigation ps-container">
+        <ul class="menu menu-sm">
+          <li class="menu-item">
+            <a class="menu-link" href="dashboard.html">
+              <span class="icon ti-home">
+              </span>
+              <span class="title">Dashboard
+              </span>
+            </a>
+          </li>
+          <li class="menu-item active">
+            <a class="menu-link" href="#">
+              <span class="icon ti-view-list">
+              </span>
+              <span class="title">Realtime
+              </span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a class="menu-link" href="stat.html">
+              <span class="icon ti-pulse">
+              </span>
+              <span class="title">Stats
+              </span>
+            </a>
+          </li>
+          <li class="menu-item">
+            <a class="menu-link" href="a.html">
+              <span class="icon ti-layers-alt">
+              </span>
+              <span class="title">Analytics
+              </span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <header class="topbar">
+      <div class="topbar-right">
+        <ul>
+        </ul>
+        <form class="lookup lookup-circle lookup-right" target="index.html">
+          <input text="text" aria-hidden="true"></input>
+        </form>
+      </div>
+    </header>
+    <main class="main-container">
+      <div class="main-content">
+        <div class="media-list media-list-divided media-list-hover">
+          <header class="flexbox align-items-center media-list-header bg-transparent b-0 py-16 pl-20">
+            <div class="flexbox align-items-center">
+              <span class="divider-line mx-1"></span>
+              <div class="dropdown">
+                <a class="btn btn-sm dropdown-toggle" data-toggle="dropdown" href="#"
+                    aria-expanded="false">Sort by</a>
+                <div class="dropdown-menu" x-placement="bottom-start"
+                    style="position: absolute; top: 30px; left: 0px; will-change: top, left;">
+                  <a class="dropdown-item" href=#"">Received time</a>
+                  <a class="dropdown-item" href="#">Service name</a>
+                </div>
+              </div>
+            </div>
+          </header>
+          <div class="media-list-body bg-white b-1">
+            <div class="media align-items-center">
+              <label class="custom-control custom-checkbox pr-12">
+                <input type="checkbox" class="custom-control-input" />
+                <span class="custom-control-indicator">
+                </span>
+              </label>
+              <a class="flexbox align-items-center flex-grow gap-items text-truncate">
+                <div class="media-body text-truncate">
+                  <h6>CRM : GetCustomerProfile</h6>
+                  <small>
+                    <span>234-R45-444-2326</span>
+                    <span class="divider-dash">13.01.2018 17:18 45:33:22</span>
+                    </span>
+                    <span class="divider-dash">
+                      <span class="text-success">INFO</span>
+                    </span>
+                  </small>
+                </div>
+                <span class="lead text-fade">Request received</span>
+              </a>
+            </div>
+            <div class="media align-items-center">
+              <label class="custom-control custom-checkbox pr-12">
+                <input type="checkbox" class="custom-control-input" />
+                <span class="custom-control-indicator">
+                </span>
+              </label>
+              <a class="flexbox align-items-center flex-grow gap-items text-truncate">
+                <div class="media-body text-truncate">
+                  <h6>CRM : GetCustomerProfile</h6>
+                  <small>
+                    <span>234-R45-444-2327</span>
+                    <span class="divider-dash">13.01.2018 17:18 45:33:23</span>
+                    </span>
+                    <span class="divider-dash">
+                      <span class="text-warning">INFO</span>
+                    </span>
+                  </small>
+                </div>
+                <span class="lead text-fade">Credentials obtained</span>
+              </a>
+            </div>
+            <div class="media align-items-center">
+              <label class="custom-control custom-checkbox pr-12">
+                <input type="checkbox" class="custom-control-input" />
+                <span class="custom-control-indicator">
+                </span>
+              </label>
+              <a class="flexbox align-items-center flex-grow gap-items text-truncate">
+                <div class="media-body text-truncate">
+                  <h6>CRM : GetCustomerProfile</h6>
+                  <small>
+                    <span>234-R45-444-2328</span>
+                    <span class="divider-dash">13.01.2018 17:18 45:33:23</span>
+                    </span>
+                    <span class="divider-dash">
+                      <span class="text-danger">ERROR</span>
+                    </span>
+                  </small>
+                </div>
+                <span class="lead text-fade">Authorization failed</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <footer class="site-footer">
+        <div class="row">
+          </div>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
