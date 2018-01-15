@@ -8,10 +8,11 @@ import openSocket from 'socket.io-client';
 
 import reducers from './reducers';
 import App from './App.jsx';
+import AppLayout from './AppLayout';
 
 let store = createStore(reducers);
 
-const socket = openSocket('http://10.60.10.129:8000');
+const socket = openSocket('http://172.20.10.4:8000');
 
 socket.on('esbEvent', data => {
 
@@ -19,6 +20,8 @@ socket.on('esbEvent', data => {
     type: 'NEW_EVENT',
     data: {
       storyId: data.storyId,
+      serviceName: data.serviceName,
+      message: data.message,
       eventId: data.eventId,
       issued: data.time,
       status: data.status
@@ -29,7 +32,7 @@ socket.emit('subscribeToEsbEvents', ''); // no filter initially
 
 ReactDOM.render(<Provider store={store}>
                   <BrowserRouter>
-                    <App />
+                    <AppLayout />
                   </BrowserRouter>
                 </Provider>  ,
                 document.getElementById('root'));
