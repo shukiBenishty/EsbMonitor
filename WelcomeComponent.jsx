@@ -26,14 +26,7 @@ class WelcomeComponent extends React.Component<Props> {
 
   render() {
     return (
-      <header style={this.styles.navigation}>
-        <nav>
-          <ul>
-            <li><Link to='/'>Real-time</Link></li>
-            <li><Link to='/stats'>Stats</Link></li>
-            <li><Link to='/analytics'>Analytics</Link></li>
-          </ul>
-        </nav>
+      <header className="topbar">
         <div style={this.styles.container}>Welcome, {this.props.userName}</div>
       </header>
     )
