@@ -41,7 +41,7 @@ class EventList extends React.Component<Props, State> {
 
     this.styles = {
       eventListFrame: {
-        height: "81%",
+        height: "92%",
         minHeigth: "410px",
         display: "flex",
         flexDirection: "column"
@@ -67,6 +67,8 @@ class EventList extends React.Component<Props, State> {
 
     const esbEvent = {
       storyId: nextProps.storyId,
+      serviceName: nextProps.serviceName,
+      message: nextProps.message,
       eventId: nextProps.eventId,
       issued: nextProps.issued,
       status: nextProps.status
@@ -75,6 +77,8 @@ class EventList extends React.Component<Props, State> {
     this.setState( prevState => ({
       esbEvents: [...this.state.esbEvents, {
                       storyId: esbEvent.storyId,
+                      serviceName: esbEvent.serviceName,
+                      message: esbEvent.message,
                       eventId: esbEvent.eventId,
                       issued: esbEvent.issued,
                       status: esbEvent.status
@@ -84,11 +88,13 @@ class EventList extends React.Component<Props, State> {
 
     this.search.addDocuments({
                     storyId: esbEvent.storyId,
+                    serviceName: esbEvent.serviceName,
                     eventId: esbEvent.eventId.toString(),
                     issued: esbEvent.issued
                   });
     this.search.addIndex('eventId');
-    this.search.addIndex('storyId');
+    this.search.addIndex('serviceName');
+    this.search.addIndex('message');
     this.search.addIndex('issued');
   }
 
@@ -115,7 +121,8 @@ class EventList extends React.Component<Props, State> {
 
   render() {
 
-    return(<div className='maxHeight'>
+    return(<main className="main-container maxHeight">
+              <div className="main-content maxHeight">
               <EventsFilter />
               <div style={this.styles.eventListFrame}>
                 <AutoSizer >
@@ -125,38 +132,18 @@ class EventList extends React.Component<Props, State> {
                         width={width}
                         height={400}
                         headerHeight={20}
-                        rowHeight={30}
+                        rowHeight={60}
                         rowCount={this.state.esbEvents.length}
                         rowGetter={({ index }) => this.state.esbEvents[index]}
                         rowRenderer={this.rowRenderer}>
-                            <Column
-                              label='Correlation Id'
-                              dataKey='correlationid'
-                              width={120}
-                              flexGrow={1}/>
-                            <Column
-                                label='Status'
-                                dataKey='status'
-                                width={100}
-                                flexGrow={1} />
-                            <Column
-                              label='Issued'
-                              dataKey='issued'
-                              width={200}
-                              flexGrow={2}
-                            />
-                            <Column
-                              label='EventId'
-                              dataKey='eventid'
-                              width={100}
-                              flexGrow={1}
-                            />
+
                       </Table>
                     )}
               </AutoSizer>
               </div>
               <EsbStatus filter={this.props.filterValue}/>
-          </div>)
+            </div>
+          </main>)
   }
 
 }
@@ -164,6 +151,8 @@ class EventList extends React.Component<Props, State> {
 function mapStateToProps(state) {
   return {
       storyId: state.storyId,
+      serviceName: state.serviceName,
+      message: state.message,
       eventId: state.eventId,
       issued: state.issued,
       status: state.status,
