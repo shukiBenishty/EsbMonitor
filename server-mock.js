@@ -35,6 +35,8 @@ io.on('connection', (client) => {
       client.emit('esbEvent', {
                               storyId: guids[index],
                               time:  new Date(),
+                              serviceName: 'CRM : GetCustomerProfile',
+                              message: 'Request received',
                               eventId: generateEventId(),
                               status: generateStatus()
                             });
