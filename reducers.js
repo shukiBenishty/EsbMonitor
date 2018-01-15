@@ -3,6 +3,8 @@ import _ from 'lodash';
 
 const INITIAL_STATE = {
   storyId: '',
+  serviceName: '',
+  message: '',
   eventId: 0,
   issued: Date(),
   status: '',
@@ -16,6 +18,8 @@ const reducers = (state = INITIAL_STATE, action) => {
     case 'NEW_EVENT': {
       state = _.assign({}, state, {
                                     storyId: action.data.storyId,
+                                    serviceName: action.data.serviceName,
+                                    message: action.data.message,
                                     eventId: action.data.eventId,
                                     issued: new Date(action.data.issued),
                                     status: action.data.status
