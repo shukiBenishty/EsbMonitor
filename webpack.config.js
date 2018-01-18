@@ -1,8 +1,6 @@
 var path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var cssName = process.env.NODE_ENV === 'production' ? 'styles-[hash].css' : 'styles.css';
-
 var jsName = 'bundle.js';
 
 var BUILD_DIR = path.resolve(__dirname, 'assets');
@@ -31,34 +29,29 @@ var config = {
          loader: ExtractTextPlugin.extract({
               loader: 'css-loader',
               query: {
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-                modules: true
+                modules: false
               }
             })
       },
-      { test: /\.(woff|woff2|ttt|eot|otf)/, loader: 'url-loader?limit=1' },
       {
-        test: /\.png/,
-        //loader: 'url-loader?limit=10000&mimetype=image/png',
-        loader: 'file-loader',
-        query: {
-          name: 'images/[hash].[ext]',
-          publicPath: '/'
-        }
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: 'file-loader?name=fonts/[name].[ext]'
       },
-      { test: /\.svg/, loader: 'url-loader?limit=26000&mimetype=svg+xml' }
+      {
+        test: /\.(gif|png)$/,
+        loader: 'file-loader'
+      }
     ]
   },
-  devServer: {
-      headers: { 'Access-Control-Origin': '*'}
+  node: {
+   fs: "empty"
   },
-  plugins: [
-    new ExtractTextPlugin({
-      filename: 'styles.css',
-      allChunks: true
-    })
-  ]
-
+ plugins: [
+   new ExtractTextPlugin({
+     filename: 'styles.css',
+     allChunks: true
+   })
+ ]
 };
 
 module.exports = config;
