@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import 'moment/locale/he';
 import Datetime from 'react-datetime';
 import { Chart } from 'react-google-charts';
@@ -13,7 +14,9 @@ type Props = {
 
 type State = {
   fromDate: {},
-  tillDate: {}
+  tillDate: {},
+  renderChart: boolean,
+  serviceSelectorDisabled: boolean
 };
 
 class Stats extends React.Component<Props, State> {
@@ -24,7 +27,9 @@ class Stats extends React.Component<Props, State> {
     this.state = {
       fromDate: null,
       tillDate: null,
+      services: [],
       selectedServices: '',
+      serviceSelectorDisabled: true,
       renderChart: false,
       categories: [],
       selectedCategory: ''
@@ -56,9 +61,23 @@ class Stats extends React.Component<Props, State> {
   }
 
   _updateCategory(newCategory: string) {
+
+    let disableCategoriesSelector = !newCategory ? true : false;
+
     this.setState({
-      selectedCategory: newCategory
+      selectedCategory: newCategory,
+      serviceSelectorDisabled: disableCategoriesSelector,
+      selectedServices: ''
     });
+
+    // Mock
+    let promise = EsbAPI.getServicesByCategoryId(1);
+    promise.then( _services => {
+      this.setState({
+        services: _services
+      })
+    })
+
   }
 
   _fromDateChanged(_date) {
@@ -147,6 +166,7 @@ class Stats extends React.Component<Props, State> {
                         name="categoriesSelector"
                         ref={(ref) => { this.select = ref; }}
                         simpleValue
+                        placeholder="Select category"
                         options={this.state.categories}
                         value={this.state.selectedCategory}
                         onChange={this._updateCategory}
@@ -154,11 +174,12 @@ class Stats extends React.Component<Props, State> {
                       <Select style={this.styles.selectorStyle}
                               multi
                               simpleValue
+                              disabled={this.state.serviceSelectorDisabled}
                               removeSelected={true}
                               onChange={this._serviceNameChanged}
                               name="servicesSelector"
                               placeholder="Select services(s)"
-                              options={services}
+                              options={this.state.services}
                               value={value}
                             />
                         <div>From</div>
@@ -235,6 +256,17 @@ class EsbAPI {
       ))
       }, 1000);
     })
+  }
+
+  static getServicesByCategoryId(categoryId: number) {
+    return new Promise( (resolve, reject) => {
+        setTimeout( () => {
+            resolve(_.assign([], [
+              { value: 'three', label: 'Three' },
+              { value: 'four', label: 'Four' },
+            ]))
+        }, 1000);
+    });
   }
 }
 
