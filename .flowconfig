@@ -1,6 +1,9 @@
 [ignore]
 
 [include]
+App.jsx
+EventList.jsx
+reducers.jsx
 
 [libs]
 
