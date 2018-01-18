@@ -2,6 +2,7 @@
 import React from 'react';
 import moment from 'moment';
 import classNames from 'classnames';
+import { Chart } from 'react-google-charts';
 
 type Props = {
   data: Object
@@ -65,6 +66,18 @@ class EsbEvent extends React.Component<Props> {
       'errorText': this.props.data.status == "ERROR"
     });
 
+    let chartColumns = [
+      {"id":"President","type":"string"},
+      {"id":"Start","type":"date"},
+      {"id":"End","type":"date"}
+    ];
+
+    let chartRows = [
+      ["Washington",new Date("1789-04-11"),new Date("1797-03-03T22:00:00.000Z")],
+      ["Adams",new Date("1797-03-03T22:00:00.000Z"), new Date("1801-03-03T22:00:00.000Z")],
+      ["Jefferson",new Date("1801-03-03T22:00:00.000Z"), new Date("1809-03-03T22:00:00.000Z")]
+    ];
+
     return (<div style={this.styles.esbBox} className="media align-items-center">
       <a className="flexbox align-items-center flex-grow gap-items text-truncate">
         <div className="media-body text-truncate">
@@ -75,7 +88,7 @@ class EsbEvent extends React.Component<Props> {
             <span className={statusClass}>{this.props.data.status}</span>
           </small>
         </div>
-          <span class="lead text-fade">{this.props.data.message}</span>
+        <span className="lead text-fade">{this.props.data.message}</span>
       </a>
     </div>);
 
