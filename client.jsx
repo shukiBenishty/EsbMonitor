@@ -8,7 +8,6 @@ import openSocket from 'socket.io-client';
 
 import reducers from './reducers';
 import App from './App.jsx';
-import AppLayout from './AppLayout';
 
 let store = createStore(reducers,
       window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
