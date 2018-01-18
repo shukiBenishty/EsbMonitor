@@ -13,7 +13,9 @@ type Props = {
 
 type State = {
   fromDate: {},
-  tillDate: {}
+  tillDate: {},
+  renderChart: boolean,
+  serviceSelectorDisabled: boolean
 };
 
 class Stats extends React.Component<Props, State> {
@@ -25,6 +27,7 @@ class Stats extends React.Component<Props, State> {
       fromDate: null,
       tillDate: null,
       selectedServices: '',
+      serviceSelectorDisabled: true,
       renderChart: false,
       categories: [],
       selectedCategory: ''
@@ -56,9 +59,15 @@ class Stats extends React.Component<Props, State> {
   }
 
   _updateCategory(newCategory: string) {
+
+    let disableCategoriesSelector = !newCategory ? true : false;
+
     this.setState({
-      selectedCategory: newCategory
+      selectedCategory: newCategory,
+      serviceSelectorDisabled: disableCategoriesSelector,
+      selectedServices: ''
     });
+
   }
 
   _fromDateChanged(_date) {
@@ -147,6 +156,7 @@ class Stats extends React.Component<Props, State> {
                         name="categoriesSelector"
                         ref={(ref) => { this.select = ref; }}
                         simpleValue
+                        placeholder="Select category"
                         options={this.state.categories}
                         value={this.state.selectedCategory}
                         onChange={this._updateCategory}
@@ -154,6 +164,7 @@ class Stats extends React.Component<Props, State> {
                       <Select style={this.styles.selectorStyle}
                               multi
                               simpleValue
+                              disabled={this.state.serviceSelectorDisabled}
                               removeSelected={true}
                               onChange={this._serviceNameChanged}
                               name="servicesSelector"
