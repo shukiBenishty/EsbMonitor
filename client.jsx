@@ -10,9 +10,10 @@ import reducers from './reducers';
 import App from './App.jsx';
 import AppLayout from './AppLayout';
 
-let store = createStore(reducers);
+let store = createStore(reducers,
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-const socket = openSocket('http://172.20.10.4:8000');
+const socket = openSocket('http://10.0.0.1:8000');
 
 socket.on('esbEvent', data => {
 
@@ -32,7 +33,7 @@ socket.emit('subscribeToEsbEvents', ''); // no filter initially
 
 ReactDOM.render(<Provider store={store}>
                   <BrowserRouter>
-                    <AppLayout />
+                    <App />
                   </BrowserRouter>
                 </Provider>  ,
                 document.getElementById('root'));
