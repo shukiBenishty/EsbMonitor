@@ -13,7 +13,7 @@ class Navigation extends React.Component {
                   <ul className="menu menu-sm">
                      <li className="menu-item">
                         <Link className="menu-link" to="/">
-                          <span className="icon ti-home">
+                          <span className="icon ti-dashboard">
                           </span>
                           <span className="title">Dashboard
                           </span>
@@ -21,26 +21,35 @@ class Navigation extends React.Component {
                     </li>
                     <li className="menu-item">
                       <Link className="menu-link" to='/realtime'>
-                        <span className="icon ti-view-list">
-                        </span>
-                        <span className="title">Realtime
-                        </span>
+                        <span className="icon ti-layout-list-thumb"></span>
+                        <span className="title">Realtime</span>
                       </Link>
                     </li>
                     <li className="menu-item">
                       <Link className="menu-link" to='/stat'>
-                        <span className="icon ti-pulse">
-                        </span>
-                        <span className="title">Stats
-                        </span>
+                        <span className="icon ti-pulse"></span>
+                        <span className="title">Stats</span>
                       </Link>
                     </li>
                     <li className="menu-item">
                       <Link className="menu-link" to='/analytics'>
-                        <span className="icon ti-layers-alt">
-                        </span>
-                        <span className="title">Analytics
-                        </span>
+                        <span className="icon ti-layers-alt"></span>
+                        <span className="title">Analytics</span>
+                        <span className="badge badge-pill badge-info">2</span>
+                      </Link>
+                    </li>
+                    <li className="menu-divider">
+                    </li>
+                    <li>
+                      <Link className='menu-link' to='/admin'>
+                        <span className="icon ti-settings"></span>
+                        <span className="title">Admin</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className='menu-link' to='/test'>
+                        <span className="icon ti-help"></span>
+                        <span className="title">Test</span>
                       </Link>
                     </li>
                   </ul>
