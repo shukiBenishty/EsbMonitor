@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import moment from 'moment';
+import _ from 'lodash';
 import 'moment/locale/he';
 import Datetime from 'react-datetime';
 import { Chart } from 'react-google-charts';
@@ -26,6 +27,7 @@ class Stats extends React.Component<Props, State> {
     this.state = {
       fromDate: null,
       tillDate: null,
+      services: [],
       selectedServices: '',
       serviceSelectorDisabled: true,
       renderChart: false,
@@ -67,6 +69,14 @@ class Stats extends React.Component<Props, State> {
       serviceSelectorDisabled: disableCategoriesSelector,
       selectedServices: ''
     });
+
+    // Mock
+    let promise = EsbAPI.getServicesByCategoryId(1);
+    promise.then( _services => {
+      this.setState({
+        services: _services
+      })
+    })
 
   }
 
@@ -169,7 +179,7 @@ class Stats extends React.Component<Props, State> {
                               onChange={this._serviceNameChanged}
                               name="servicesSelector"
                               placeholder="Select services(s)"
-                              options={services}
+                              options={this.state.services}
                               value={value}
                             />
                         <div>From</div>
@@ -246,6 +256,17 @@ class EsbAPI {
       ))
       }, 1000);
     })
+  }
+
+  static getServicesByCategoryId(categoryId: number) {
+    return new Promise( (resolve, reject) => {
+        setTimeout( () => {
+            resolve(_.assign([], [
+              { value: 'three', label: 'Three' },
+              { value: 'four', label: 'Four' },
+            ]))
+        }, 1000);
+    });
   }
 }
 
