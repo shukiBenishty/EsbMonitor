@@ -1,21 +1,19 @@
-// @flow
 import React from 'react';
 
+import Navigation from './Navigation';
+import WelcomeComponent from './WelcomeComponent';
 import MainContent from './MainContent';
 
-import WelcomeComponent from './WelcomeComponent';
-
-class App extends React.Component<{}> {
+class AppLayout extends React.Component {
 
   render() {
-    return(
-      <div id='appFrame' className="maxHeight">
-        <WelcomeComponent userName='Oleg Kleiman'/>
-        <MainContent />
-      </div>
-    );
+    return (<div className="maxHeight">
+              <Navigation />
+              <WelcomeComponent userName='Oleg Kleiman'/>
+              <MainContent />
+            </div>);
   }
 
-}
+};
 
-export default App;
+export default AppLayout;
