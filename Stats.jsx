@@ -16,7 +16,8 @@ type State = {
   fromDate: {},
   tillDate: {},
   renderChart: boolean,
-  serviceSelectorDisabled: boolean
+  serviceSelectorDisabled: boolean,
+  selectedCategory: Object
 };
 
 class Stats extends React.Component<Props, State> {
@@ -32,7 +33,7 @@ class Stats extends React.Component<Props, State> {
       serviceSelectorDisabled: true,
       renderChart: false,
       categories: [],
-      selectedCategory: ''
+      selectedCategory: {}
     }
 
     this.styles = {
@@ -60,7 +61,7 @@ class Stats extends React.Component<Props, State> {
     })
   }
 
-  _updateCategory(newCategory: string) {
+  _updateCategory(newCategory) {
 
     let disableCategoriesSelector = !newCategory ? true : false;
 
@@ -71,7 +72,7 @@ class Stats extends React.Component<Props, State> {
     });
 
     // Mock
-    let promise = EsbAPI.getServicesByCategoryId(1);
+    let promise = EsbAPI.getServicesByCategoryId(newCategory.value);
     promise.then( _services => {
       this.setState({
         services: _services
@@ -157,6 +158,9 @@ class Stats extends React.Component<Props, State> {
                                            chartPackage='timeline'
                                            /> : null;
 
+   const { selectedCategory } = this.state;
+ 	 const _value = selectedCategory && selectedCategory.value;
+
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
                   <div className="media-list media-list-divided media-list-hover">
@@ -164,11 +168,9 @@ class Stats extends React.Component<Props, State> {
                       <div className="flexbox align-items-center">
                       <Select style={this.styles.categoriesSelectorStyle}
                         name="categoriesSelector"
-                        ref={(ref) => { this.select = ref; }}
-                        simpleValue
                         placeholder="Select category"
                         options={this.state.categories}
-                        value={this.state.selectedCategory}
+                        value={_value}
                         onChange={this._updateCategory}
                       />
                       <Select style={this.styles.selectorStyle}
@@ -245,13 +247,13 @@ class EsbAPI {
     return new Promise( (resolve, reject) => {
       setTimeout( () => {
         resolve(_.assign([], [
-            {value: 'משרד התחבורה', label: 'משרד התחבורה'},
-            {value: 'שירותי מיקום', label: 'שירותי מיקום'},
-            {value: 'דיגיתל', label: 'דיגיתל'},
-            {value: 'מחו"ג', label: 'מחו"ג'},
-            {value: 'עירייה זמינה', label: 'עירייה זמינה'},
-            {value: 'ארנונה', label: 'ארנונה'},
-            {value: 'CRM', label: 'CRM'},
+            {value: '1', label: 'משרד התחבורה'},
+            {value: '2', label: 'שירותי מיקום'},
+            {value: '3', label: 'דיגיתל'},
+            {value: '4', label: 'מחו"ג'},
+            {value: '5', label: 'עירייה זמינה'},
+            {value: '6', label: 'ארנונה'},
+            {value: '28', label: 'CRM'},
         ]
       ))
       }, 1000);
