@@ -3,11 +3,23 @@ import { Link } from 'react-router-dom';
 
 class Navigation extends React.Component {
 
+  constructor() {
+    super();
+
+    this.styles = {
+      logoStyle: {
+        width: "48px",
+        height: "48px"
+      }
+    }
+  }
+
   render() {
     return (<aside className="sidebar sidebar-expand-lg sidebar-light sidebar-sm sidebar-color-info">
                 <header className="sidebar-header bg-info">
                   <span className="logo">ESB Monitor</span>
-                  <span className="idebar-toggle-fold"></span>
+                  <img style={this.styles.logoStyle}
+                        src='/assets/images/reactlogo.png' alt='ESB Monitor Logo' />
                 </header>
                 <nav className="sidebar-navigation ps-container">
                   <ul className="menu menu-sm">
