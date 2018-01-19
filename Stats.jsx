@@ -3,6 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import 'moment/locale/he';
+import classNames from 'classnames';
 import Datetime from 'react-datetime';
 import { Chart } from 'react-google-charts';
 import Select from 'react-select';
@@ -29,7 +30,7 @@ class Stats extends React.Component<Props, State> {
       fromDate: null,
       tillDate: null,
       services: [],
-      selectedServices: '',
+      selectedServices: null,
       serviceSelectorDisabled: true,
       renderChart: false,
       categories: [],
@@ -147,16 +148,38 @@ class Stats extends React.Component<Props, State> {
       ["Post-processing", new Date("2018-01-17T22:00:03.000Z"), new Date("2018-01-17T22:00:03.640Z")]
     ];
 
-    let timeline = this.state.renderChart ?  <Chart chartType="Timeline"
-                                                     columns={chartColumns}
-                                                     rows={chartRows}
-                                                     options='width:600px'
-                                                     width='100%'
-                                                     chartPackage='timeline'
-                                                     /> : null;
-
     const { selectedCategory } = this.state;
- 	  const _value = selectedCategory && selectedCategory.value;
+    const _value = selectedCategory && selectedCategory.value;
+
+    let isCategoriesInvalid = ( !selectedCategory || selectedCategory.value == null);
+    let categoriesSelectorClassNames = classNames('categoriesSelector', {
+        'inputValidationError': this.state.renderChart  && isCategoriesInvalid
+    });
+
+    let isServicesInvalid = !selectedServices;
+    let servicesSelectorClassName = classNames('servicesSelector', {
+        'inputValidationError': this.state.renderChart && isServicesInvalid
+    });
+
+    let isFromDateInvalid = !this.state.fromDate;
+    let fromDateClassName = classNames('', {
+      'inputValidationError': this.state.renderChart && isFromDateInvalid
+    })
+
+    let isTillDateInvalid = !this.state.tillDate;
+    let tillDateClassName = classNames('', {
+      'inputValidationError': this.state.renderChart && isTillDateInvalid
+    })
+
+    let timeline = this.state.renderChart && !isCategoriesInvalid && !isServicesInvalid
+                   && !isFromDateInvalid && !tillDateClassName ?
+                    <Chart chartType="Timeline"
+                           columns={chartColumns}
+                           rows={chartRows}
+                           options='width:600px'
+                           width='100%'
+                           chartPackage='timeline'
+                    /> : null;
 
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
@@ -165,8 +188,9 @@ class Stats extends React.Component<Props, State> {
                             className="flexbox align-items-center media-list-header bg-transparent b-0 py-16">
 
                         <Select
-                            className="categoriesSelector"
+                            className={categoriesSelectorClassNames}
                             name="categoriesSelector"
+                            required
                             placeholder="Select category"
                             options={this.state.categories}
                             value={_value}
@@ -174,7 +198,7 @@ class Stats extends React.Component<Props, State> {
                         />
 
                         <Select
-                            className="servicesSelector"
+                            className={servicesSelectorClassName}
                             multi
                             simpleValue
                             disabled={this.state.serviceSelectorDisabled}
@@ -189,11 +213,13 @@ class Stats extends React.Component<Props, State> {
                         <div className="align-items-center flexbox">
                           <div>From</div>
                           <Datetime
+                              className={fromDateClassName}
                               onChange={this._fromDateChanged}
                               closeOnSelect={true}
                               locale="he"/>
                           <div>Till</div>
                           <Datetime
+                              className={tillDateClassName}
                               onChange={this._tillDateChanged}
                               closeOnSelect={true}
                               locale="he"/>
