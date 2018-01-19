@@ -158,8 +158,8 @@ class Stats extends React.Component<Props, State> {
                                            chartPackage='timeline'
                                            /> : null;
 
-   const { selectedCategory } = this.state;
- 	 const _value = selectedCategory && selectedCategory.value;
+    const { selectedCategory } = this.state;
+ 	  const _value = selectedCategory && selectedCategory.value;
 
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
