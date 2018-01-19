@@ -37,11 +37,8 @@ class Stats extends React.Component<Props, State> {
     }
 
     this.styles = {
-      selectorStyle : {
-        width: "400px"
-      },
-      categoriesSelectorStyle: {
-        width: "200px"
+      selectionHeader: {
+        flexWrap: "wrap"
       }
     }
 
@@ -151,12 +148,12 @@ class Stats extends React.Component<Props, State> {
     ];
 
     let timeline = this.state.renderChart ?  <Chart chartType="Timeline"
-                                           columns={chartColumns}
-                                           rows={chartRows}
-                                           options='width:600px'
-                                           width='100%'
-                                           chartPackage='timeline'
-                                           /> : null;
+                                                     columns={chartColumns}
+                                                     rows={chartRows}
+                                                     options='width:600px'
+                                                     width='100%'
+                                                     chartPackage='timeline'
+                                                     /> : null;
 
     const { selectedCategory } = this.state;
  	  const _value = selectedCategory && selectedCategory.value;
@@ -164,39 +161,46 @@ class Stats extends React.Component<Props, State> {
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
                   <div className="media-list media-list-divided media-list-hover">
-                    <header className="flexbox align-items-center media-list-header bg-transparent b-0 py-16 pl-20">
-                      <div className="flexbox align-items-center">
-                      <Select style={this.styles.categoriesSelectorStyle}
-                        name="categoriesSelector"
-                        placeholder="Select category"
-                        options={this.state.categories}
-                        value={_value}
-                        onChange={this._updateCategory}
-                      />
-                      <Select style={this.styles.selectorStyle}
-                              multi
-                              simpleValue
-                              disabled={this.state.serviceSelectorDisabled}
-                              removeSelected={true}
-                              onChange={this._serviceNameChanged}
-                              name="servicesSelector"
-                              placeholder="Select services(s)"
-                              options={this.state.services}
-                              value={value}
-                            />
-                        <div>From</div>
-                        <Datetime
-                          onChange={this._fromDateChanged}
-                          closeOnSelect={true}
-                          locale="he"/>
-                        <div>Till</div>
-                        <Datetime
-                          onChange={this._tillDateChanged}
-                          closeOnSelect={true}
-                          locale="he"/>
-                        <button className="btn btn-info"
-                          onClick={this._apply}>Apply</button>
-                      </div>
+                    <header style={this.styles.selectionHeader}
+                            className="flexbox align-items-center media-list-header bg-transparent b-0 py-16">
+
+                        <Select
+                            className="categoriesSelector"
+                            name="categoriesSelector"
+                            placeholder="Select category"
+                            options={this.state.categories}
+                            value={_value}
+                            onChange={this._updateCategory}
+                        />
+
+                        <Select
+                            className="servicesSelector"
+                            multi
+                            simpleValue
+                            disabled={this.state.serviceSelectorDisabled}
+                            removeSelected={true}
+                            onChange={this._serviceNameChanged}
+                            name="servicesSelector"
+                            placeholder="Select services(s)"
+                            options={this.state.services}
+                            value={value}
+                        />
+
+                        <div className="align-items-center flexbox">
+                          <div>From</div>
+                          <Datetime
+                              onChange={this._fromDateChanged}
+                              closeOnSelect={true}
+                              locale="he"/>
+                          <div>Till</div>
+                          <Datetime
+                              onChange={this._tillDateChanged}
+                              closeOnSelect={true}
+                              locale="he"/>
+                          <button className="btn btn-info"
+                            onClick={this._apply}>Apply</button>
+                        </div>
+
                     </header>
                     {timeline}
                   </div>
