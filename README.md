@@ -1,8 +1,13 @@
 # EsbMonitor
 
 ## How to build
-1. After git pull, <code>npm i</code> to install all dependencies
-2. <code>npm start</code> - to run server side for subscription to Kafka events and emitting sockets or <code>npm run start-mock</code> to create mock events without Kafka client
+
+This project depends on the GraphQL Server for TLV ESB, i.e. it's the GraphQL client; so before you run this project, download and, build and run its counterpart. Next, ajust the address of GraphQL server in <code>Environment.js</code>.
+
+When you are done with GraphQL Servver,
+1. git pull, <code>npm i</code> to install all dependencies
+2. <code>yarn run relay</code> to compile graphql templates
+2. <code>yarn start</code> - to run server side for subscription to Kafka events and emitting sockets or <code>npm run start-mock</code> to create mock events without Kafka client
 3. Adjust server address in <code>client.jsx</code>
 4. Point Web Server for Chrome or IIS to file system folder to host <code>index.html</code>
-5. <code>npm build</code> - to create <code>bundle.js</code> referenced in <code>index.html</code>
+5. <code>yarn build</code> - to create <code>bundle.js</code> referenced in <code>index.html</code>
