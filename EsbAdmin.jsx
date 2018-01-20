@@ -1,13 +1,26 @@
 // @flow
 import React from 'react';
+import { QueryRenderer, graphql } from 'react-relay';
 import classNames from 'classnames';
 
 import EsbService from './EsbService';
+import environment from './Environment';
 
 const mockServices = [
-  { serviceName: 'Service Name A', address: 'http://iis07/apps/s1.svc', sla: 2},
-  { serviceName: 'Service Name B', address: 'http://iis07/apps/s2.svc', sla: 1.3}
+  { name: 'Service Name A', address: 'http://iis07/apps/s1.svc', sla: 2},
+  { name: 'Service Name B', address: 'http://iis07/apps/s2.svc', sla: 1.3}
 ];
+
+const servicesQuery = graphql`
+  query EsbAdminQuery {
+    services {
+      id
+      name
+      address
+      sla
+    }
+  }
+`;
 
 type Props = {
 };
@@ -58,6 +71,21 @@ class EsbAdmin extends React.Component<Props, State> {
     })
   }
 
+  renderServicesList({error, props, retry}) {
+    if( error )
+      return <div>Error</div>;
+
+    if( !props ) {
+      return <div>Loading...</div>
+    }
+
+    return (<div className="media-list-body bg-white b-1">{
+              props.services.map( (service, index) => {
+                return <EsbService key={index} {...service} />
+              } )
+            }</div>)
+  }
+
   render() {
 
     var servicePanelClass = classNames('quickview', 'quickview-lg', {
@@ -72,13 +100,11 @@ class EsbAdmin extends React.Component<Props, State> {
                       <div className="flexbox align-items-center">
                       </div>
                     </header>
-                    <div className="media-list-body bg-white b-1">
-                    {
-                      mockServices.map( (service, index) => {
-                          return <EsbService key={index} {...service} />
-                      })
-                    }
-                    </div>
+                    <QueryRenderer
+                        environment={environment}
+                        query={servicesQuery}
+                        variables={{}}
+                        render={this.renderServicesList}/>
                   </div>
                 </div>
                 <div className="fab fab-fixed">
