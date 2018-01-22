@@ -3,7 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 type Props = {
-  userName: string
+  userName: string,
+  styles: {}
 }
 
 class WelcomeComponent extends React.Component<Props> {
@@ -19,7 +20,6 @@ class WelcomeComponent extends React.Component<Props> {
       container: {
         display: "flex",
         flexDirection: "row-reverse",
-        backgroundColor: '#d3d3d3'
       }
     }
   }
@@ -27,7 +27,8 @@ class WelcomeComponent extends React.Component<Props> {
   render() {
     return (
       <header className="topbar">
-        <div style={this.styles.container}>Welcome, {this.props.userName}</div>
+        <div className="topbar-left"></div>
+        <div className="topbar-right" style={this.styles.container}>Welcome, {this.props.userName}</div>
       </header>
     )
   }
