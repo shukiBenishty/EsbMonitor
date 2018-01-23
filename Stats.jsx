@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux'
+import { QueryRenderer, graphql } from 'react-relay';
 import moment from 'moment';
 import _ from 'lodash';
 import 'moment/locale/he';
@@ -8,6 +10,8 @@ import Datetime from 'react-datetime';
 import { Chart } from 'react-google-charts';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
+
+import environment from './Environment';
 
 type Props = {
 
@@ -21,6 +25,15 @@ type State = {
   selectedCategory: Object
 };
 
+const categoriesQuery = graphql`
+  query StatsCategoriesQuery {
+    categories {
+      name
+      id
+    }
+  }
+`;
+
 class Stats extends React.Component<Props, State> {
 
   constructor() {
@@ -33,7 +46,7 @@ class Stats extends React.Component<Props, State> {
       selectedServices: null,
       serviceSelectorDisabled: true,
       renderChart: false,
-      categories: [],
+      //categories: [],
       selectedCategory: {}
     }
 
@@ -48,6 +61,7 @@ class Stats extends React.Component<Props, State> {
     this._fromDateChanged = this._fromDateChanged.bind(this);
     this._tillDateChanged = this._tillDateChanged.bind(this);
     this._serviceNameChanged = this._serviceNameChanged.bind(this);
+    this.renderCategories = this.renderCategories.bind(this);
   }
 
   _apply() {
@@ -118,14 +132,37 @@ class Stats extends React.Component<Props, State> {
     // });
 
     // Mock
-    let promise = EsbAPI.getAllCategories();
-    promise.then( _categories => {
-      this.setState({
-        categories: _categories
-      })
-    })
+    // let promise = EsbAPI.getAllCategories();
+    // promise.then( _categories => {
+    //   this.setState({
+    //     categories: _categories
+    //   })
+    // })
 
   };
+
+  renderCategories({error, props, retry}) {
+    if( error )
+      return <div>Error</div>;
+
+    if( !props ) {
+      return <div>Loading...</div>
+    }
+
+    let normalizedCategories = props.categories.map( (category, index) => {
+        return {
+          value: category.id,
+          label: category.name
+        }
+    })
+
+    this.props.dispatch({
+      type: 'CATEGORIES_RECEIVED',
+      data: normalizedCategories
+    })
+
+    return null; // This null actually is React element to rendered
+  }
 
   render() {
 
@@ -187,12 +224,18 @@ class Stats extends React.Component<Props, State> {
                     <header style={this.styles.selectionHeader}
                             className="flexbox align-items-center media-list-header bg-transparent b-0 py-16">
 
+                        <QueryRenderer
+                            environment={environment}
+                            query={categoriesQuery}
+                            variables={{}}
+                            render={this.renderCategories}/>
+`
                         <Select
                             className={categoriesSelectorClassNames}
                             name="categoriesSelector"
                             required
                             placeholder="Select category"
-                            options={this.state.categories}
+                            options={this.props.categories}
                             value={_value}
                             onChange={this._updateCategory}
                         />
@@ -238,40 +281,6 @@ class Stats extends React.Component<Props, State> {
 
 // Mocks
 
-// [
-//   {"CategoryId":30,"CategoryName":"Active Directory"},
-//   {"CategoryId":0,"CategoryName":"ALL"},
-//   {"CategoryId":28,"CategoryName":"CRM"},
-//   {"CategoryId":33,"CategoryName":"SAP"},
-//   {"CategoryId":32,"CategoryName":"UC4"},
-//   {"CategoryId":20,"CategoryName":"ארכיון"},
-//   {"CategoryId":23,"CategoryName":"ארנונה"},
-//   {"CategoryId":3,"CategoryName":"דיגיתל"},
-//   {"CategoryId":25,"CategoryName":"זימון תורים"},
-//   {"CategoryId":16,"CategoryName":"חינוך"},
-//   {"CategoryId":51,"CategoryName":"חניונים"},
-//   {"CategoryId":10,"CategoryName":"טלאול"},
-//   {"CategoryId":41,"CategoryName":"מאיה"},
-//   {"CategoryId":27,"CategoryName":"מובייל"},
-//   {"CategoryId":4,"CategoryName":"מחו\"ג"},
-//   {"CategoryId":13,"CategoryName":"מסופונים"},
-//   {"CategoryId":43,"CategoryName":"מערך פלילי"},
-//   {"CategoryId":37,"CategoryName":"מערכת לוגיסטית"},
-//   {"CategoryId":34,"CategoryName":"משאבי אנוש"},
-//   {"CategoryId":1,"CategoryName":"משרד התחבורה"},
-//   {"CategoryId":19,"CategoryName":"משרדים ממשלתיים"},
-//   {"CategoryId":21,"CategoryName":"נכסים"},
-//   {"CategoryId":5,"CategoryName":"עירייה זמינה"},
-//   {"CategoryId":6,"CategoryName":"עמ\"ל"},
-//   {"CategoryId":42,"CategoryName":"רישוי בניה תושב"},
-//   {"CategoryId":15,"CategoryName":"רישוי מקוון"},
-//   {"CategoryId":48,"CategoryName":"רישוי עסקים מקוון"},
-//   {"CategoryId":2,"CategoryName":"שירותי מיקום"},
-//   {"CategoryId":24,"CategoryName":"שירותים חיצוניים"},
-//   {"CategoryId":44,"CategoryName":"תיאום הנדסי"},
-//   {"CategoryId":12,"CategoryName":"תשתיות אינטגרציה"}
-// ]
-
 class EsbAPI {
   static getAllCategories() {
     return new Promise( (resolve, reject) => {
@@ -302,4 +311,11 @@ class EsbAPI {
   }
 }
 
-export default Stats;
+function mapStateToProps(state) {
+  return {
+      categories: state.categories,
+  }
+
+}
+
+export default connect(mapStateToProps)(Stats);
