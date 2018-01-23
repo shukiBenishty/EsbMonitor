@@ -9,7 +9,8 @@ const INITIAL_STATE = {
   issued: Date(),
   status: '',
   filterValue: '',
-  socketSwitch: true
+  socketSwitch: true,
+  categories: []
 };
 
 const reducers = (state = INITIAL_STATE, action) => {
@@ -21,6 +22,13 @@ const reducers = (state = INITIAL_STATE, action) => {
                                     socketSwitch: action.switch
                                   })
       break;
+
+    case 'CATEGORIES_RECEIVED' : {
+      state = _.assign({}, state, {
+                                    categories: action.data
+                                  })
+    }
+    break;
 
     case 'CLEAN_EVENTS': {
 
