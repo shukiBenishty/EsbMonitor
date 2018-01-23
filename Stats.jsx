@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { QueryRenderer, graphql } from 'react-relay';
+import { fetchQuery } from 'relay-runtime';
 import moment from 'moment';
 import _ from 'lodash';
 import 'moment/locale/he';
@@ -83,13 +84,39 @@ class Stats extends React.Component<Props, State> {
       selectedServices: ''
     });
 
-    // Mock
-    let promise = EsbAPI.getServicesByCategoryId(newCategory.value);
-    promise.then( _services => {
+    let variables = {
+      "categoryId": newCategory.value
+    }
+
+    fetchQuery(environment,
+    graphql`
+      query Stats_ServicesByCategory_Query($categoryId: Int) {
+        services(categoryId: $categoryId) {
+          name
+          id
+        }
+      }
+    `,
+    variables).then( (data) => {
+
       this.setState({
-        services: _services
+        services: data.services.map( (service) => {
+                                          return {
+                                            value: service.id,
+                                            label: service.name
+                                          }
+                                      })
       })
+
     })
+
+    // Mock
+    // let promise = EsbAPI.getServicesByCategoryId(newCategory.value);
+    // promise.then( _services => {
+    //   this.setState({
+    //     services: _services
+    //   })
+    // })
 
   }
 
