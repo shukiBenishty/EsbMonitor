@@ -1,4 +1,5 @@
 import React from 'react';
+import { createFragmentContainer, graphql} from 'react-relay';
 
 class EsbService extends React.Component {
 
@@ -18,13 +19,16 @@ class EsbService extends React.Component {
   }
 
   render() {
+
+    let service = this.props.service;
+
     return (<div className="media align-items-center">
               <a className="flexbox align-items-center flex-grow gap-items">
               <div className="media-body text-truncate">
-                <h6>{this.props.serviceName}</h6>
+                <h6>{service.name}</h6>
                 <small>
-                  <span>{this.props.address}</span>
-                  <span className="divider-dash">SLA: {this.props.sla} sec.</span>
+                  <span>{service.address}</span>
+                  <span className="divider-dash">SLA: {service.sla} sec.</span>
                 </small>
               </div>
               </a>
@@ -48,4 +52,13 @@ class EsbService extends React.Component {
 
 };
 
-export default EsbService;
+export default createFragmentContainer(EsbService,
+  graphql`
+    fragment EsbService_service on Service {
+      id
+      name
+      address
+      sla
+    }
+  `
+);
