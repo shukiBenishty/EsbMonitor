@@ -6,11 +6,6 @@ import classNames from 'classnames';
 import EsbService from './EsbService';
 import environment from './Environment';
 
-const mockServices = [
-  { name: 'Service Name A', address: 'http://iis07/apps/s1.svc', sla: 2},
-  { name: 'Service Name B', address: 'http://iis07/apps/s2.svc', sla: 1.3}
-];
-
 const addServiceMutation = graphql`
   mutation EsbAdminMutation {
     publishService(name: "ddd", address: "http://iis05") {
