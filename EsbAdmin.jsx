@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay';
+import { QueryRenderer, commitMutation, graphql } from 'react-relay';
 import classNames from 'classnames';
 
 import EsbService from './EsbService';
@@ -11,13 +11,20 @@ const mockServices = [
   { name: 'Service Name B', address: 'http://iis07/apps/s2.svc', sla: 1.3}
 ];
 
-const servicesQuery = graphql`
-  query EsbAdminQuery {
-    services {
-      id
+const addServiceMutation = graphql`
+  mutation EsbAdminMutation {
+    publishService(name: "ddd", address: "http://iis05") {
       name
-      address
-      sla
+      id
+      description
+    }
+  }
+`;
+
+const servicesQuery = graphql`
+  query EsbAdminQuery($categoryId: Int) {
+    services(categoryId: $categoryId) {
+      ...EsbService_service
     }
   }
 `;
@@ -55,6 +62,21 @@ class EsbAdmin extends React.Component<Props, State> {
         servicePanelVisible: false
     })
 
+    const variables = {};
+    //  = {
+    //   input: {
+    //     name
+    //   },
+    // };
+
+    // commitMutation(environment, {
+    //   addServiceMutation,
+    //   variables,
+    //   onCompleted: (response, errors) => {
+    //     console.log(response);
+    //   },
+    //   onError: err => console.error(err)
+    // });
   }
 
   _openServicePanel() {
@@ -81,7 +103,7 @@ class EsbAdmin extends React.Component<Props, State> {
 
     return (<div className="media-list-body bg-white b-1">{
               props.services.map( (service, index) => {
-                return <EsbService key={index} {...service} />
+                return <EsbService key={index} service={service} />
               } )
             }</div>)
   }
