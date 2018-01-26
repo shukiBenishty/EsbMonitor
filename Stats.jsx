@@ -53,7 +53,7 @@ class Stats extends React.Component<Props, State> {
 
     this.styles = {
       selectionHeader: {
-        flexWrap: "wrap"
+        flexWrap: "nowrap"
       }
     }
 
@@ -226,12 +226,12 @@ class Stats extends React.Component<Props, State> {
     });
 
     let isFromDateInvalid = !this.state.fromDate;
-    let fromDateClassName = classNames('', {
+    let fromDateClassName = classNames('timePicker', {
       'inputValidationError': this.state.renderChart && isFromDateInvalid
     })
 
     let isTillDateInvalid = !this.state.tillDate;
-    let tillDateClassName = classNames('', {
+    let tillDateClassName = classNames('timePicker', {
       'inputValidationError': this.state.renderChart && isTillDateInvalid
     })
 
@@ -256,7 +256,7 @@ class Stats extends React.Component<Props, State> {
                             query={categoriesQuery}
                             variables={{}}
                             render={this.renderCategories}/>
-`
+
                         <Select
                             className={categoriesSelectorClassNames}
                             name="categoriesSelector"
@@ -280,7 +280,7 @@ class Stats extends React.Component<Props, State> {
                             value={value}
                         />
 
-                        <div className="align-items-center flexbox">
+                        <div className="align-items-center flexbox timePickerArea">
                           <div>From</div>
                           <Datetime
                               className={fromDateClassName}
