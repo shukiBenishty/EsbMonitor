@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { QueryRenderer, commitMutation, graphql } from 'react-relay';
+import Select from 'react-select';
 import classNames from 'classnames';
 
 import EsbService from './EsbService';
@@ -21,6 +22,10 @@ const servicesQuery = graphql`
     services(categoryId: $categoryId) {
       ...EsbService_service
     }
+    categories {
+      name
+      id
+    }
   }
 `;
 
@@ -28,7 +33,8 @@ type Props = {
 };
 
 type State = {
-  servicePanelVisible: boolean
+  servicePanelVisible: boolean,
+  selectedCategory: Object
 }
 
 class EsbAdmin extends React.Component<Props, State> {
@@ -41,12 +47,26 @@ class EsbAdmin extends React.Component<Props, State> {
     super();
 
     this.state = {
-      servicePanelVisible: false
+      servicePanelVisible: false,
+      selectedCategory: {},
+      categories: []
     };
+
+    this.styles = {
+      categoriesSelectorStyle: {
+        position: 'absolute',
+        right: '0px',
+        marginTop: '-30px',
+        marginRight: '30px',
+        width: '14%'
+      }
+    }
 
     this._addService = this._addService.bind(this);
     this._openServicePanel = this._openServicePanel.bind(this);
     this._closeServicePanel = this._closeServicePanel.bind(this);
+    this._updateCategory = this._updateCategory.bind(this);
+    this.renderRelayQuey = this.renderRelayQuey.bind(this);
   }
 
   _addService() {
@@ -88,13 +108,35 @@ class EsbAdmin extends React.Component<Props, State> {
     })
   }
 
-  renderServicesList({error, props, retry}) {
+  _updateCategory(newCategory) {
+
+    let disableCategoriesSelector = !newCategory ? true : false;
+
+    this.setState({
+      selectedCategory: newCategory,
+      serviceSelectorDisabled: disableCategoriesSelector,
+      selectedServices: ''
+    });
+  }
+
+  renderRelayQuey({error, props, retry}) {
     if( error )
       return <div>Error</div>;
 
     if( !props ) {
       return <div>Loading...</div>
     }
+
+    let normalizedCategories = props.categories.map( (category, index) => {
+        return {
+          value: category.id,
+          label: category.name
+        }
+    })
+
+    this.setState({
+      categories: normalizedCategories
+    });
 
     return (<div className="media-list-body bg-white b-1">{
               props.services.map( (service, index) => {
@@ -109,19 +151,29 @@ class EsbAdmin extends React.Component<Props, State> {
       'reveal': this.state. servicePanelVisible
     });
 
+    const { selectedCategory } = this.state;
+    const _value = selectedCategory && selectedCategory.value;
 
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
                   <div className="media-list media-list-divided media-list-hover">
-                    <header className="flexbox align-items-center media-list-header bg-transparent b-0 py-16 pl-20">
-                      <div className="flexbox align-items-center">
+                    <header className="media-list-header bg-transparent b-0 py-16 pl-20">
+                      <div style={this.styles.categoriesSelectorStyle}>
+                        <Select
+                            className='categoriesSelector'
+                            name="categoriesSelector"
+                            placeholder="Select category"
+                            options={this.state.categories}
+                            value={_value}
+                            onChange={this._updateCategory}
+                        />
                       </div>
                     </header>
                     <QueryRenderer
                         environment={environment}
                         query={servicesQuery}
                         variables={{}}
-                        render={this.renderServicesList}/>
+                        render={this.renderRelayQuey}/>
                   </div>
                 </div>
                 <div className="fab fab-fixed">
