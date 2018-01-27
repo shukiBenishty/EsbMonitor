@@ -3,15 +3,15 @@ import { QueryRenderer, graphql } from 'react-relay';
 
 import environemnt from './Environment';
 import EsbTestCategory from './EsbTestCategory';
-import EsbTestService from './EsbTestService';
+import EsbTestServicesList from './EsbTestServicesList';
 
 const sericesQuery = graphql`
-  query EsbTest_Serices_Query {
-    services {
-      ...EsbTestService_service
-    }
-    categories {
-      ...EsbTestCategory_category
+  query EsbTest_Services_Query($categoryId: ID!) {
+    category(id: $categoryId) {
+      name
+      services {
+        ...EsbTestServicesList_list
+      }
     }
   }
 `;
@@ -35,18 +35,7 @@ class EsbTest extends React.Component {
       return <div>{error.message}</div>
     } else if( props ) {
       return (<div style={this.styles.container}>
-                <div>{
-                  props.services.map( (service, index) => {
-                    return <EsbTestService key={index} service={service} />
-                  })
-                }
-                </div>
-                <div>{
-                  props.categories.map( (category, index) => {
-                    return <EsbTestCategory key={index} category={category} />
-                  })
-                }
-                </div>
+                  <EsbTestServicesList list={props.category.services} />;
               </div>);
     }
 
@@ -62,7 +51,7 @@ class EsbTest extends React.Component {
                   <QueryRenderer
                       environment={environemnt}
                       query={sericesQuery}
-                      variables={{}}
+                      variables={{categoryId: 2}}
                       render={this.renderServices}
                   />
                 </header>
