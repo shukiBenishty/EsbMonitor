@@ -1,5 +1,4 @@
 // @flow
-var Kafka = require('no-kafka');
 const io = require('socket.io')();
 const uuidv4 = require('uuid/v4');
 import _ from 'lodash';
@@ -47,4 +46,4 @@ io.on('connection', (client) => {
 
 const port = 8000;
 io.listen(port);
-console.log('\x1b[36m%s\x1b[0m', 'Kafka Consumer created. Listening on port ' + port + ' for React clients');
+console.log('\x1b[36m%s\x1b[0m', 'Listening on port ' + port + ' for React clients');
