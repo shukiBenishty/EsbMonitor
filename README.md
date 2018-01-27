@@ -7,7 +7,7 @@ This project depends on the <a href="https://github.com/Tel-Aviv/EsbGQLServer">G
 When you are done with GraphQL Servver,
 1. git pull, <code>$ npm i</code> to install all dependencies
 2. <code>$ yarn run relay</code> to compile graphql templates
-2. <code>$ yarn start</code> - to run server side for subscription to Kafka events and emitting sockets or <code>$ npm run start-mock</code> to create mock events without Kafka client
+2. <code>$ yarn start</code> - to run server side for subscription to Kafka events and emitting sockets or <code>$ yarn start-mock</code> to create mock events without Kafka client
 3. Adjust server address in <code>client.jsx</code>
 4. Point Web Server for Chrome or IIS to file system folder to host <code>index.html</code>
 5. <code>$ yarn build</code> - to create <code>bundle.js</code> referenced in <code>index.html</code>
