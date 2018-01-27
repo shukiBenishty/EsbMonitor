@@ -10,7 +10,7 @@ class EsbTestServicesList extends React.Component {
 
     return (<div>
               <div>{list.name}</div>
-              {list.map( service => <EsbTestService service={service} /> )}
+              {list.map( (service, index) => <EsbTestService key={index} service={service} /> )}
             </div>);
   }
 
