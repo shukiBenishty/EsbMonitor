@@ -1,0 +1,26 @@
+import React from 'react';
+import { createFragmentContainer, graphql } from 'react-relay';
+import EsbTestService from './EsbTestService';
+
+class EsbTestServicesList extends React.Component {
+
+  render() {
+
+    let list = this.props.list;
+
+    return (<div>
+              <div>{list.name}</div>
+              {list.map( service => <EsbTestService service={service} /> )}
+            </div>);
+  }
+
+};
+
+export default createFragmentContainer(EsbTestServicesList,
+graphql`
+  fragment EsbTestServicesList_list on Service @relay(plural: true){
+    name
+    id
+    address
+  }
+`);
