@@ -59,9 +59,9 @@ class Dashboard extends React.Component<{}> {
               <div className="main-content">
                 <div className="row">
                   <div className="col-lg-4">
-                    <div className="card card-body">
+                    <div className="card card-body esbCard">
                       <h6>
-                        <span className="text-uppercase">Total calls</span>
+                        <span className="text-uppercase esbCaption">Total calls</span>
                         <span className="float-right">
                           <a className="btn btn-xs btn-primary" href="#">View</a>
                         </span>
@@ -78,9 +78,9 @@ class Dashboard extends React.Component<{}> {
                     </div>
                   </div>
                   <div className="col-md-6 col-lg-4">
-                    <div className="card card-body">
+                    <div className="card card-body esbCard">
                       <h6>
-                        <span className="text-uppercase">Latency</span>
+                        <span className="text-uppercase esbCaption">Latency</span>
                         <span className="float-right">
                           <a className="btn btn-xs btn-primary" href="#">View</a>
                         </span>
@@ -98,9 +98,9 @@ class Dashboard extends React.Component<{}> {
                     </div>
                   </div>
                   <div className="col-md-6 col-lg-4">
-                    <div className="card card-body">
+                    <div className="card card-body esbCard">
                       <h6>
-                        <span className="text-uppercase">Errors</span>
+                        <span className="text-uppercase esbCaption">Errors</span>
                         <span className="float-right">
                           <a className="btn btn-xs btn-primary" href="#">View</a>
                         </span>
@@ -117,10 +117,10 @@ class Dashboard extends React.Component<{}> {
                     </div>
                   </div>
                   <div className="col-12">
-                    <div className="card">
+                    <div className="card esbCard">
                       <div className="card-header">
                         <h5>
-                          <strong>Calls Distribution</strong>
+                          <strong className="text-uppercase esbCaption">Calls Distribution</strong>
                         </h5>
                       </div>
                       <div className="card-body">
