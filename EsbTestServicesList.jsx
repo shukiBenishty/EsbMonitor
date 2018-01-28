@@ -9,7 +9,6 @@ class EsbTestServicesList extends React.Component {
     let list = this.props.list;
 
     return (<div>
-              <div>{list.name}</div>
               {list.map( (service, index) => <EsbTestService key={index} service={service} /> )}
             </div>);
   }
@@ -19,8 +18,6 @@ class EsbTestServicesList extends React.Component {
 export default createFragmentContainer(EsbTestServicesList,
 graphql`
   fragment EsbTestServicesList_list on Service @relay(plural: true){
-    name
-    id
-    address
+    ...EsbTestService_service
   }
 `);
