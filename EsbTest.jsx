@@ -35,7 +35,7 @@ class EsbTest extends React.Component {
       return <div>{error.message}</div>
     } else if( props ) {
       return (<div style={this.styles.container}>
-                  <EsbTestServicesList list={props.category.services} />;
+                  <EsbTestServicesList list={props.category.services} />
               </div>);
     }
 
