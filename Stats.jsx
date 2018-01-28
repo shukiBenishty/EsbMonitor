@@ -236,7 +236,7 @@ class Stats extends React.Component<Props, State> {
     })
 
     let timeline = this.state.renderChart && !isCategoriesInvalid && !isServicesInvalid
-                   && !isFromDateInvalid && !tillDateClassName ?
+                   && !isFromDateInvalid && !isTillDateInvalid ?
                     <Chart chartType="Timeline"
                            columns={chartColumns}
                            rows={chartRows}
