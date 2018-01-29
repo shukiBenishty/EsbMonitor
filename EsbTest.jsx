@@ -2,11 +2,14 @@ import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 
 import environemnt from './Environment';
-import EsbTestCategory from './EsbTestCategory';
+import EsbTestCategories from './EsbTestCategories';
 import EsbTestServicesList from './EsbTestServicesList';
 
 const sericesQuery = graphql`
   query EsbTest_Services_Query($categoryId: ID!) {
+    categories {
+      ...EsbTestCategories_categories
+    }
     category(id: $categoryId) {
       name
       services {
@@ -35,6 +38,7 @@ class EsbTest extends React.Component {
       return <div>{error.message}</div>
     } else if( props ) {
       return (<div style={this.styles.container}>
+                  <EsbTestCategories categories={props.categories} />
                   <EsbTestServicesList list={props.category.services} />
               </div>);
     }
