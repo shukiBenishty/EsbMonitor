@@ -1,63 +1,41 @@
 import React from 'react';
 import { createFragmentContainer, createRefetchContainer, graphql } from 'react-relay';
 
-class EsbTestCategory extends React.Component {
+const EsbTestCategory = ({category}) => {
 
-  constructor() {
-    super();
-
-    this.styles = {
-      container: {
-        display: "flex"
-      }
-    }
-
-    this._refetch = this._refetch.bind(this);
-  }
-
-  _refetch() {
-    console.log(this.props.category.id);
-
-    this.props.relay.refetch(
-      {id: this.props.category.id},
-      null,
-      () => {console.log('Refetched')},
-      {force: true}
-    )
-  }
-
-  render() {
-
-    let category = this.props.category;
-
-    return (<div style={this.styles.container}>
-              <div>{category.name}({category.id})</div>
-              <button onClick={this._refetch}>Refresh</button>
-            </div>);
-
-  }
+  return (<div>
+            {category.name}
+          </div>);
 
 };
 
-// export default createFragmentContainer(EsbTestCategory,
-// graphql`
-//   fragment EsbTestCategory_category on Category {
-//     name
-//     id
+// class EsbTestCategory extends React.Component {
+//
+//   constructor(props) {
+//     super(props);
+//
+//     this.styles = {
+//       container: {
+//         display: "flex"
+//       }
+//     }
 //   }
-// `);
+//
+//   render() {
+//
+//     let category = this.props.category;
+//
+//     return (<div style={this.styles.container}>
+//               <div>{category.name}({category.id})</div>
+//             </div>);
+//   }
+// };
 
-export default createRefetchContainer(EsbTestCategory,
+export default createFragmentContainer(EsbTestCategory,
   graphql`
     fragment EsbTestCategory_category on Category {
-      name
       id
+      name
     }
-  `,
-  graphql`
-    query EsbTestCategory_Query($id: ID!) {
-      category(id: $id) {
-        ...EsbTestCategory_category
-      }
-    }
-  `)
+  `
+)
