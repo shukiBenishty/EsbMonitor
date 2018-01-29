@@ -19,11 +19,11 @@ class Navigation extends React.Component {
                 <header className="sidebar-header bg-info">
                   <span className="logo">ESB Monitor</span>
                   <img style={this.styles.logoStyle}
-                        src='/assets/images/reactlogo.png' alt='ESB Monitor Logo' />
+                        src='./assets/images/reactlogo.png' alt='ESB Monitor Logo' />
                 </header>
                 <nav className="sidebar-navigation ps-container">
                   <ul className="menu menu-sm">
-                     <li className="menu-item">
+                     <li className="menu-item active">
                         <Link className="menu-link" to="/">
                           <span className="icon ti-dashboard">
                           </span>
