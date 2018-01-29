@@ -7,15 +7,20 @@ import classNames from 'classnames';
 import EsbService from './EsbService';
 import environment from './Environment';
 
-const addServiceMutation = graphql`
-  mutation EsbAdminMutation {
-    publishService(name: "ddd", address: "http://iis05") {
-      name
-      id
-      description
-    }
-  }
-`;
+ const addServiceMutation = graphql`
+   mutation EsbAdminMutation {
+     publishService(input: {
+        name: "s",
+        categoryId: 2,
+        address: "http://sss",
+        description: "descripion",
+        sla: 200,
+        affiliations: "Digitel"
+     }) {
+       id
+     }
+   }
+ `;
 
 const servicesQuery = graphql`
   query EsbAdminQuery($categoryId: Int) {
@@ -49,6 +54,7 @@ class EsbAdmin extends React.Component<Props, State> {
     this.state = {
       servicePanelVisible: false,
       selectedCategory: {},
+      selectedCategoryForNewService: {},
       categories: []
     };
 
@@ -59,6 +65,9 @@ class EsbAdmin extends React.Component<Props, State> {
         marginTop: '-30px',
         marginRight: '30px',
         width: '14%'
+      },
+      addServiceCategorySelector: {
+        marginTop: "46px"
       }
     }
 
@@ -66,6 +75,7 @@ class EsbAdmin extends React.Component<Props, State> {
     this._openServicePanel = this._openServicePanel.bind(this);
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
+    this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
     this.renderRelayQuey = this.renderRelayQuey.bind(this);
   }
 
@@ -77,21 +87,33 @@ class EsbAdmin extends React.Component<Props, State> {
         servicePanelVisible: false
     })
 
-    const variables = {};
-    //  = {
-    //   input: {
-    //     name
-    //   },
-    // };
+    const variables =
+    {
+      input: {
+        name: "s",
+        categoryId: 2,
+        address: "http://sss",
+        description: "descripion",
+        sla: 200,
+        affiliations: ["Digitel", "two"]
+      },
+    };
 
-    // commitMutation(environment, {
-    //   addServiceMutation,
-    //   variables,
-    //   onCompleted: (response, errors) => {
-    //     console.log(response);
-    //   },
-    //   onError: err => console.error(err)
-    // });
+    console.log(environment);
+
+    commitMutation(
+      environment,
+      {
+          mutation: addServiceMutation,
+          variables,
+          updater: (store) => {
+            console.log(store);
+          },
+          onCompleted: (response, errors) => {
+            console.log(response);
+          },
+          onError: err => console.error(err)
+      });
   }
 
   _openServicePanel() {
@@ -116,6 +138,12 @@ class EsbAdmin extends React.Component<Props, State> {
       selectedCategory: newCategory,
       serviceSelectorDisabled: disableCategoriesSelector,
       selectedServices: ''
+    });
+  }
+
+  _addServiceCategoryChanged(newCategory) {
+    this.setState({
+      selectedCategoryForNewService: newCategory
     });
   }
 
@@ -153,6 +181,9 @@ class EsbAdmin extends React.Component<Props, State> {
 
     const { selectedCategory } = this.state;
     const _value = selectedCategory && selectedCategory.value;
+
+    const { selectedCategoryForNewService } = this.state;
+    const _newServiceCategoryValue = selectedCategoryForNewService && selectedCategoryForNewService.value;
 
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
@@ -198,6 +229,16 @@ class EsbAdmin extends React.Component<Props, State> {
                       <div className="form-group">
                         <input type="text" className="form-control" />
                         <label>Address (URL)</label>
+                      </div>
+                      <div className="form-group">
+                        <Select
+                          style={this.styles.addServiceCategorySelector}
+                          name="addServiceCategoriesSelector"
+                          placeholder="Select category"
+                          options={this.state.categories}
+                          value={_newServiceCategoryValue}
+                          onChange={this._addServiceCategoryChanged} />
+                        <label>Category</label>
                       </div>
                       <div className="form-group">
                         <input type="text" className="form-control" />
