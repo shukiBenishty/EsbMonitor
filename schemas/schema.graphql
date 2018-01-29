@@ -42,8 +42,17 @@ type Query {
     service(name: String): Service
 }
 
+input ServiceInput {
+  name: String!
+  categoryId: Int!
+  address: String!
+  description: String
+  sla: Int
+  affiliation: String
+}
+
 type Mutation {
-  publishService(name: String, address: String): Service
+  publishService(input: ServiceInput): Service
 }
 
 type Subscription {
