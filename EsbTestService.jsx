@@ -7,8 +7,9 @@ class EsbTestItem extends React.Component {
 
     const service = this.props.service;
 
-    return (<div>{service.name}
-            </div>)
+    return (<h5>
+                {service.name}
+            </h5>);
   }
 
 };
@@ -16,6 +17,7 @@ class EsbTestItem extends React.Component {
 export default createFragmentContainer(EsbTestItem,
   graphql`
     fragment EsbTestService_service on Service {
+      id
       name
     }
   `
