@@ -3,7 +3,7 @@ import { QueryRenderer, graphql } from 'react-relay';
 
 import environemnt from './Environment';
 import EsbTestCategories from './EsbTestCategories';
-import EsbTestServicesList from './EsbTestServicesList';
+import EsbTestServices from './EsbTestServices';
 
 const sericesQuery = graphql`
   query EsbTest_Services_Query($categoryId: ID!) {
@@ -13,7 +13,7 @@ const sericesQuery = graphql`
     category(id: $categoryId) {
       name
       services {
-        ...EsbTestServicesList_list
+        ...EsbTestServices_list
       }
     }
   }
@@ -39,7 +39,7 @@ class EsbTest extends React.Component {
     } else if( props ) {
       return (<div style={this.styles.container}>
                   <EsbTestCategories categories={props.categories} />
-                  <EsbTestServicesList list={props.category.services} />
+                  <EsbTestServices list={props.category.services} />
               </div>);
     }
 
