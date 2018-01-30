@@ -23,8 +23,8 @@ import environment from './Environment';
  `;
 
 const servicesQuery = graphql`
-  query EsbAdminQuery($categoryId: Int) {
-    services(categoryId: $categoryId) {
+  query EsbAdminQuery {
+    services {
       ...EsbService_service
     }
     categories {
@@ -98,8 +98,6 @@ class EsbAdmin extends React.Component<Props, State> {
         affiliations: ["Digitel", "two"]
       },
     };
-
-    console.log(environment);
 
     commitMutation(
       environment,
