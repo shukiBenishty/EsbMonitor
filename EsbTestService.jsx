@@ -1,20 +1,13 @@
 import React from 'react';
 import { createFragmentContainer, graphql } from 'react-relay';
 
-class EsbTestItem extends React.Component {
+const EsbTestService = ({service}) => {
 
-  render() {
-
-    const service = this.props.service;
-
-    return (<h5>
-                {service.name}
-            </h5>);
-  }
+  return (<h5>{service.name}</h5>);
 
 };
 
-export default createFragmentContainer(EsbTestItem,
+export default createFragmentContainer(EsbTestService,
   graphql`
     fragment EsbTestService_service on Service {
       id
