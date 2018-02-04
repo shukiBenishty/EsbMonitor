@@ -7,21 +7,18 @@ import EventList from './EventList';
 import Stats from './Stats';
 import Analyze from './Analyze';
 import EsbAdmin from './EsbAdmin';
-import EsbTest from './EsbTest';
+import StatsRenderer from './StatsRenderer';
 
-class MainContent extends React.Component<{}> {
+const MainContent = () => {
 
-  render() {
-    return (<Switch>
-                  <Route exact path='/' component={Dashboard} />
-                  <Route path='/realtime' component={EventList} />
-                  <Route path='/stat' component={Stats} />
-                  <Route path='/analytics' component={Analyze} />
-                  <Route path="/admin" component={EsbAdmin} />
-                  <Route path="/test" component={EsbTest} />
-            </Switch>);
-  }
+  return (<Switch>
+                <Route exact path='/' component={Dashboard} />
+                <Route path='/realtime' component={EventList} />
+                <Route path='/stat' component={StatsRenderer} />
+                <Route path='/analytics' component={Analyze} />
+                <Route path="/admin" component={EsbAdmin} />
+          </Switch>);
 
-};
+}
 
 export default MainContent;
