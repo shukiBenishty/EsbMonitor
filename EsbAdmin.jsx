@@ -9,15 +9,17 @@ import environment from './Environment';
 
  const addServiceMutation = graphql`
    mutation EsbAdminMutation {
-     publishService(input: {
-        name: "s",
+     addService(input: {
+        name: "oneService",
         categoryId: 2,
         address: "http://sss",
         description: "descripion",
         sla: 200,
-        affiliations: "Digitel"
+        soapAction: "uri://dddd",
+        domain: AZURE
      }) {
-       id
+       objectId
+       created
      }
    }
  `;
