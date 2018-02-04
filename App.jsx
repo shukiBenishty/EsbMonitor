@@ -1,16 +1,18 @@
 import React from 'react';
 
 import Navigation from './Navigation';
-import WelcomeComponent from './WelcomeComponent';
+import Header from './Header';
 import MainContent from './MainContent';
+import Footer from './Footer';
 
 class AppLayout extends React.Component {
 
   render() {
     return (<div className="maxHeight">
               <Navigation />
-              <WelcomeComponent userName='Oleg Kleiman'/>
+              <Header userName='Oleg Kleiman'/>
               <MainContent />
+              <Footer />
             </div>);
   }
 
