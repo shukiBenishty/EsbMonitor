@@ -1,3 +1,5 @@
+scalar Date
+
 interface Node {
   # The id of the object.
   id: ID!
@@ -9,6 +11,8 @@ type User implements Node {
 
 type Category implements Node {
   id: ID!
+  objectId: Int!
+
   name: String
   description: String
   services: [Service]
@@ -16,6 +20,8 @@ type Category implements Node {
 
 type Service implements Node {
     id: ID!
+
+    objectId: Int!
     categoryId: Int
     name: String
     address: String!
@@ -24,6 +30,12 @@ type Service implements Node {
     when_published: String #Date
     affiliations: [String]
     available: Boolean
+}
+
+type Repository implements Node {
+  id: ID!
+  services(categoryId: Int): [Service]
+  categories: [Category]
 }
 
 # This type specifies the entry points into our API.
@@ -36,10 +48,7 @@ type Query {
       id: ID!
     ): Node
 
-    categories: [Category]
-    category(id: ID!) : Category
-    services(categoryId: Int): [Service]
-    service(name: String): Service
+    repository: Repository
 }
 
 input ServiceInput {
