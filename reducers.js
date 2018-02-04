@@ -23,13 +23,6 @@ const reducers = (state = INITIAL_STATE, action) => {
                                   })
       break;
 
-    case 'CATEGORIES_RECEIVED' : {
-      state = _.assign({}, state, {
-                                    categories: action.data
-                                  })
-    }
-    break;
-
     case 'CLEAN_EVENTS': {
 
     }
