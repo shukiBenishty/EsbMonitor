@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { QueryRenderer, commitMutation, graphql } from 'react-relay';
+import { createRefetchContainer, QueryRenderer, commitMutation, graphql } from 'react-relay';
 import Select from 'react-select';
 import classNames from 'classnames';
 
@@ -24,12 +24,15 @@ import environment from './Environment';
 
 const servicesQuery = graphql`
   query EsbAdminQuery {
-    services {
-      ...EsbService_service
-    }
-    categories {
-      name
-      id
+    repository {
+      services {
+        ...EsbService_service
+      }
+
+      categories {
+        objectId
+        name
+      }
     }
   }
 `;
@@ -76,7 +79,7 @@ class EsbAdmin extends React.Component<Props, State> {
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
     this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
-    this.renderRelayQuey = this.renderRelayQuey.bind(this);
+    this.renderRelayQuery = this.renderRelayQuery.bind(this);
   }
 
   _addService() {
@@ -145,7 +148,8 @@ class EsbAdmin extends React.Component<Props, State> {
     });
   }
 
-  renderRelayQuey({error, props, retry}) {
+  renderRelayQuery({error, props, retry}) {
+
     if( error )
       return <div>Error</div>;
 
@@ -153,19 +157,19 @@ class EsbAdmin extends React.Component<Props, State> {
       return <div>Loading...</div>
     }
 
-    let normalizedCategories = props.categories.map( (category, index) => {
+    let categories = props.repository.categories.map( (category, index) => {
         return {
-          value: category.id,
+          value: category.objectId,
           label: category.name
         }
     })
 
     this.setState({
-      categories: normalizedCategories
+      categories: categories
     });
 
     return (<div className="media-list-body bg-white b-1">{
-              props.services.map( (service, index) => {
+              props.repository.services.map( (service, index) => {
                 return <EsbService key={index} service={service} />
               } )
             }</div>)
@@ -202,7 +206,7 @@ class EsbAdmin extends React.Component<Props, State> {
                         environment={environment}
                         query={servicesQuery}
                         variables={{}}
-                        render={this.renderRelayQuey}/>
+                        render={this.renderRelayQuery}/>
                   </div>
                 </div>
                 <div className="fab fab-fixed">
@@ -227,6 +231,16 @@ class EsbAdmin extends React.Component<Props, State> {
                       <div className="form-group">
                         <input type="text" className="form-control" />
                         <label>Address (URL)</label>
+                      </div>
+                      <div>
+                        <label className="switch">
+                          <input type="checkbox" />
+                          <span className="switch-indicator">
+                          </span>
+                          <span className="switch-description">
+                            Old fashion (SOAP)
+                          </span>
+                        </label>
                       </div>
                       <div className="form-group">
                         <Select
