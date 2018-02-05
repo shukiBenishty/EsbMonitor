@@ -1,6 +1,17 @@
 // @flow
 import React from 'react';
+import { QueryRenderer, graphql } from 'react-relay';
+import Summary from './Summary';
+
 var LineChart = require("react-chartjs").Line;
+
+const totalsQuery = graphql`
+	query DashboardTotals_Query {
+		runtime {
+			...Summary_item
+		}
+	}
+`;
 
 var chartData = {
 	labels: ["January", "February", "March", "April", "May", "June", "July"],
