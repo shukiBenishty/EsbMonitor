@@ -258,11 +258,6 @@ class EsbAdmin extends React.Component<Props, State> {
                         <input type="text" className="form-control" />
                         <label>Expected SLA</label>
                       </div>
-                      <div className="form-group">
-                        <input type="text" className="form-control" />
-                        <label>Affiliated System</label>
-                      </div>
-
                     </div>
                   </div>
                   <footer className="p-12 text-right">
