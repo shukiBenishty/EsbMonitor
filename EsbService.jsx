@@ -24,13 +24,13 @@ class EsbService extends React.Component {
 
     return (<div className="media align-items-center">
               <a className="flexbox align-items-center flex-grow gap-items">
-              <div className="media-body text-truncate">
-                <h6>{service.name}</h6>
-                <small>
-                  <span>{service.address}</span>
-                  <span className="divider-dash">SLA: {service.sla} sec.</span>
-                </small>
-              </div>
+                <div className="media-body text-truncate">
+                  <h6>{service.name}</h6>
+                  <small>
+                    <span>{service.address}</span>
+                    <span className="divider-dash">SLA: {service.sla} sec.</span>
+                  </small>
+                </div>
               </a>
               <span className="lead text-fade mr-25 d-none d-md-block">
                 System Affilation
