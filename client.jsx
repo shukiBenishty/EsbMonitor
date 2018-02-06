@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { BrowserRouter }  from 'react-router-dom';
+import { HashRouter }  from 'react-router-dom';
 import { installRelayDevTools } from 'relay-devtools';
 
 import openSocket from 'socket.io-client';
@@ -35,8 +35,8 @@ socket.on('esbEvent', data => {
 socket.emit('subscribeToEsbEvents', ''); // no filter initially
 
 ReactDOM.render(<Provider store={store}>
-                  <BrowserRouter>
+                  <HashRouter>
                     <App />
-                  </BrowserRouter>
+                  </HashRouter>
                 </Provider>  ,
                 document.getElementById('root'));
