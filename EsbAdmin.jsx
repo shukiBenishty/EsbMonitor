@@ -5,6 +5,7 @@ import Select from 'react-select';
 import classNames from 'classnames';
 
 import EsbService from './EsbService';
+import EsbServiceRequest from './EsbServiceRequest';
 import environment from './Environment';
 
  const addServiceMutation = graphql`
@@ -34,6 +35,14 @@ const servicesQuery = graphql`
       categories {
         objectId
         name
+      }
+
+      serviceRequests {
+        objectId
+        operationName
+        address
+        domain
+        created
       }
     }
   }
@@ -170,11 +179,26 @@ class EsbAdmin extends React.Component<Props, State> {
       categories: categories
     });
 
-    return (<div className="media-list-body bg-white b-1">{
-              props.repository.services.map( (service, index) => {
-                return <EsbService key={index} service={service} />
-              } )
-            }</div>)
+    return (<div className="col-lg-9">
+              <form className="card form-type-material tab-pane active show" id="tab1">
+                <h4 className="card-title fw-400">Published Services</h4>
+                <div className="media-list-body bg-white b-1">
+                { props.repository.services.map( (service, index) => {
+                    return <EsbService key={index} service={service} />
+                  } )
+                }
+                </div>
+              </form>
+              <form className="card form-type-material tab-pane fade" id="tab2">
+                <h4 className="card-title fw-400">Publish Requests</h4>
+                <div className="media-list-body bg-white b-1">
+                { props.repository.serviceRequests.map( (request, index) => {
+                    return <EsbServiceRequest key={index} serviceRequest={request} />
+                  } )
+                }
+                </div>
+              </form>
+            </div>)
   }
 
   render() {
@@ -204,11 +228,27 @@ class EsbAdmin extends React.Component<Props, State> {
                         />
                       </div>
                     </header>
-                    <QueryRenderer
-                        environment={environment}
-                        query={servicesQuery}
-                        variables={{}}
-                        render={this.renderRelayQuery}/>
+                    <div className="row">
+                      <div className="col-lg-3 tab-content">
+                          <div className="card">
+                            <ul className="nav nav-lg nav-pills flex-column">
+                              <li className="nav-item active" data-toggle="pill" data-target="#tab1">
+                                <a className="nav-link" href="#">Services</a>
+                              </li>
+                              <li className="nav-item" data-toggle="pill" data-target="#tab2">
+                                <a className="nav-link" href="#">Requests</a>
+                              </li>
+                            </ul>
+                          </div>
+                      </div>
+
+                      <QueryRenderer
+                          environment={environment}
+                          query={servicesQuery}
+                          variables={{}}
+                          render={this.renderRelayQuery}/>
+
+                    </div>
                   </div>
                 </div>
                 <div className="fab fab-fixed">
