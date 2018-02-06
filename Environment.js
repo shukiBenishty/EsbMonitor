@@ -3,10 +3,24 @@ import {
   Network,
   RecordSource,
   Store,
+  QueryResponseCache
 } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
-async function fetchQuery(operation, variables = {}) {
+const cache = new QueryResponseCache({size: 100, ttl: 100000});
+
+async function fetchQuery(operation, variables = {}, cacheConfig) {
+
+  const queryId = operation.name;
+  const cachedData = cache.get(queryId, variables);
+  const isMutation = operation.query.operation === 'mutation';
+  const isQuery = operation.query.operation === 'query';
+
+  const forceFetch = cacheConfig && cacheConfig.force;
+
+  if( isQuery && cachedData != null && !forceFetch ) {
+    return cachedData;
+  }
 
   return fetch('http://localhost:3001/graphql', {
     method: 'POST',
@@ -20,6 +34,18 @@ async function fetchQuery(operation, variables = {}) {
     })
   }).then( response => {
     return response.json()
+  }).then( json => {
+
+    if( isQuery && json ) {
+      cache.set(queryId, variables, json);
+    }
+
+    if( isMutation ) {
+      cache.clear();
+    }
+
+    return json;
+
   }).catch( error => {
     return error;
   })
