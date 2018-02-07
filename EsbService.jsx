@@ -5,6 +5,28 @@ import { createFragmentContainer,
 
 import environment from './Environment';
 
+const disableServiceMutation = graphql`
+  mutation EsbService_DisableService_Mutation ($serviceId: Int) {
+
+    disableService(input: $serviceId) {
+      objectId
+      when_published
+      address
+    }
+  }
+`;
+
+const deleteServiceMutation = graphql`
+  mutation EsbService_DeleteService_Mutation ($serviceId: Int) {
+
+    deleteService(input: $serviceId) {
+      objectId
+      when_published
+      address
+    }
+  }
+`;
+
 class EsbService extends React.Component {
 
   constructor(props) {
@@ -29,6 +51,17 @@ class EsbService extends React.Component {
     const variables = {
       "serviceId": this.props.service.objectId
     };
+
+    commitMutation(
+      environment,
+      {
+        mutation: disableServiceMutation,
+        variables,
+        onCompleted: (response, errors) => {
+          console.log(response);
+        },
+        onError: err => console.error(err)
+      });
   }
 
   _deleteService() {
@@ -36,6 +69,17 @@ class EsbService extends React.Component {
     const variables = {
       "serviceId": this.props.service.objectId
     };
+
+    commitMutation(
+      environment,
+      {
+        mutation: deleteServiceMutation,
+        variables,
+        onCompleted: (response, errors) => {
+          console.log(response);
+        },
+        onError: err => console.error(err)
+      });
 
   }
 
