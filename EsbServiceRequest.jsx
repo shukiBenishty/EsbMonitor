@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { commitMutation, graphql } from 'react-relay';
 
@@ -74,7 +75,10 @@ class EsbServiceRequest extends React.Component<{}> {
                 </a>
                 <div className="dropdown-menu">
                     <a className="dropdown-item" onClick={this._publishService}>
-                      <span className="icon ti-cloud-up">Publish</span>
+                      <div className="row">
+                        <span className="col icon ti-cloud-up" />
+                        <div className="col actionItem">Publish</div>
+                      </div>
                     </a>
                 </div>
               </div>
