@@ -1,5 +1,9 @@
 import React from 'react';
-import { createFragmentContainer, graphql} from 'react-relay';
+import { createFragmentContainer,
+         commitMutation,
+         graphql } from 'react-relay';
+
+import environment from './Environment';
 
 class EsbService extends React.Component {
 
@@ -12,9 +16,26 @@ class EsbService extends React.Component {
         position: "absolute",
         top: "19px",
         left: "-147px",
-        willChange: "top"
+        willChange: "top, left"
       }
     }
+
+    this._disableService = this._disableService.bind(this);
+    this._deleteService = this._deleteService.bind(this);
+
+  }
+
+  _disableService() {
+    const variables = {
+      "serviceId": this.props.service.objectId
+    };
+  }
+
+  _deleteService() {
+
+    const variables = {
+      "serviceId": this.props.service.objectId
+    };
 
   }
 
@@ -33,17 +54,27 @@ class EsbService extends React.Component {
                 </div>
               </a>
               <span className="lead text-fade mr-25 d-none d-md-block">
-                System Affilation
+                System Affiliation
               </span>
               <div className="dropdown">
-                <a className="text-lighter">
+                <a className="text-lighter" data-toggle="dropdown">
                   <i className="ti-more-alt rotate-90"></i>
                 </a>
-                <div className="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                <div className="dropdown-menu dropdown-menu-right"
+                      x-placement="bottom-end"
                       style={this.styles.serviceMenu}>
+                  <a className="dropdown-item" onClick={this._disableService}>
+                    <div className="row">
+                      <span className='icon ti-hand-stop' />
+                      <div className='actionItem'>Disable</div>
+                      </div>
+                  </a>
                   <div className="dropdown-divider"></div>
-                  <a className="dropdown-item">
-                    <i className="fa fa-fw fa-trash">Delete</i>
+                  <a className="dropdown-item" onClick={this._deleteService}>
+                    <div className="row">
+                        <span className='icon ti-trash' />
+                        <div className='actionItem'>Delete</div>
+                    </div>
                   </a>
                 </div>
               </div>
@@ -55,7 +86,7 @@ class EsbService extends React.Component {
 export default createFragmentContainer(EsbService,
   graphql`
     fragment EsbService_service on Service {
-      id
+      objectId
       name
       address
       sla
