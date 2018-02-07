@@ -1,6 +1,21 @@
 import React from 'react';
+import { commitMutation, graphql } from 'react-relay';
 
-class EsbServiceRequest extends React.Component {
+import environment from './Environment';
+
+const publishServiceMutation = graphql`
+  mutation EsbServiceRequest_Mutation ($serviceId: Int) {
+    publishServiceRequest(input: $serviceId) {
+      objectId
+      name
+      address
+      categoryId
+      when_published
+    }
+  }
+`;
+
+class EsbServiceRequest extends React.Component<{}> {
 
   constructor(props) {
 
@@ -16,6 +31,26 @@ class EsbServiceRequest extends React.Component {
 
     }
 
+    this._publishService = this._publishService.bind(this);
+
+  }
+
+  _publishService() {
+
+    const variables = {
+      "serviceId": this.props.serviceRequest.objectId
+    };
+
+    commitMutation(
+      environment,
+      {
+        mutation: publishServiceMutation,
+        variables,
+        onCompleted: (response, errors) => {
+          console.log(response);
+        },
+        onError: err => console.error(err)
+      });
   }
 
   render() {
@@ -33,14 +68,12 @@ class EsbServiceRequest extends React.Component {
                 </div>
               </a>
               <div className="dropdown">
-                <a className="text-lighter" data-toggle="dropdown">
+                <a className="text-lighter" data-toggle="dropdown"
+                   aria-haspopup="true">
                   <i className="ti-more-alt rotate-90"></i>
                 </a>
-                <div className="dropdown-menu dropdown-menu-right"
-                    x-placement="bottom-end"
-                    style={this.styles.serviceMenu}>
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item">
+                <div className="dropdown-menu">
+                    <a className="dropdown-item" onClick={this._publishService}>
                       <span className="icon ti-cloud-up">Publish</span>
                     </a>
                 </div>
