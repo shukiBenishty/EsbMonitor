@@ -16,3 +16,52 @@
 .esbCaption {
   font-size: 22px;
 }
+
+.wizard {
+  display: table;
+  table-layout: fixed;
+  width: auto;
+  margin: 15px auto 0;
+}
+
+.step {
+  display: block;
+  text-align: center;
+  position: relative;
+  border-right: 20px solid rgb(245, 246, 250);
+  font-weight: 300;
+  line-height: 14px;
+  letter-spacing: 1px;
+  float: left;
+}
+
+.step:last-child {
+  border-right: 0px;
+}
+
+.step a {
+  display: block;
+  background-color: #b3b3b3;
+  color: #fff;
+  padding: 13px 6px;
+  margin: 0;
+  text-decoration: none;
+}
+
+.nav-arrow {
+  display: block;
+  width: 0;
+  height: 0;
+
+  position: absolute;
+  right: -20px;
+
+  border-color: transparent transparent transparent #b3b3b3;
+  border-style: solid;
+  border-width: 20px 0 20px 20px;
+}
+
+._row {
+  display: flex;
+  flex-direction: row;
+}
