@@ -148,13 +148,34 @@ class Stats extends React.Component<Props, State> {
 
     let timeline = this.state.renderChart && !isCategoriesInvalid && !isServicesInvalid
                    && !isFromDateInvalid && !isTillDateInvalid ?
-                    <Chart chartType="Timeline"
-                           columns={chartColumns}
-                           rows={chartRows}
-                           options='width:600px'
-                           width='100%'
-                           chartPackage='timeline'
-                    /> : null;
+                   <div>
+                     <ul className="wizard">
+                       <li className="step _row">
+                           <a href="#">Pre-processing</a>
+                           <div className="nav-arrow"></div>
+                       </li>
+                       <li className="step _row">
+                           <a href="#">Cross-domain transport</a>
+                           <div className="nav-arrow"></div>
+                       </li>
+                       <li className="step _row">
+                           <a href="#">Destination Service</a>
+                           <div className="nav-arrow"></div>
+                       </li>
+                       <li className="step _row">
+                           <a href="#">Post-processing</a>
+                           <div className="nav-arrow"></div>
+                       </li>
+                     </ul>
+                     <br />
+                      <Chart chartType="Timeline"
+                             columns={chartColumns}
+                             rows={chartRows}
+                             options='width:600px'
+                             width='100%'
+                             chartPackage='timeline'
+                      />
+                   </div> : null;
 
     return (<main className="main-container maxHeight">
               <div className="main-content maxHeight">
