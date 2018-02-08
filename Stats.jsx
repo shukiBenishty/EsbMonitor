@@ -118,7 +118,8 @@ class Stats extends React.Component<Props, State> {
 
     let chartRows = [
       ["Pre-processing",new Date("2018-01-17T22:00:01.000Z"), new Date("2018-01-17T22:00:01.050Z")],
-      ["Cross-domain",  new Date("2018-01-17T22:00:01.050Z"), new Date("2018-01-17T22:00:03.000Z")],
+      ["Cross-domain transport",  new Date("2018-01-17T22:00:01.050Z"), new Date("2018-01-17T22:00:02.000Z")],
+      ["Destination Service", new Date("2018-01-17T22:00:02.000Z"), new Date("2018-01-17T22:00:03.000Z")],
       ["Post-processing", new Date("2018-01-17T22:00:03.000Z"), new Date("2018-01-17T22:00:03.640Z")]
     ];
 
