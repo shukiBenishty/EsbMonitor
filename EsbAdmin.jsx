@@ -130,6 +130,17 @@ class EsbAdmin extends React.Component<Props, State> {
       serviceSelectorDisabled: disableCategoriesSelector,
       selectedServices: ''
     });
+
+    this.props.relay.refetch(
+      (prev) => (
+        { categoryId: newCategory ? newCategory.value : null }
+      ),
+      null,
+      null,
+      { force: false } // Network layer for this app is configured to use cache (vis QueryResponseCache)
+                       // This parameter has the meaning for it.
+                       // Although it is redundant here because the default is false.
+    )
   }
 
   _addServiceCategoryChanged(newCategory) {
@@ -257,6 +268,12 @@ class EsbAdmin extends React.Component<Props, State> {
                               <li className="page-item active" onClick={this.pageClicked}>
                                 <div className="page-link" href="#">1</div>
                               </li>
+                              <li className="page-item" onClick={this.pageClicked}>
+                                <div className="page-link" href="#">2</div>
+                              </li>
+                              <li className="page-item" onClick={this.pageClicked}>
+                                <div className="page-link" href="#">3</div>
+                              </li>
                             </ul>
                           </nav>
                           </div>
@@ -339,9 +356,12 @@ class EsbAdmin extends React.Component<Props, State> {
 export default createRefetchContainer(
 EsbAdmin,
 graphql`
-fragment EsbAdmin_repository on Repository {
-
-    services {
+  fragment EsbAdmin_repository on Repository
+  @argumentDefinitions(
+    categoryId: { type: Int }
+  )
+  {
+    services (categoryId: $categoryId){
       ...EsbService_service
     }
     serviceRequests {
@@ -354,9 +374,9 @@ fragment EsbAdmin_repository on Repository {
 }
 `,
 graphql`
-  query EsbAdmin_Query {
+  query EsbAdmin_Query ($categoryId: Int) {
     repository {
-    	...EsbAdmin_repository
+    	...EsbAdmin_repository @arguments(categoryId: $categoryId)
     }
   }
 `
