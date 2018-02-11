@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { createRefetchContainer, QueryRenderer, commitMutation, graphql } from 'react-relay';
+import { createRefetchContainer, commitMutation, graphql } from 'react-relay';
 import Select from 'react-select';
 import classNames from 'classnames';
 
@@ -24,29 +24,6 @@ import environment from './Environment';
      }
    }
  `;
-
-const servicesQuery = graphql`
-  query EsbAdminQuery {
-    repository {
-      services {
-        ...EsbService_service
-      }
-
-      categories {
-        objectId
-        name
-      }
-
-      serviceRequests {
-        objectId
-        operationName
-        address
-        domain
-        created
-      }
-    }
-  }
-`;
 
 type Props = {
 };
@@ -179,8 +156,8 @@ class EsbAdmin extends React.Component<Props, State> {
       categories: categories
     });
 
-    return (<div className="col-lg-9">
-              <form className="card form-type-material tab-pane active show" id="tab1">
+    return (<React.Fragment>
+              <div className="card tab-pane fade in active" id="tab1">
                 <h4 className="card-title fw-400">Published Services</h4>
                 <div className="media-list-body bg-white b-1">
                 { props.repository.services.map( (service, index) => {
@@ -188,8 +165,8 @@ class EsbAdmin extends React.Component<Props, State> {
                   } )
                 }
                 </div>
-              </form>
-              <form className="card form-type-material tab-pane fade" id="tab2">
+              </div>
+              <div className="card tab-pane fade" id="tab2">
                 <h4 className="card-title fw-400">Publish Requests</h4>
                 <div className="media-list-body bg-white b-1">
                 { props.repository.serviceRequests.map( (request, index) => {
@@ -197,11 +174,21 @@ class EsbAdmin extends React.Component<Props, State> {
                   } )
                 }
                 </div>
-              </form>
-            </div>)
+              </div>
+            </React.Fragment>)
   }
 
   render() {
+
+    let _categories = this.props.categories.map( (category, index) => {
+        return {
+          value: category.objectId,
+          label: category.name
+        }
+    })
+
+    let _services = this.props.repository.services;
+    let _serviceRequests = this.props.repository.serviceRequests;
 
     var servicePanelClass = classNames('quickview', 'quickview-lg', {
       'reveal': this.state. servicePanelVisible
@@ -222,7 +209,7 @@ class EsbAdmin extends React.Component<Props, State> {
                             className='categoriesSelector'
                             name="categoriesSelector"
                             placeholder="Select category"
-                            options={this.state.categories}
+                            options={_categories}
                             value={_value}
                             onChange={this._updateCategory}
                         />
@@ -231,22 +218,37 @@ class EsbAdmin extends React.Component<Props, State> {
                     <div className="row">
                       <div className="col-lg-3 tab-content">
                           <div className="card">
-                            <ul className="nav nav-lg nav-pills flex-column">
-                              <li className="nav-item active" data-toggle="pill" data-target="#tab1">
-                                <a className="nav-link" href="#">Services</a>
+                            <ul className="nav nav-tabs nav-lg _flexColumn">
+                              <li className="nav-item active">
+                                <a data-toggle="tab" className="nav-link" href="#tab1">Services</a>
                               </li>
-                              <li className="nav-item" data-toggle="pill" data-target="#tab2">
-                                <a className="nav-link" href="#">Requests</a>
+                              <li className="nav-item">
+                                <a data-toggle="tab" className="nav-link" href="#tab2">Requests</a>
                               </li>
                             </ul>
                           </div>
                       </div>
 
-                      <QueryRenderer
-                          environment={environment}
-                          query={servicesQuery}
-                          variables={{}}
-                          render={this.renderRelayQuery}/>
+                      <div className="col-lg-9 tab-content">
+                        <div className="card tab-pane fade in active" id="tab1">
+                          <h4 className="card-title fw-400">Published Services</h4>
+                          <div className="media-list-body bg-white b-1">
+                          { _services.map( (service, index) => {
+                              return <EsbService key={index} service={service} />
+                            } )
+                          }
+                          </div>
+                        </div>
+                        <div className="card tab-pane fade" id="tab2">
+                          <h4 className="card-title fw-400">Publish Requests</h4>
+                          <div className="media-list-body bg-white b-1">
+                          { _serviceRequests.map( (request, index) => {
+                              return <EsbServiceRequest key={index} serviceRequest={request} />
+                            } )
+                          }
+                          </div>
+                        </div>
+                      </div>
 
                     </div>
                   </div>
@@ -312,4 +314,28 @@ class EsbAdmin extends React.Component<Props, State> {
 
 };
 
-export default EsbAdmin;
+export default createRefetchContainer(
+EsbAdmin,
+graphql`
+fragment EsbAdmin_repository on Repository {
+
+    services {
+      ...EsbService_service
+    }
+    serviceRequests {
+      objectId
+      operationName
+      address
+      domain
+      created
+    }
+}
+`,
+graphql`
+  query EsbAdmin_Query {
+    repository {
+    	...EsbAdmin_repository
+    }
+  }
+`
+);
