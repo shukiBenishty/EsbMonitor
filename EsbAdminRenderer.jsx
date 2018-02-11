@@ -7,22 +7,13 @@ import EsbAdmin from './EsbAdmin';
 const rootQuery = graphql`
   query EsbAdminRendererQuery {
     repository {
-      services {
-        ...EsbService_service
-      }
 
       categories {
         objectId
         name
       }
 
-      serviceRequests {
-        objectId
-        operationName
-        address
-        domain
-        created
-      }
+      ...EsbAdmin_repository
     }
   }
 `;
@@ -46,8 +37,6 @@ class EsbAdminRenderer extends React.Component {
   }
 
   render() {
-
-      //return (<div>EsbAdminRenderer</div>);
 
       return (<QueryRenderer
                   environment={environment}
