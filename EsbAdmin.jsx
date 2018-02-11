@@ -68,6 +68,8 @@ class EsbAdmin extends React.Component<Props, State> {
     this._updateCategory = this._updateCategory.bind(this);
     this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
     this.renderRelayQuery = this.renderRelayQuery.bind(this);
+
+    this.pageClicked = this.pageClicked.bind(this);
   }
 
   _addService() {
@@ -178,6 +180,19 @@ class EsbAdmin extends React.Component<Props, State> {
             </React.Fragment>)
   }
 
+  pageClicked() {
+
+    this.props.relay.refetch(
+      null,
+      null,
+      null,
+      { force: false } // Network layer for this app is configured to use cache (vis QueryResponseCache)
+                       // This parameter has the meaning for it.
+                       // Although it is redundant here because the default is false.
+    );
+
+  }
+
   render() {
 
     let _categories = this.props.categories.map( (category, index) => {
@@ -237,6 +252,13 @@ class EsbAdmin extends React.Component<Props, State> {
                               return <EsbService key={index} service={service} />
                             } )
                           }
+                          <nav>
+                            <ul className="pagination pagination-info">
+                              <li className="page-item active" onClick={this.pageClicked}>
+                                <div className="page-link" href="#">1</div>
+                              </li>
+                            </ul>
+                          </nav>
                           </div>
                         </div>
                         <div className="card tab-pane fade" id="tab2">
