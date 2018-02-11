@@ -4,18 +4,28 @@ import { QueryRenderer, graphql } from 'react-relay';
 import environment from './Environment';
 import EsbAdmin from './EsbAdmin';
 
-// const rootQuery = graphql`
-//   query EsbAdminRendererQuery {
-//     repository {
-//       ...EsbAdmin_repository
-//
-//       categories {
-//         objectId
-//         name
-//       }
-//     }
-//   }
-// `;
+const rootQuery = graphql`
+  query EsbAdminRendererQuery {
+    repository {
+      services {
+        ...EsbService_service
+      }
+
+      categories {
+        objectId
+        name
+      }
+
+      serviceRequests {
+        objectId
+        operationName
+        address
+        domain
+        created
+      }
+    }
+  }
+`;
 
 class EsbAdminRenderer extends React.Component {
 
@@ -27,7 +37,7 @@ class EsbAdminRenderer extends React.Component {
       let categories = props.repository.categories;
 
       return(<EsbAdmin repository={props.repository}
-                      categories={categories}
+                       categories={categories}
               />
             )
     }
@@ -37,15 +47,17 @@ class EsbAdminRenderer extends React.Component {
 
   render() {
 
-      return (<div>EsbAdminRenderer</div>);
+      //return (<div>EsbAdminRenderer</div>);
 
-      // return (<QueryRenderer
-      //             environment={environment}
-      //             query={rootQuery}
-      //             variables={{}}
-      //             render={this.renderQueries}
-      //         />
-      //);
+      return (<QueryRenderer
+                  environment={environment}
+                  query={rootQuery}
+                  variables={{}}
+                  render={this.renderQueries}
+              />
+      );
     }
 
 }
+
+export default EsbAdminRenderer;
