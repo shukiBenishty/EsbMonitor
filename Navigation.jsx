@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux'
 import classNames from 'classnames';
 
 import navigationLinks from './NavigationLinks.json'
@@ -21,7 +22,8 @@ class Navigation extends React.Component {
     }
 
     this.state = {
-      currentLink: 1
+      currentLink: 1,
+      errorsNumber: 0
     }
 
     this.linkClicked = this.linkClicked.bind(this);
@@ -31,6 +33,14 @@ class Navigation extends React.Component {
     this.setState({
       currentLink: linkNumber
     })
+  }
+
+  componentWillReceiveProps(nextProps) {
+
+    this.setState({
+        errorsNumber: ++this.state.errorsNumber
+    })
+
   }
 
   render() {
@@ -55,9 +65,9 @@ class Navigation extends React.Component {
                         } else {
 
                           let badge = null;
-                          if( link.badge ) {
+                          if( link.badge && this.state.errorsNumber > 0 ) {
                             let badgeClasName = 'badge badge-pill ' + link.badge.type;
-                            badge = <span className={badgeClasName}>{link.badge.count}</span>
+                            badge = <span className={badgeClasName}>{this.state.errorsNumber}</span>
                           }
 
                           return (<li key={index} className={linkClassName}>
@@ -80,4 +90,12 @@ class Navigation extends React.Component {
 
 };
 
-export default Navigation;
+function mapStateToProps(state) {
+
+  if( state.status == 'ERROR' )
+    return {
+        status: state.status
+    }
+}
+
+export default connect(mapStateToProps)(Navigation);
