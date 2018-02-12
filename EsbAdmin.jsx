@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { createRefetchContainer, commitMutation, graphql } from 'react-relay';
+import { AutoSizer, Table, List } from 'react-virtualized';
 import Select from 'react-select';
 import classNames from 'classnames';
 
@@ -69,9 +70,10 @@ class EsbAdmin extends React.Component<Props, State> {
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
     this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
-    this.renderRelayQuery = this.renderRelayQuery.bind(this);
 
     this.pageClicked = this.pageClicked.bind(this);
+
+    this.rowRenderer = this.rowRenderer.bind(this);
   }
 
   _addService() {
@@ -155,48 +157,6 @@ class EsbAdmin extends React.Component<Props, State> {
     });
   }
 
-  renderRelayQuery({error, props, retry}) {
-
-    if( error )
-      return <div>Error</div>;
-
-    if( !props ) {
-      return <div>Loading...</div>
-    }
-
-    let categories = props.repository.categories.map( (category, index) => {
-        return {
-          value: category.objectId,
-          label: category.name
-        }
-    })
-
-    this.setState({
-      categories: categories
-    });
-
-    return (<React.Fragment>
-              <div className="card tab-pane fade in active" id="tab1">
-                <h4 className="card-title fw-400">Published Services</h4>
-                <div className="media-list-body bg-white b-1">
-                { props.repository.services.map( (service, index) => {
-                    return <EsbService key={index} service={service} />
-                  } )
-                }
-                </div>
-              </div>
-              <div className="card tab-pane fade" id="tab2">
-                <h4 className="card-title fw-400">Publish Requests</h4>
-                <div className="media-list-body bg-white b-1">
-                { props.repository.serviceRequests.map( (request, index) => {
-                    return <EsbServiceRequest key={index} serviceRequest={request} />
-                  } )
-                }
-                </div>
-              </div>
-            </React.Fragment>)
-  }
-
   pageClicked(pageNumber: number) {
 
     this.props.relay.refetch(
@@ -218,6 +178,22 @@ class EsbAdmin extends React.Component<Props, State> {
       currentPage: pageNumber
     })
 
+  }
+
+  rowRenderer({
+    key,
+    index,
+    isScrolling,
+    isVisible,
+    style
+  }) {
+
+    this.vServicesList.scrollToRow(index);
+
+    let _services = this.props.repository.services;
+
+    return <EsbService key={index} style={style}
+                       service={_services[index]} />
   }
 
   render() {
@@ -274,29 +250,41 @@ class EsbAdmin extends React.Component<Props, State> {
                       <div className="col-lg-9 tab-content">
                         <div className="card tab-pane fade in active" id="tab1">
                           <h4 className="card-title fw-400">Published Services</h4>
-                          <div className="media-list-body bg-white b-1">
-                          { _services.map( (service, index) => {
-                              return <EsbService key={index} service={service} />
-                            } )
-                          }
-                          <nav>
-                            <ul className="pagination pagination-info">
+                          <div className="media-list-body bg-white b-1 esbList">
+                            <AutoSizer>
                               {
-                                [1,2,3].map( pageNumber => {
+                                ({height, width}) => (
 
-                                  var pageNumberClassName = classNames('page-item', {
-                                    'active': pageNumber == this.state.currentPage
-                                  });
+                                  <List ref={ c => { this.vServicesList = c; }}
+                                    width={width}
+                                    height={height}
+                                    autoHeight={true}
+                                    rowHeight={60}
+                                    rowCount={_services.length}
+                                    rowRenderer={this.rowRenderer}
+                                  />
 
-                                  return <li key={pageNumber} className={pageNumberClassName}
-                                              onClick={()=>this.pageClicked(pageNumber)} >
-                                            <div className="page-link">{pageNumber}</div>
-                                         </li>
-
-                                })
+                                )
                               }
-                            </ul>
-                          </nav>
+                            </AutoSizer>
+                            <nav>
+                              <ul className="pagination pagination-info">
+                                {
+                                  [1,2,3].map( pageNumber => {
+
+                                    var pageNumberClassName = classNames('page-item', {
+                                      'active': pageNumber == this.state.currentPage
+                                    });
+
+                                    return <li key={pageNumber} className={pageNumberClassName}
+                                                onClick={()=>this.pageClicked(pageNumber)} >
+                                              <div className="page-link">{pageNumber}</div>
+                                           </li>
+
+                                  })
+                                }
+                              </ul>
+                            </nav>
                           </div>
                         </div>
                         <div className="card tab-pane fade" id="tab2">
