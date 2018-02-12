@@ -87,7 +87,7 @@ class EsbService extends React.Component {
 
     let service = this.props.service;
 
-    return (<div className="media align-items-center">
+    return (<div className="media align-items-center bg-white b-1">
               <a className="flexbox align-items-center flex-grow gap-items">
                 <div className="media-body text-truncate">
                   <h6>{service.name}</h6>
