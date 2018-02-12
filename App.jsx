@@ -12,7 +12,6 @@ class AppLayout extends React.Component {
               <Navigation />
               <Header userName='Oleg Kleiman'/>
               <MainContent />
-              <Footer />
             </div>);
   }
 
