@@ -87,18 +87,20 @@ class Navigation extends React.Component {
 
                         if( link.type == 'menu-divider' ) {
                             linkClassName = link.type;
-                            return (<li key={index+1} className={linkClassName} />)
+                            return (<li key={index} className={linkClassName} />)
                         } else {
 
-                          //if( link.badge )
-                          //<span className="badge badge-pill badge-danger">3</span>
+                          let badge = ( link.badge ) ?
+                            <span className="badge badge-pill badge-danger">3</span> :
+                            null;
 
-                          return (<li className={linkClassName}>
-                                    <Link key={index} className="menu-link"
+                          return (<li key={index} className={linkClassName}>
+                                    <Link className="menu-link"
                                       onClick={ () => this.linkClicked(index+1) }
                                       to={link.to}>
                                         <span className={link.icon}></span>
                                         <span className="title">{link.title}</span>
+                                        {badge}
                                     </Link>
                                  </li>)
                         }
