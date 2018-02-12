@@ -92,10 +92,12 @@ class Navigation extends React.Component {
 
 function mapStateToProps(state) {
 
-  if( state.status == 'ERROR' )
+  if( state.status == 'ERROR' ) {
     return {
         status: state.status
     }
+  } else
+      return {};
 }
 
 export default connect(mapStateToProps)(Navigation);
