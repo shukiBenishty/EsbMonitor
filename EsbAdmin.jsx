@@ -58,10 +58,14 @@ class EsbAdmin extends React.Component<Props, State> {
         right: '0px',
         marginTop: '-30px',
         marginRight: '30px',
-        width: '14%'
+        width: '14%',
+        zIndex: '100'
       },
       addServiceCategorySelector: {
         marginTop: "46px"
+      },
+      listTitle: {
+        borderBottom: "0"
       }
     }
 
@@ -267,25 +271,32 @@ class EsbAdmin extends React.Component<Props, State> {
 
                       <div className="col-lg-9 tab-content">
                         <div className="card tab-pane fade in active" id="tab1">
-                          <h4 className="card-title fw-400">Published Services</h4>
-                          <nav>
-                            <ul className="pagination pagination-info">
-                              {
-                                [1,2,3].map( pageNumber => {
+                          <h4 style={this.styles.listTitle}
+                              className="card-title fw-400">Published Services</h4>
 
-                                  var pageNumberClassName = classNames('page-item', {
-                                    'active': pageNumber == this.state.currentServicesPage
-                                  });
+                          <div className="row">
+                          <div className="col-lg-10"></div>
+                          <div className="col-lg-2">
+                              <nav>
+                                <ul className="pagination pagination-circle">
+                                  {
+                                    [1,2,3].map( pageNumber => {
 
-                                  return <li key={pageNumber} className={pageNumberClassName}
-                                              onClick={()=>this.pageClicked(pageNumber)} >
-                                            <div className="page-link">{pageNumber}</div>
-                                         </li>
+                                      var pageNumberClassName = classNames('page-item', {
+                                        'active': pageNumber == this.state.currentServicesPage
+                                      });
 
-                                })
-                              }
-                            </ul>
-                          </nav>
+                                      return <li key={pageNumber} className={pageNumberClassName}
+                                                  onClick={()=>this.pageClicked(pageNumber)} >
+                                                <div className="page-link">{pageNumber}</div>
+                                             </li>
+
+                                    })
+                                  }
+                                </ul>
+                              </nav>
+                          </div>
+                          </div>
 
                             <AutoSizer>
                               {
@@ -307,7 +318,8 @@ class EsbAdmin extends React.Component<Props, State> {
 
                         </div>
                         <div className="card tab-pane fade" id="tab2">
-                          <h4 className="card-title fw-400">Publish Requests</h4>
+                          <h4 style={this.styles.listTitle}
+                              className="card-title fw-400">Publish Requests</h4>
 
                             <AutoSizer>
                               {
