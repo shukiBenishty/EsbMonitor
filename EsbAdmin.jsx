@@ -30,7 +30,8 @@ type Props = {
 
 type State = {
   servicePanelVisible: boolean,
-  selectedCategory: Object
+  selectedCategory: Object,
+  currentPage: number
 }
 
 class EsbAdmin extends React.Component<Props, State> {
@@ -46,7 +47,8 @@ class EsbAdmin extends React.Component<Props, State> {
       servicePanelVisible: false,
       selectedCategory: {},
       selectedCategoryForNewService: {},
-      categories: []
+      categories: [],
+      currentPage: 1
     };
 
     this.styles = {
@@ -133,7 +135,10 @@ class EsbAdmin extends React.Component<Props, State> {
 
     this.props.relay.refetch(
       (prev) => (
-        { categoryId: newCategory ? newCategory.value : null }
+        {
+          categoryId: newCategory ? newCategory.value : null,
+          pageSize: 10
+        }
       ),
       null,
       null,
@@ -191,16 +196,25 @@ class EsbAdmin extends React.Component<Props, State> {
             </React.Fragment>)
   }
 
-  pageClicked() {
+  pageClicked(pageNumber: number) {
 
     this.props.relay.refetch(
-      null,
+      (prev) => (
+        {
+          page: pageNumber,
+          pageSize: 10
+        }
+      ),
       null,
       null,
       { force: false } // Network layer for this app is configured to use cache (vis QueryResponseCache)
                        // This parameter has the meaning for it.
                        // Although it is redundant here because the default is false.
     );
+
+    this.setState({
+      currentPage: pageNumber
+    })
 
   }
 
@@ -265,15 +279,20 @@ class EsbAdmin extends React.Component<Props, State> {
                           }
                           <nav>
                             <ul className="pagination pagination-info">
-                              <li className="page-item active" onClick={this.pageClicked}>
-                                <div className="page-link" href="#">1</div>
-                              </li>
-                              <li className="page-item" onClick={this.pageClicked}>
-                                <div className="page-link" href="#">2</div>
-                              </li>
-                              <li className="page-item" onClick={this.pageClicked}>
-                                <div className="page-link" href="#">3</div>
-                              </li>
+                              {
+                                [1,2,3].map( pageNumber => {
+
+                                  var pageNumberClassName = classNames('page-item', {
+                                    'active': pageNumber == this.state.currentPage
+                                  });
+
+                                  return <li className={pageNumberClassName}
+                                              onClick={()=>this.pageClicked(pageNumber)} >
+                                            <div className="page-link">{pageNumber}</div>
+                                         </li>
+
+                                })
+                              }
                             </ul>
                           </nav>
                           </div>
@@ -359,9 +378,11 @@ graphql`
   fragment EsbAdmin_repository on Repository
   @argumentDefinitions(
     categoryId: { type: Int }
+    page: { type: Int }
+    pageSize: { type: Int, defaultValue: 10}
   )
   {
-    services (categoryId: $categoryId){
+    services (categoryId: $categoryId, page: $page, pageSize: $pageSize){
       ...EsbService_service
     }
     serviceRequests {
@@ -374,9 +395,17 @@ graphql`
 }
 `,
 graphql`
-  query EsbAdmin_Query ($categoryId: Int) {
+  query EsbAdmin_Query
+  (
+    $categoryId: Int
+    $page: Int
+    $pageSize: Int
+  )
+  {
     repository {
-    	...EsbAdmin_repository @arguments(categoryId: $categoryId)
+    	...EsbAdmin_repository @arguments(categoryId: $categoryId,
+                                        page: $page,
+                                        pageSize: $pageSize)
     }
   }
 `
