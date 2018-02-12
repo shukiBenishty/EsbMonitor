@@ -137,6 +137,7 @@ class EsbAdmin extends React.Component<Props, State> {
       (prev) => (
         {
           categoryId: newCategory ? newCategory.value : null,
+          page: this.state.currentPage,
           pageSize: 10
         }
       ),
@@ -201,6 +202,7 @@ class EsbAdmin extends React.Component<Props, State> {
     this.props.relay.refetch(
       (prev) => (
         {
+          categoryId: this.state.selectedCategory ? this.state.selectedCategory.value : null,
           page: pageNumber,
           pageSize: 10
         }
@@ -286,7 +288,7 @@ class EsbAdmin extends React.Component<Props, State> {
                                     'active': pageNumber == this.state.currentPage
                                   });
 
-                                  return <li className={pageNumberClassName}
+                                  return <li key={pageNumber} className={pageNumberClassName}
                                               onClick={()=>this.pageClicked(pageNumber)} >
                                             <div className="page-link">{pageNumber}</div>
                                          </li>
@@ -378,7 +380,7 @@ graphql`
   fragment EsbAdmin_repository on Repository
   @argumentDefinitions(
     categoryId: { type: Int }
-    page: { type: Int }
+    page: { type: Int, defaultValue: 1 }
     pageSize: { type: Int, defaultValue: 10}
   )
   {
