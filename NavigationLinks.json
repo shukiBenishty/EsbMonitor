@@ -11,7 +11,7 @@
   "to": "/realtime",
   "title": "Realtime",
   "icon": "icon ti-layout-list-thumb",
-  "badge": { "count": 4, "type": "badge-danger"}
+  "badge": { "type": "badge-danger"}
 }, {
   "id": 3,
   "type": "menu-item",
