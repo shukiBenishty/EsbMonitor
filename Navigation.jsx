@@ -3,46 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
-const links = [{
-  id: 1,
-  type: 'menu-item',
-  to: '/',
-  title: 'Dashboard',
-  icon: 'icon ti-dashboard',
-  badge: null
-}, {
-  id: 2,
-  type: 'menu-item',
-  to: '/realtime',
-  title: 'Realtime',
-  icon: 'icon ti-layout-list-thumb',
-  badge: { count: 3, type: 'badge-danger'}
-}, {
-  id: 3,
-  type: 'menu-item',
-  to: '/stat',
-  title: 'Stats',
-  icon: 'icon ti-pulse',
-  badge: null
-}, {
-  id: 4,
-  type: 'menu-item',
-  to: '/analytics',
-  title: 'Analytics',
-  icon: 'icon ti-layers-alt',
-  badge: null
-}, {
-  id: 5,
-  type: 'menu-divider'
-}, {
-  id: 6,
-  type: 'menu-item',
-  to: '/admin',
-  title: 'Admin',
-  icon: 'icon ti-settings',
-  badge: null
-}
-]
+import navigationLinks from './NavigationLinks.json'
 
 class Navigation extends React.Component {
 
@@ -79,7 +40,7 @@ class Navigation extends React.Component {
                 <nav className="sidebar-navigation ps-container">
                   <ul className="menu menu-sm">
                   {
-                    links.map( (link, index) => {
+                    navigationLinks.map( (link, index) => {
 
                         let linkClassName = classNames('menu-item', {
                           'active': link.id == this.state.currentLink
@@ -90,9 +51,11 @@ class Navigation extends React.Component {
                             return (<li key={index} className={linkClassName} />)
                         } else {
 
-                          let badge = ( link.badge ) ?
-                            <span className="badge badge-pill badge-danger">3</span> :
-                            null;
+                          let badge = null;
+                          if( link.badge ) {
+                            let badgeClasName = 'badge badge-pill ' + link.badge.type;
+                            badge = <span className={badgeClasName}>{link.badge.count}</span>
+                          }
 
                           return (<li key={index} className={linkClassName}>
                                     <Link className="menu-link"
