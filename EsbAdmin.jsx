@@ -69,7 +69,6 @@ class EsbAdmin extends React.Component<Props, State> {
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
     this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
-    this.renderRelayQuery = this.renderRelayQuery.bind(this);
 
     this.pageClicked = this.pageClicked.bind(this);
   }
@@ -153,48 +152,6 @@ class EsbAdmin extends React.Component<Props, State> {
     this.setState({
       selectedCategoryForNewService: newCategory
     });
-  }
-
-  renderRelayQuery({error, props, retry}) {
-
-    if( error )
-      return <div>Error</div>;
-
-    if( !props ) {
-      return <div>Loading...</div>
-    }
-
-    let categories = props.repository.categories.map( (category, index) => {
-        return {
-          value: category.objectId,
-          label: category.name
-        }
-    })
-
-    this.setState({
-      categories: categories
-    });
-
-    return (<React.Fragment>
-              <div className="card tab-pane fade in active" id="tab1">
-                <h4 className="card-title fw-400">Published Services</h4>
-                <div className="media-list-body bg-white b-1">
-                { props.repository.services.map( (service, index) => {
-                    return <EsbService key={index} service={service} />
-                  } )
-                }
-                </div>
-              </div>
-              <div className="card tab-pane fade" id="tab2">
-                <h4 className="card-title fw-400">Publish Requests</h4>
-                <div className="media-list-body bg-white b-1">
-                { props.repository.serviceRequests.map( (request, index) => {
-                    return <EsbServiceRequest key={index} serviceRequest={request} />
-                  } )
-                }
-                </div>
-              </div>
-            </React.Fragment>)
   }
 
   pageClicked(pageNumber: number) {
