@@ -10,12 +10,6 @@ import EsbStatus from './EsbStatus';
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
 
-const list = [
-  { name: 'Brian Vaughn', description: 'Software engineer' },
-  { name: 'Oleg', description: 'Software engineer' }
-  // And so on...
-];
-
 type Props = {
   eventId: number,
   issued: Date
