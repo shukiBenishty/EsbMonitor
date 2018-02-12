@@ -14,6 +14,9 @@ class Navigation extends React.Component {
       logoStyle: {
         width: "48px",
         height: "48px"
+      },
+      navDivider: {
+        marginTop: "1px"
       }
     }
 
@@ -37,7 +40,7 @@ class Navigation extends React.Component {
                   <img style={this.styles.logoStyle}
                         src='./assets/images/reactlogo.png' alt='ESB Monitor Logo' />
                 </header>
-                <nav className="sidebar-navigation ps-container">
+                <nav style={this.styles.navDivider} className="sidebar-navigation ps-container">
                   <ul className="menu menu-sm">
                   {
                     navigationLinks.map( (link, index) => {
