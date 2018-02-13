@@ -20,5 +20,5 @@ fetch('http://localhost:3001/graphql', {
   .then(res => {
     console.log(res);
     const schemaString = printSchema(buildClientSchema(res.data));
-    fs.writeFileSync('./schemas/schema2.graphql', schemaString.replace("\"\"\"", ""));
+    fs.writeFileSync('./schemas/schema2.graphql', schemaString);
   });
