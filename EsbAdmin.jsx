@@ -10,16 +10,10 @@ import EsbServiceRequest from './EsbServiceRequest';
 import environment from './Environment';
 
  const addServiceMutation = graphql`
-   mutation EsbAdminMutation {
-     addService(input: {
-        name: "oneService",
-        categoryId: 2,
-        address: "http://sss",
-        description: "descripion",
-        sla: 200,
-        soapAction: "uri://dddd",
-        domain: AZURE
-     }) {
+   mutation EsbAdminMutation(
+     $input: ServiceInput
+   ) {
+     addService(input: $input) {
        objectId
        created
      }
@@ -48,6 +42,7 @@ class EsbAdmin extends React.Component<Props, State> {
       servicePanelVisible: false,
       selectedCategory: {},
       selectedCategoryForNewService: {},
+      domainForNewService: {},
       categories: [],
       currentServicesPage: 1
     };
@@ -74,6 +69,7 @@ class EsbAdmin extends React.Component<Props, State> {
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
     this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
+    this._addServiceDomainChanged = this._addServiceDomainChanged.bind(this);
 
     this.pageClicked = this.pageClicked.bind(this);
 
@@ -85,18 +81,27 @@ class EsbAdmin extends React.Component<Props, State> {
     // TBD
     console.log('Adding new service');
 
+    // TBD: Validate the following fields
+    // this._serviceName.value
+    // this._serviceCategory.value
+    // this._serviceAddress.value
+    // this._expectedSLA.value
+
+
     this.setState({
         servicePanelVisible: false
     })
 
+    let domainName = ( this.state.domainForNewService.value == 1 ) ? 'AZURE' : 'DOM';
     const variables =
     {
       input: {
-        name: "s",
-        categoryId: 2,
-        address: "http://sss",
+        name: this._serviceName.value,
+        categoryId: this.state.selectedCategoryForNewService.value,
+        address: this._serviceAddress.value,
         description: "descripion",
-        sla: 200,
+        sla: this._expectedSLA.value,
+        domain: domainName,
         affiliations: ["Digitel", "two"]
       },
     };
@@ -162,6 +167,12 @@ class EsbAdmin extends React.Component<Props, State> {
     });
   }
 
+  _addServiceDomainChanged(newDomain) {
+    this.setState({
+      domainForNewService: newDomain
+    })
+  }
+
   pageClicked(pageNumber: number) {
 
     this.props.relay.refetch(
@@ -220,6 +231,14 @@ class EsbAdmin extends React.Component<Props, State> {
 
   render() {
 
+    let _domains = [{
+      value: 1,
+      label: 'Extenal'
+    }, {
+      value: 0,
+      label: 'Internal'
+    }];
+
     let _categories = this.props.categories.map( (category, index) => {
         return {
           value: category.objectId,
@@ -239,6 +258,9 @@ class EsbAdmin extends React.Component<Props, State> {
 
     const { selectedCategoryForNewService } = this.state;
     const _newServiceCategoryValue = selectedCategoryForNewService && selectedCategoryForNewService.value;
+
+    const { domainForNewService } = this.state
+    const _newServiceDomain = domainForNewService && domainForNewService.value;
 
     return (<main className="main-container maxHeight">
                 <div className="main-content maxHeight">
@@ -361,12 +383,25 @@ class EsbAdmin extends React.Component<Props, State> {
                     <div className="quickview-block form-type-material">
                       <h6>Service Details</h6>
                       <div className="form-group">
-                        <input type="text" className="form-control" />
+                        <input type="text" className="form-control"
+                                ref={ input => this._serviceName = input } />
                         <label>Name</label>
                       </div>
                       <div className="form-group">
-                        <input type="text" className="form-control" />
+                        <input type="text" className="form-control"
+                                ref={ input => this._serviceAddress = input } />
                         <label>Address (URL)</label>
+                      </div>
+                      <div className="form-group">>
+                        <Select
+                          ref={ input => this._serviceDomain = input }
+                          name="addServiceDomainSelector"
+                          placeholder="Select domain"
+                          options={_domains}
+                          value={_newServiceDomain}
+                          onChange={this._addServiceDomainChanged}
+                        />
+                        <label>Domain</label>
                       </div>
                       <div>
                         <label className="switch">
@@ -380,16 +415,18 @@ class EsbAdmin extends React.Component<Props, State> {
                       </div>
                       <div className="form-group">
                         <Select
+                          ref={ input => this._serviceCategory = input }
                           style={this.styles.addServiceCategorySelector}
                           name="addServiceCategoriesSelector"
                           placeholder="Select category"
-                          options={this.state.categories}
+                          options={_categories}
                           value={_newServiceCategoryValue}
                           onChange={this._addServiceCategoryChanged} />
                         <label>Category</label>
                       </div>
                       <div className="form-group">
-                        <input type="text" className="form-control" />
+                        <input type="text" className="form-control"
+                                ref={ input => this._expectedSLA = input }/>
                         <label>Expected SLA</label>
                       </div>
                     </div>
