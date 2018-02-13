@@ -6,9 +6,15 @@
   "scripts": {
     "start": "nodemon server.js --exec babel-node",
     "start-mock": "nodemon server-mock.js --exec babel-node",
-    "relay": "relay-compiler --src ./ --schema schemas/schema.graphql --extensions=jsx",
+    "relay": "node scripts/getSchema.js && relay-compiler --src ./ --schema schemas/schema.graphql --extensions=jsx",
     "build": "webpack -d --watch",
-    "test": "jest"
+    "test": "jest",
+    "get-schema": "node scripts/getSchema.js"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+                            "src/**/*.{js,jsx}"
+                            ]
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +28,7 @@
     "classnames": "^2.2.5",
     "css-loader": "^0.28.7",
     "fs": "0.0.1-security",
+    "glamor": "^2.20.40",
     "graphql": "^0.12.3",
     "js-search": "^1.4.2",
     "lodash": "^4.17.4",
@@ -38,6 +45,7 @@
     "react-relay": "^1.4.1",
     "react-router-dom": "^4.2.2",
     "react-select": "^1.2.1",
+    "react-toastify": "^3.3.2",
     "react-virtualized": "^9.15.0",
     "redux": "^3.7.2",
     "relay-devtools": "^1.4.0",
