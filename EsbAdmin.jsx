@@ -420,7 +420,7 @@ class EsbAdmin extends React.Component<Props, State> {
                               hintText="URL"
                               floatingLabelText="Address (URL)"/>
                       </div>
-                      <div className="form-group">>
+                      <div className="form-group">
                         <Select
                           ref={ input => this._serviceDomain = input }
                           name="addServiceDomainSelector"
