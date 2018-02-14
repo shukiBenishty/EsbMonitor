@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import environment from './Environment';
 import EsbAdmin from './EsbAdmin';
@@ -27,9 +28,10 @@ class EsbAdminRenderer extends React.Component {
 
       let categories = props.repository.categories;
 
-      return(<EsbAdmin repository={props.repository}
-                       categories={categories}
-              />
+      return(<MuiThemeProvider>
+                <EsbAdmin repository={props.repository}
+                       categories={categories} />
+             </MuiThemeProvider>
             )
     }
 
