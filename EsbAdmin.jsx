@@ -3,7 +3,10 @@ import React from 'react';
 import { createRefetchContainer, commitMutation, graphql } from 'react-relay';
 import { AutoSizer, List } from 'react-virtualized';
 import Select from 'react-select';
+import { ToastContainer, toast } from 'react-toastify';
+import { css } from 'glamor';
 import classNames from 'classnames';
+import TextField from 'material-ui/TextField';
 
 import EsbService from './EsbService';
 import EsbServiceRequest from './EsbServiceRequest';
@@ -78,9 +81,6 @@ class EsbAdmin extends React.Component<Props, State> {
   }
 
   _addService() {
-    // TBD
-    console.log('Adding new service');
-
     // TBD: Validate the following fields
     // this._serviceName.value
     // this._serviceCategory.value
@@ -92,7 +92,6 @@ class EsbAdmin extends React.Component<Props, State> {
         servicePanelVisible: false
     })
 
-    let domainName = ( this.state.domainForNewService.value == 1 ) ? 'AZURE' : 'DOM';
     const variables =
     {
       input: {
@@ -101,23 +100,49 @@ class EsbAdmin extends React.Component<Props, State> {
         address: this._serviceAddress.value,
         description: "descripion",
         sla: this._expectedSLA.value,
-        domain: domainName,
+        environment: this.state.domainForNewService.label,
         affiliations: ["Digitel", "two"]
       },
     };
 
+    const toastId = toast("Adding Service to Repository", { autoClose: false});
     commitMutation(
-      environment,
+      this.props.relay.environment,
       {
           mutation: addServiceMutation,
           variables,
           updater: (store) => {
-            console.log(store);
+
+            let root = store.getRoot();
+            console.log(root);
+
           },
           onCompleted: (response, errors) => {
-            console.log(response);
+            if( errors ) {
+              toast.error(errors);
+            } else {
+              toast.update(toastId,
+                            {
+                              render: "Service Request with ID " + response.addService.objectId + " was added",
+                              type: toast.TYPE.SUCCESS,
+                              autoClose: 3000,
+                              className: css({
+                                transform: "rotateY(360deg)",
+                                transition: "transform 0.6sec"
+                              })
+                            });
+            }
           },
-          onError: err => console.error(err)
+          onError: err => {
+            console.log(err.message);
+            toast.update(toastId,
+              {
+                render: err.message,
+                type: toast.TYPE.ERROR,
+                autoClose: 5000
+              })
+          }
+
       });
   }
 
@@ -233,7 +258,7 @@ class EsbAdmin extends React.Component<Props, State> {
 
     let _domains = [{
       value: 1,
-      label: 'Extenal'
+      label: 'External'
     }, {
       value: 0,
       label: 'Internal'
@@ -263,6 +288,7 @@ class EsbAdmin extends React.Component<Props, State> {
     const _newServiceDomain = domainForNewService && domainForNewService.value;
 
     return (<main className="main-container maxHeight">
+                <ToastContainer />
                 <div className="main-content maxHeight">
                   <div className="media-list media-list-divided media-list-hover">
                     <header className="media-list-header bg-transparent b-0 py-16 pl-20">
@@ -383,14 +409,16 @@ class EsbAdmin extends React.Component<Props, State> {
                     <div className="quickview-block form-type-material">
                       <h6>Service Details</h6>
                       <div className="form-group">
-                        <input type="text" className="form-control"
-                                ref={ input => this._serviceName = input } />
-                        <label>Name</label>
+                        <TextField
+                              ref={ input => this._serviceName = input }
+                              hintText="Name"
+                              floatingLabelText="Serice's name"/>
                       </div>
                       <div className="form-group">
-                        <input type="text" className="form-control"
-                                ref={ input => this._serviceAddress = input } />
-                        <label>Address (URL)</label>
+                        <TextField
+                              ref={ input => this._serviceAddress = input }
+                              hintText="URL"
+                              floatingLabelText="Address (URL)"/>
                       </div>
                       <div className="form-group">>
                         <Select
@@ -425,9 +453,10 @@ class EsbAdmin extends React.Component<Props, State> {
                         <label>Category</label>
                       </div>
                       <div className="form-group">
-                        <input type="text" className="form-control"
-                                ref={ input => this._expectedSLA = input }/>
-                        <label>Expected SLA</label>
+                        <TextField
+                              ref={ input => this._expectedSLA = input }
+                              hintText="Number of milliseconds"
+                              floatingLabelText="Expected SLA"/>
                       </div>
                     </div>
                   </div>
@@ -460,7 +489,7 @@ graphql`
       objectId
       operationName
       address
-      domain
+      environment
       created
     }
 }
