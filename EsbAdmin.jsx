@@ -59,7 +59,7 @@ class EsbAdmin extends React.Component<Props, State> {
         width: '14%',
         zIndex: '100'
       },
-      addServiceCategorySelector: {
+      addServiceSelector: {
         marginTop: "46px"
       },
       listTitle: {
@@ -423,6 +423,7 @@ class EsbAdmin extends React.Component<Props, State> {
                       <div className="form-group">
                         <Select
                           ref={ input => this._serviceDomain = input }
+                          style={this.styles.addServiceSelector}
                           name="addServiceDomainSelector"
                           placeholder="Select domain"
                           options={_domains}
@@ -444,7 +445,7 @@ class EsbAdmin extends React.Component<Props, State> {
                       <div className="form-group">
                         <Select
                           ref={ input => this._serviceCategory = input }
-                          style={this.styles.addServiceCategorySelector}
+                          style={this.styles.addServiceSelector}
                           name="addServiceCategoriesSelector"
                           placeholder="Select category"
                           options={_categories}
