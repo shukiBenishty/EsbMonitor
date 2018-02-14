@@ -13,8 +13,8 @@
   },
   "jest": {
     "collectCoverageFrom": [
-                            "src/**/*.{js,jsx}"
-                            ]
+      "src/**/*.{js,jsx}"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -32,6 +32,7 @@
     "graphql": "^0.12.3",
     "js-search": "^1.4.2",
     "lodash": "^4.17.4",
+    "material-ui": "^0.20.0",
     "moment": "^2.20.1",
     "net": "^1.0.2",
     "no-kafka": "^3.2.8",
