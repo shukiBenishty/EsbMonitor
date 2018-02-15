@@ -161,7 +161,13 @@ class EsbAdmin extends React.Component<Props, State> {
             },
             onCompleted: (response, errors) => {
               if( errors ) {
-                toast.error(errors);
+                toast.update(toastId,
+                              {
+                                render: errors[0].message,
+                                type: toast.TYPE.ERROR,
+                                autoClose: 5000,
+                              }
+                            );
               } else {
                 toast.update(toastId,
                               {
