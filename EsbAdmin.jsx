@@ -45,9 +45,15 @@ class EsbAdmin extends React.Component<Props, State> {
       servicePanelVisible: false,
       selectedCategory: {},
       selectedCategoryForNewService: {},
-      domainForNewService: {},
+      environmentForNewService: {},
       categories: [],
-      currentServicesPage: 1
+      currentServicesPage: 1,
+
+      isNewServiceNameValid: true,
+      isNewServiceAddressValid: true,
+      isNewServiceCategoryIdValid: true,
+      isNewServiceSLAValid: true,
+      isNewServiceEnvironment: true
     };
 
     this.styles = {
@@ -59,11 +65,22 @@ class EsbAdmin extends React.Component<Props, State> {
         width: '14%',
         zIndex: '100'
       },
-      addServiceSelector: {
-        marginTop: "46px"
-      },
       listTitle: {
         borderBottom: "0"
+      },
+      textFieldStyle: {
+        marginTop: "-20px"
+      },
+      formItem: {
+        alignSelf: "flex-end",
+        color: "rgba(77, 82, 89, 0.8)"
+      },
+      formSelector: {
+        paddingLeft: "0px",
+        paddingRight: "0px"
+      },
+      formRow: {
+        marginTop: "18px"
       }
     }
 
@@ -72,7 +89,7 @@ class EsbAdmin extends React.Component<Props, State> {
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
     this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
-    this._addServiceDomainChanged = this._addServiceDomainChanged.bind(this);
+    this._addServiceEnvironmentChanged = this._addServiceEnvironmentChanged.bind(this);
 
     this.pageClicked = this.pageClicked.bind(this);
 
@@ -81,69 +98,95 @@ class EsbAdmin extends React.Component<Props, State> {
   }
 
   _addService() {
-    // TBD: Validate the following fields
-    // this._serviceName.value
-    // this._serviceCategory.value
-    // this._serviceAddress.value
-    // this._expectedSLA.value
 
+    let _serviceNameValid = this._serviceName.value != null
+                            && this._serviceName.value != '';
+    let _serviceCategoryValid = this.state.selectedCategoryForNewService != null
+                                && this.state.selectedCategoryForNewService.value != null
+                                && this.state.selectedCategoryForNewService.value != '';
+    let _serviceEnvironmentValid = this.state.environmentForNewService != null
+                                  && this.state.environmentForNewService.value != null
+                                && this.state.environmentForNewService.value != ''
+    let _serviceNameAddressValid = this._serviceAddress.value != null
+                              && this._serviceAddress.value != '';
+    let _serviceSlaValid = this._expectedSLA.value != null
+                            && this._expectedSLA.value != '';
 
     this.setState({
-        servicePanelVisible: false
-    })
+      isNewServiceNameValid:  _serviceNameValid,
+      isNewServiceAddressValid: _serviceNameAddressValid,
+      isNewServiceCategoryIdValid: _serviceCategoryValid,
+      isNewServiceSLAValid: _serviceSlaValid,
+      isNewServiceEnvironment: _serviceEnvironmentValid
+    });
 
-    const variables =
-    {
-      input: {
-        name: this._serviceName.value,
-        categoryId: this.state.selectedCategoryForNewService.value,
-        address: this._serviceAddress.value,
-        description: "descripion",
-        sla: this._expectedSLA.value,
-        environment: this.state.domainForNewService.label,
-        affiliations: ["Digitel", "two"]
-      },
-    };
+    // End of validaton
 
-    const toastId = toast("Adding Service to Repository", { autoClose: false});
-    commitMutation(
-      this.props.relay.environment,
+    if( _serviceNameValid &&
+        _serviceCategoryValid &&
+        _serviceNameAddressValid &&
+        _serviceSlaValid &&
+        _serviceEnvironmentValid ) {
+
+      this.setState({
+          servicePanelVisible: false
+      })
+
+      let servicePattern = this._servicePattern.checked ?
+                           "Soap" : "Rest" ;
+
+      const variables =
       {
-          mutation: addServiceMutation,
-          variables,
-          updater: (store) => {
+        input: {
+          name: this._serviceName.value,
+          categoryId: this.state.selectedCategoryForNewService.value,
+          address: this._serviceAddress.value,
+          sla: this._expectedSLA.value,
+          environment: this.state.environmentForNewService.label,
+          pattern: servicePattern
+        },
+      };
 
-            let root = store.getRoot();
-            console.log(root);
+      const toastId = toast("Adding Service to Repository", { autoClose: false});
+      commitMutation(
+        this.props.relay.environment,
+        {
+            mutation: addServiceMutation,
+            variables,
+            updater: (store) => {
 
-          },
-          onCompleted: (response, errors) => {
-            if( errors ) {
-              toast.error(errors);
-            } else {
+              let root = store.getRoot();
+              console.log(root);
+
+            },
+            onCompleted: (response, errors) => {
+              if( errors ) {
+                toast.error(errors);
+              } else {
+                toast.update(toastId,
+                              {
+                                render: "Service Request with ID " + response.addService.objectId + " was added",
+                                type: toast.TYPE.SUCCESS,
+                                autoClose: 3000,
+                                className: css({
+                                  transform: "rotateY(360deg)",
+                                  transition: "transform 0.6sec"
+                                })
+                              });
+              }
+            },
+            onError: err => {
+              console.log(err.message);
               toast.update(toastId,
-                            {
-                              render: "Service Request with ID " + response.addService.objectId + " was added",
-                              type: toast.TYPE.SUCCESS,
-                              autoClose: 3000,
-                              className: css({
-                                transform: "rotateY(360deg)",
-                                transition: "transform 0.6sec"
-                              })
-                            });
+                {
+                  render: err.message,
+                  type: toast.TYPE.ERROR,
+                  autoClose: 5000
+                })
             }
-          },
-          onError: err => {
-            console.log(err.message);
-            toast.update(toastId,
-              {
-                render: err.message,
-                type: toast.TYPE.ERROR,
-                autoClose: 5000
-              })
-          }
 
-      });
+        });
+    }
   }
 
   _openServicePanel() {
@@ -192,9 +235,9 @@ class EsbAdmin extends React.Component<Props, State> {
     });
   }
 
-  _addServiceDomainChanged(newDomain) {
+  _addServiceEnvironmentChanged(newEnvironment) {
     this.setState({
-      domainForNewService: newDomain
+      environmentForNewService: newEnvironment
     })
   }
 
@@ -256,7 +299,7 @@ class EsbAdmin extends React.Component<Props, State> {
 
   render() {
 
-    let _domains = [{
+    let _environments = [{
       value: 1,
       label: 'External'
     }, {
@@ -284,8 +327,24 @@ class EsbAdmin extends React.Component<Props, State> {
     const { selectedCategoryForNewService } = this.state;
     const _newServiceCategoryValue = selectedCategoryForNewService && selectedCategoryForNewService.value;
 
-    const { domainForNewService } = this.state
-    const _newServiceDomain = domainForNewService && domainForNewService.value;
+    const { environmentForNewService } = this.state
+    const _newServiceEnvironment= environmentForNewService && environmentForNewService.value;
+
+    // Validation errors
+    let errorMessage = !this.state.isNewServiceNameValid ?
+                       "This field is requied" : "";
+    let categoriesSelectorClassNames = classNames('col col-9', {
+         'inputValidationError': !this.state.isNewServiceCategoryIdValid
+    });
+    let environmentSelectorClassNames = classNames('col col-9', {
+        'inputValidationError': !this.state.isNewServiceEnvironment
+    });
+
+    let errorMessageAddress = !this.state.isNewServiceAddressValid ?
+                              "This field is requied" : "";
+    let errorMessageSLA = !this.state.isNewServiceSLAValid ?
+                              "This field is requied" : "";
+    // End od validation errors
 
     return (<main className="main-container maxHeight">
                 <ToastContainer />
@@ -408,54 +467,104 @@ class EsbAdmin extends React.Component<Props, State> {
                   <div className="quickview-body ps-container ps-theme-default ps-active-y">
                     <div className="quickview-block form-type-material">
                       <h6>Service Details</h6>
-                      <div className="form-group">
-                        <TextField
-                              ref={ input => this._serviceName = input }
-                              hintText="Name"
-                              floatingLabelText="Serice's name"/>
-                      </div>
-                      <div className="form-group">
-                        <TextField
-                              ref={ input => this._serviceAddress = input }
-                              hintText="URL"
-                              floatingLabelText="Address (URL)"/>
-                      </div>
-                      <div className="form-group">
-                        <Select
-                          ref={ input => this._serviceDomain = input }
-                          style={this.styles.addServiceSelector}
-                          name="addServiceDomainSelector"
-                          placeholder="Select domain"
-                          options={_domains}
-                          value={_newServiceDomain}
-                          onChange={this._addServiceDomainChanged}
-                        />
-                        <label>Domain</label>
+                      <div>
+                         <TextField
+                                type='text'
+                                style={this.styles.textFieldStyle}
+                                hintText="Name"
+                                floatingLabelText="Serice's name"
+                                fullWidth={true}
+                                errorText = {errorMessage}
+                                ref={
+                                  (el) => {
+                                    if( el )
+                                      this._serviceName = el.input;
+                                  }
+                                } />
                       </div>
                       <div>
+                        <TextField
+                              style={this.styles.textFieldStyle}
+                              ref={
+                                  (el) => {
+                                    if( el )
+                                      this._serviceAddress = el.input
+                                  }
+                              }
+                              fullWidth={true}
+                              hintText="URL"
+                              errorText = { errorMessageAddress }
+                              floatingLabelText="Address (URL)"/>
+                      </div>
+
+                      <div style={this.styles.formRow}>
                         <label className="switch">
-                          <input type="checkbox" />
+                          <input type="checkbox"
+                                  ref={
+                                    el => {
+                                      if( el )
+                                        this._servicePattern = el;
+                                    }
+                                  }/>
                           <span className="switch-indicator">
                           </span>
                           <span className="switch-description">
-                            Old fashion (SOAP)
+                            Old Fashion (SOAP)
                           </span>
                         </label>
                       </div>
-                      <div className="form-group">
+
+                      <div className="row" style={this.styles.formRow}>
+                        <label style={this.styles.formItem}
+                               className="col col-3">Environment:</label>
                         <Select
-                          ref={ input => this._serviceCategory = input }
-                          style={this.styles.addServiceSelector}
+                          ref={
+                            el => {
+                              if( el )
+                                this._serviceEnvironment = el ;
+                            }
+                          }
+                          style={this.styles.formSelector}
+                          className={environmentSelectorClassNames}
+                          name="addServiceDomainSelector"
+                          placeholder="Select environment"
+                          options={_environments}
+                          value={_newServiceEnvironment}
+                          onChange={this._addServiceEnvironmentChanged}
+                        />
+
+                      </div>
+                      <div className="row" style={this.styles.formRow}>
+                        <label style={this.styles.formItem}
+                               className="col col-3">Category:</label>
+                        <Select
+                          ref={
+                            el => {
+                              if( el )
+                                this._serviceCategory = el.input.input;
+                            }
+                          }
+                          style={this.styles.formSelector}
+                          className={categoriesSelectorClassNames}
                           name="addServiceCategoriesSelector"
                           placeholder="Select category"
                           options={_categories}
                           value={_newServiceCategoryValue}
                           onChange={this._addServiceCategoryChanged} />
-                        <label>Category</label>
+
                       </div>
-                      <div className="form-group">
+                      <div style={this.styles.formRow}>
                         <TextField
-                              ref={ input => this._expectedSLA = input }
+                              type='number'
+                              style={this.styles.textFieldStyle}
+                              ref={
+                                  (el) => {
+                                    if( el )
+                                      this._expectedSLA = el.input
+                                  }
+                              }
+                              fullWidth={true}
+                              errorText = { errorMessageSLA }
                               hintText="Number of milliseconds"
                               floatingLabelText="Expected SLA"/>
                       </div>
