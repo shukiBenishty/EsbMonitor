@@ -46,9 +46,9 @@ class Dashboard extends React.Component<{}> {
   render() {
 
 		let queryVariables = {
-			totalCallsBefore: 2,
-			totalLatencyBefore: 2,
-			totalErrorsBefore: 2,
+			totalCallsBefore: 1,
+			totalLatencyBefore: 1,
+			totalErrorsBefore: 1,
 			daysBefore: 10,
 			servicesIds: [3,4]
 		}
