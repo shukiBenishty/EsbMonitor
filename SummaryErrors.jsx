@@ -36,11 +36,14 @@ const SummaryErrors = ({title, totals, relay}) => {
 
 export default createFragmentContainer(SummaryErrors,
 graphql`
-fragment SummaryErrors_totals on Runtime {
-  errors(before: 1) {
+fragment SummaryErrors_totals on Runtime
+@argumentDefinitions(
+  before: { type: "Date", defaultValue: 2 }
+)
+{
+  errors(before: $before) {
     date
     value
-    id
   }
 }
 `);
