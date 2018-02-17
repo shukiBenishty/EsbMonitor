@@ -9,9 +9,12 @@ import SummaryErrors from './SummaryErrors';
 import SummaryDistribution from './SummaryDistribution';
 
 const summariesQuery = graphql`
-	query DashboardTotals_Query ($daysBefore: Int, $servicesIds: [Int]!){
+	query DashboardTotals_Query ($totalCallsBefore: Date,
+															 $daysBefore: Int,
+															 $servicesIds: [Int]!)
+ {
 		runtime {
-			...SummaryCalls_totals
+			...SummaryCalls_totals @arguments(before: $totalCallsBefore)
 			...SummaryLatency_totals
 			...SummaryErrors_totals
 			...SummaryDistribution_totals @arguments(daysBefore: $daysBefore,
@@ -41,6 +44,7 @@ class Dashboard extends React.Component<{}> {
   render() {
 
 		let queryVariables = {
+			totalCallsBefore: 2,
 			daysBefore: 10,
 			servicesIds: [3,4]
 		}
