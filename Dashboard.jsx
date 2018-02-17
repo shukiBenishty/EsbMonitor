@@ -2,7 +2,10 @@
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import environment from './Environment';
+
 import SummaryCalls from './SummaryCalls';
+import SummaryLatency from './SummaryLatency';
+import SummaryErrors from './SummaryErrors';
 
 var LineChart = require("react-chartjs").Line;
 
@@ -10,6 +13,7 @@ const summariesQuery = graphql`
 	query DashboardTotals_Query {
 		runtime {
 			...SummaryCalls_totals
+			...SummaryLatency_totals
 		}
 	}
 `;
@@ -53,32 +57,22 @@ var chartOptions = {
 
 class Dashboard extends React.Component<{}> {
 
-  constructor() {
-
-    super();
-
-    this.styles = {
-      progressBar : {
-        width: "65%",
-        height: "4px"
-      }
-    }
-
-  }
 
 	renderSummaries({error, props}) {
 		if( error ) {
 			return <div>{error.message}</div>
 		} else if ( props ) {
-			return <SummaryCalls title='Total Calls' totals={props.runtime} />
+			return <React.Fragment>
+								<SummaryCalls title='Total Calls' totals={props.runtime} />
+								<SummaryLatency title='Latency' />
+								<SummaryErrors title='Errors' />
+						 </React.Fragment>
 		}
 
 		return <div>Loading...</div>
 	}
 
   render() {
-
-		this.styles.progressBar.width = '10%';
 
     return (<main className="main-container">
               <div className="main-content">
@@ -89,45 +83,6 @@ class Dashboard extends React.Component<{}> {
 										variables={{}}
 										render={this.renderSummaries}
 									/>
-                  <div className="col-lg-4">
-                    <div className="card card-body esbCard">
-                      <h6>
-                        <span className="text-uppercase esbCaption">Latency</span>
-                        <span className="float-right">
-                          <a className="btn btn-xs btn-primary" href="#">View</a>
-                        </span>
-                      </h6>
-                      <br />
-                      <p className="fs-28 fw-100">0.13 sec.</p>
-                      <div className="progress">
-                        <div className="progress-bar bg-danger" role="progressbar" style={this.styles.progressBar}>
-                        </div>
-                      </div>
-                      <div className="text-gray fs-12">
-                        <i className="ti-stats-down text-danger mr-1"></i>%18 decrease from last hour
-                      </div>
-
-                    </div>
-                  </div>
-                  <div className="col-lg-4">
-                    <div className="card card-body esbCard">
-                      <h6>
-                        <span className="text-uppercase esbCaption">Errors</span>
-                        <span className="float-right">
-                          <a className="btn btn-xs btn-primary" href="#">View</a>
-                        </span>
-                      </h6>
-                      <br />
-                      <p className="fs-28 fw-100">3</p>
-                      <div className="progress">
-                        <div className="progress-bar bg-danger" role="progressbar" style={this.styles.progressBar}>
-                        </div>
-                      </div>
-                      <div className="text-gray fs-12">
-                        <i className="ti-stats-down text-danger mr-1"></i>%3 decrease from last hour
-                      </div>
-                    </div>
-                  </div>
                   <div className="col-12">
                     <div className="card esbCard">
                       <div className="card-header">
