@@ -88,10 +88,11 @@ export default createFragmentContainer(SummaryDistribution,
 graphql`
   fragment SummaryDistribution_totals on Runtime
 	@argumentDefinitions(
-		daysBefore: { type: "Int", defaultValue: 2}
+		daysBefore: { type: "Int", defaultValue: 2 },
+		servicesIds: { type: "[Int]!", defaultValue: [1,2] }
 	)
 	{
-  	distribution(daysBefore: $daysBefore, servicesIds: [2, 3]) {
+  	distribution(daysBefore: $daysBefore, servicesIds: $servicesIds) {
       labels
       datasets: series { #alias
         label
