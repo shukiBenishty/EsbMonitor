@@ -9,7 +9,7 @@ const SummaryLatency = ({title}) => {
   let progressBarCss = css({
       width: progressBarWidth,
       height: "4px",
-      backgroundColor: "#f96868 !important;"
+      backgroundColor: "#f96868 !important"
   });
 
   return (<div className="col-lg-4">
