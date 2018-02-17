@@ -44,6 +44,25 @@ const SummaryDistribution = ({title, totals, relay}) => {
 
 	let distribution = totals.distribution;
 
+	let datasets = distribution.datasets.map( (ds, index) => {
+
+		return {
+			data: ds.data,
+			label: ds.label,
+			fillColor: "rgba(151,187,205,0.2)",
+			strokeColor: "rgba(151,187,205,1)",
+			pointColor: "rgba(151,187,205,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(151,187,205,1)"
+		}
+	});
+
+	let _chartData = {
+		labels: distribution.labels,
+		datasets: datasets
+	};
+
   return (
     <div className="col-12">
       <div className="card esbCard">
@@ -53,7 +72,7 @@ const SummaryDistribution = ({title, totals, relay}) => {
           </h5>
         </div>
         <div className="card-body">
-          <LineChart data={chartData} options={chartOptions}
+          <LineChart data={_chartData} options={chartOptions}
             width="1100" height="460"/>
         </div>
       </div>
@@ -65,7 +84,7 @@ const SummaryDistribution = ({title, totals, relay}) => {
 export default createFragmentContainer(SummaryDistribution,
 graphql`
   fragment SummaryDistribution_totals on Runtime {
-  	distribution(daysBefore: 10, servicesIds: [1, 2, 3]) {
+  	distribution(daysBefore: 10, servicesIds: [2, 3]) {
       labels
       datasets: series { #alias
         label
