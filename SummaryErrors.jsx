@@ -2,14 +2,14 @@ import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { css } from 'glamor';
 
-const SummaryErrors = ({title}) => {
+const SummaryErrors = ({title, totals, relay}) => {
 
   let progressBarWidth = "14%";
 
   let progressBarCss = css({
       width: progressBarWidth,
       height: "4px",
-      backgroundColor: "#f96868 !important;"
+      backgroundColor: "#f96868 !important"
   });
 
   return (<div className="col-lg-4">
