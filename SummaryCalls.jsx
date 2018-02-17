@@ -9,7 +9,7 @@ const SummaryCalls = ({title, totals, relay}) => {
 
      let percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
 
-    let progressBarWidth = "10%";
+    let progressBarWidth = percentage + '%';
 
     let progressBarCss = css({
         width: progressBarWidth,
