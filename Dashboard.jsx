@@ -2,14 +2,14 @@
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import environment from './Environment';
-import Summary from './Summary';
+import SummaryCalls from './SummaryCalls';
 
 var LineChart = require("react-chartjs").Line;
 
 const summariesQuery = graphql`
 	query DashboardTotals_Query {
 		runtime {
-			...Summary_totals
+			...SummaryCalls_totals
 		}
 	}
 `;
@@ -70,7 +70,7 @@ class Dashboard extends React.Component<{}> {
 		if( error ) {
 			return <div>{error.message}</div>
 		} else if ( props ) {
-			return <Summary title='Total Calls' totals={props.runtime} />
+			return <SummaryCalls title='Total Calls' totals={props.runtime} />
 		}
 
 		return <div>Loading...</div>
