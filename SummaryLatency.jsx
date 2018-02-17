@@ -36,8 +36,12 @@ const SummaryLatency = ({title}) => {
 
 export default createFragmentContainer(SummaryLatency,
 graphql`
-  fragment SummaryLatency_totals on Runtime {
-    latency(before:1) {
+  fragment SummaryLatency_totals on Runtime
+  @argumentDefinitions(
+    before: { type: "Date", defaultValue: 2 }
+  )
+  {
+    latency(before: $before) {
       date
       value
       id
