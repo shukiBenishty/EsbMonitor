@@ -1,3 +1,4 @@
+// @flow
 import {
   Environment,
   Network,
@@ -52,7 +53,7 @@ async function fetchQuery(operation, variables = {}, cacheConfig) {
 
 };
 
-const websocketURL = 'ws://localhost:8000'
+const websocketURL = 'ws://localhost:3001/subscriptions';
 
 function setupSubscription(
   config,
@@ -60,7 +61,7 @@ function setupSubscription(
   cacheConfig,
   observer,
 ) {
-  const query = config.text
+  const query = config.text;
 
   const subscriptionClient = new SubscriptionClient(websocketURL,
                                                     {
