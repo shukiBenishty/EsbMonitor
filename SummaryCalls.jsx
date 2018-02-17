@@ -6,11 +6,9 @@ import { css } from 'glamor';
 const SummaryCalls = ({title, totals, relay}) => {
 
     let todayCalls = totals.totalCalls[0].value.toLocaleString();
-
-     let percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
+    let percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
 
     let progressBarWidth = percentage + '%';
-
     let progressBarCss = css({
         width: progressBarWidth,
         height: "4px",
