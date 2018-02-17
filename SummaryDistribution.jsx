@@ -4,7 +4,7 @@ import { createFragmentContainer, graphql} from 'react-relay';
 var LineChart = require("react-chartjs").Line;
 
 //
-// Chart data should be formatted as follows:
+// Chart data should be shaped as follows:
 //
 // var chartData = {
 // 	labels: ["January", "February", "March", "April", "May", "June", "July"],
