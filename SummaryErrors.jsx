@@ -8,7 +8,6 @@ const SummaryErrors = ({title, totals, relay}) => {
   let percentage = Math.floor(totals.errors[0].value / totals.errors[1].value * 100) ;
 
   let progressBarWidth =  percentage + '%';
-
   let progressBarCss = css({
       width: progressBarWidth,
       height: "4px",
