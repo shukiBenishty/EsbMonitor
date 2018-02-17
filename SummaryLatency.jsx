@@ -2,10 +2,12 @@ import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { css } from 'glamor';
 
-const SummaryLatency = ({title}) => {
+const SummaryLatency = ({title, totals, relay}) => {
 
-  let progressBarWidth = "3%";
+  let todayLatency = totals.latency[0].value.toLocaleString();
+  let percentage = Math.floor(totals.latency[0].value / totals.latency[1].value * 100) ;
 
+  let progressBarWidth = percentage + '3%';
   let progressBarCss = css({
       width: progressBarWidth,
       height: "4px",
@@ -21,13 +23,14 @@ const SummaryLatency = ({title}) => {
                   </span>
                 </h6>
                 <br />
-                <p className="fs-28 fw-100">0.13 sec.</p>
+                <p className="fs-28 fw-100">{todayLatency} sec.</p>
                 <div className="progress">
                   <div className="progress-bar bg-danger" role="progressbar" className={progressBarCss}>
                   </div>
                 </div>
                 <div className="text-gray fs-12">
-                  <i className="ti-stats-down text-danger mr-1"></i>%18 decrease from last hour
+                  <i className="ti-stats-down text-danger mr-1"></i>
+                  {percentage}% decrease from last hour
                 </div>
               </div>
             </div>);
