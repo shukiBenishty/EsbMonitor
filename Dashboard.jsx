@@ -9,12 +9,12 @@ import SummaryErrors from './SummaryErrors';
 import SummaryDistribution from './SummaryDistribution';
 
 const summariesQuery = graphql`
-	query DashboardTotals_Query {
+	query DashboardTotals_Query ($daysBefore: Int){
 		runtime {
 			...SummaryCalls_totals
 			...SummaryLatency_totals
 			...SummaryErrors_totals
-			...SummaryDistribution_totals
+			...SummaryDistribution_totals @arguments(daysBefore: $daysBefore)
 		}
 	}
 `;
@@ -28,9 +28,9 @@ class Dashboard extends React.Component<{}> {
 		} else if ( props ) {
 			return <React.Fragment>
 								<SummaryCalls title='Total Calls' totals={props.runtime} />
-								<SummaryLatency title='Latency' />
-								<SummaryErrors title='Errors' />
-								<SummaryDistribution title='Calls Distribution' />
+								<SummaryLatency title='Latency' totals={props.runtime} />
+								<SummaryErrors title='Errors' totals={props.runtime}/>
+								<SummaryDistribution title='Calls Distribution' totals={props.runtime} />
 						 </React.Fragment>
 		}
 
@@ -39,13 +39,18 @@ class Dashboard extends React.Component<{}> {
 
   render() {
 
+		let queryVariables = {
+			daysBefore: 10,
+			servicesIds: [3,4]
+		}
+
     return (<main className="main-container">
               <div className="main-content">
                 <div className="row">
 									<QueryRenderer
 										environment={environment}
 										query={summariesQuery}
-										variables={{}}
+										variables={queryVariables}
 										render={this.renderSummaries}
 									/>
                 </div>
