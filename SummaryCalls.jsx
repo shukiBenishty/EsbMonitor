@@ -5,7 +5,7 @@ import { css } from 'glamor';
 
 const SummaryCalls = ({title, totals, relay}) => {
 
-    let totalCalls = totals;
+    let todayCalls = totals.totalCalls[0].value.toLocaleString();
 
     let progressBarWidth = "10%";
 
@@ -25,7 +25,7 @@ const SummaryCalls = ({title, totals, relay}) => {
                 </span>
               </h6>
               <br />
-              <p className="fs-28 fw-100">17.876</p>
+              <p className="fs-28 fw-100">{todayCalls}</p>
               <div className="progress">
                 <div className="progress-bar" role="progressbar" className={progressBarCss}>
                 </div>
