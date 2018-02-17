@@ -1,14 +1,15 @@
 // @flow
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
+import environment from './Environment';
 import Summary from './Summary';
 
 var LineChart = require("react-chartjs").Line;
 
-const totalsQuery = graphql`
+const summariesQuery = graphql`
 	query DashboardTotals_Query {
 		runtime {
-			...Summary_item
+			...Summary_totals
 		}
 	}
 `;
@@ -65,30 +66,30 @@ class Dashboard extends React.Component<{}> {
 
   }
 
+	renderSummaries({error, props}) {
+		if( error ) {
+			return <div>{error.message}</div>
+		} else if ( props ) {
+			return <Summary title='Total Calls' totals={props.runtime} />
+		}
+
+		return <div>Loading...</div>
+	}
+
   render() {
+
+		this.styles.progressBar.width = '10%';
+
     return (<main className="main-container">
               <div className="main-content">
                 <div className="row">
+									<QueryRenderer
+										environment={environment}
+										query={summariesQuery}
+										variables={{}}
+										render={this.renderSummaries}
+									/>
                   <div className="col-lg-4">
-                    <div className="card card-body esbCard">
-                      <h6>
-                        <span className="text-uppercase esbCaption">Total calls</span>
-                        <span className="float-right">
-                          <a className="btn btn-xs btn-primary" href="#">View</a>
-                        </span>
-                      </h6>
-                      <br />
-                      <p className="fs-28 fw-100">17.876</p>
-                      <div className="progress">
-                        <div className="progress-bar" role="progressbar" style={this.styles.progressBar}>
-                        </div>
-                      </div>
-                      <div className="text-gray fs-12">
-                        <i className="ti-stats-up text-success mr-1" aria-hidden="true"></i>%18 decrease from last day
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-md-6 col-lg-4">
                     <div className="card card-body esbCard">
                       <h6>
                         <span className="text-uppercase esbCaption">Latency</span>
@@ -99,7 +100,7 @@ class Dashboard extends React.Component<{}> {
                       <br />
                       <p className="fs-28 fw-100">0.13 sec.</p>
                       <div className="progress">
-                        <div className="progress-bar bg-danger" role="progressbar"style={this.styles.progressBar}>
+                        <div className="progress-bar bg-danger" role="progressbar" style={this.styles.progressBar}>
                         </div>
                       </div>
                       <div className="text-gray fs-12">
@@ -108,7 +109,7 @@ class Dashboard extends React.Component<{}> {
 
                     </div>
                   </div>
-                  <div className="col-md-6 col-lg-4">
+                  <div className="col-lg-4">
                     <div className="card card-body esbCard">
                       <h6>
                         <span className="text-uppercase esbCaption">Errors</span>
