@@ -7,6 +7,8 @@ const SummaryCalls = ({title, totals, relay}) => {
 
     let todayCalls = totals.totalCalls[0].value.toLocaleString();
 
+     let percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
+
     let progressBarWidth = "10%";
 
     let progressBarCss = css({
@@ -31,7 +33,8 @@ const SummaryCalls = ({title, totals, relay}) => {
                 </div>
               </div>
               <div className="text-gray fs-12">
-                <i className="ti-stats-up text-success mr-1" aria-hidden="true"></i>%18 decrease from last day
+                <i className="ti-stats-up text-success mr-1" aria-hidden="true"></i>
+                {percentage}% increase from last day
               </div>
             </div>
           </div>);
