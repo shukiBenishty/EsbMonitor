@@ -3,12 +3,9 @@ import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { css } from 'glamor';
 
-class SummaryCalls extends React.Component {
+const SummaryCalls = ({title, totals, relay}) => {
 
-  render() {
-
-    let totalCalls = this.props.totals;
-    let title = this.props.title;
+    let totalCalls = totals;
 
     let progressBarWidth = "10%";
 
@@ -38,7 +35,7 @@ class SummaryCalls extends React.Component {
               </div>
             </div>
           </div>);
-  }
+
 
 }
 
