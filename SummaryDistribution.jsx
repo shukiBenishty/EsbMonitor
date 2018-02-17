@@ -40,7 +40,9 @@ var chartOptions = {
   datasetFill : true,
 }
 
-const SummaryDistribution = ({title}) => {
+const SummaryDistribution = ({title, totals, relay}) => {
+
+	let distribution = totals.distribution;
 
   return (
     <div className="col-12">
@@ -65,7 +67,7 @@ graphql`
   fragment SummaryDistribution_totals on Runtime {
   	distribution(daysBefore: 10, servicesIds: [1, 2, 3]) {
       labels
-      series {
+      datasets: series { #alias
         label
         data
       }
