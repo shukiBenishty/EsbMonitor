@@ -4,7 +4,10 @@ import { css } from 'glamor';
 
 const SummaryErrors = ({title, totals, relay}) => {
 
-  let progressBarWidth = "14%";
+  let todayErrors = totals.errors[0].value.toLocaleString();
+  let percentage = Math.floor(totals.errors[0].value / totals.errors[1].value * 100) ;
+
+  let progressBarWidth =  percentage + '%';
 
   let progressBarCss = css({
       width: progressBarWidth,
@@ -21,13 +24,14 @@ const SummaryErrors = ({title, totals, relay}) => {
                   </span>
                 </h6>
                 <br />
-                <p className="fs-28 fw-100">3</p>
+                <p className="fs-28 fw-100">{todayErrors}</p>
                 <div className="progress">
                   <div className="progress-bar bg-danger" role="progressbar" className={progressBarCss}>
                   </div>
                 </div>
                 <div className="text-gray fs-12">
-                  <i className="ti-stats-down text-danger mr-1"></i>%3 decrease from last hour
+                  <i className="ti-stats-down text-danger mr-1"></i>
+                  {percentage}% decrease from last hour
                 </div>
               </div>
             </div>);
