@@ -86,8 +86,12 @@ const SummaryDistribution = ({title, totals, relay}) => {
 
 export default createFragmentContainer(SummaryDistribution,
 graphql`
-  fragment SummaryDistribution_totals on Runtime {
-  	distribution(daysBefore: 10, servicesIds: [2, 3]) {
+  fragment SummaryDistribution_totals on Runtime
+	@argumentDefinitions(
+		daysBefore: { type: "Int", defaultValue: 2}
+	)
+	{
+  	distribution(daysBefore: $daysBefore, servicesIds: [2, 3]) {
       labels
       datasets: series { #alias
         label
