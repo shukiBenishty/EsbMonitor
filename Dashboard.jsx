@@ -9,12 +9,13 @@ import SummaryErrors from './SummaryErrors';
 import SummaryDistribution from './SummaryDistribution';
 
 const summariesQuery = graphql`
-	query DashboardTotals_Query ($daysBefore: Int){
+	query DashboardTotals_Query ($daysBefore: Int, $servicesIds: [Int]!){
 		runtime {
 			...SummaryCalls_totals
 			...SummaryLatency_totals
 			...SummaryErrors_totals
-			...SummaryDistribution_totals @arguments(daysBefore: $daysBefore)
+			...SummaryDistribution_totals @arguments(daysBefore: $daysBefore,
+																							 servicesIds: $servicesIds)
 		}
 	}
 `;
