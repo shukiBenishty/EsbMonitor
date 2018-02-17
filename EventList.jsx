@@ -1,14 +1,17 @@
 // @flow
 import React from 'react';
+import { graphql, requestSubscription } from 'react-relay';
 import { connect } from 'react-redux'
 import * as JsSearch from 'js-search';
 
 import EventsFilter from './EventsFilter';
 import EsbEvent from './EsbEvent';
 import EsbStatus from './EsbStatus';
+import RealtimeEventsSubscription from './RealtimeEventsSubscription';
 
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
+
 
 type Props = {
   eventId: number,
@@ -50,6 +53,8 @@ class EventList extends React.Component<Props, State> {
     this.search = new JsSearch.Search('eventId');
     // this.search.addDocuments([{eventId: 'ab'}, {eventId: 'cd'}, {eventId: 'ef'}]);
     //this.search.addIndex('eventId');
+
+    RealtimeEventsSubscription(345);
   }
 
   componentWillReceiveProps(nextProps){
