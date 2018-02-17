@@ -41,8 +41,12 @@ const SummaryCalls = ({title, totals, relay}) => {
 
 export default createFragmentContainer(SummaryCalls,
 graphql`
-  fragment SummaryCalls_totals on Runtime {
-    totalCalls(before: 1) {
+  fragment SummaryCalls_totals on Runtime
+  @argumentDefinitions(
+    before: { type: "Date", defaultValue: 2 }
+  )
+  {
+    totalCalls(before: $before) {
       date
       value
     }
