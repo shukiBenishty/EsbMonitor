@@ -6,6 +6,11 @@
   max-height: none !important;
 }
 
+.graphqlConnectionError {
+  font-size: xx-large;
+  color: red;
+}
+
 .esbCard {
   border-width: 1px !important;
   border-style: solid !important;
