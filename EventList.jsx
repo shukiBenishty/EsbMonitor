@@ -7,17 +7,32 @@ import * as JsSearch from 'js-search';
 import EventsFilter from './EventsFilter';
 import EsbEvent from './EsbEvent';
 import EsbStatus from './EsbStatus';
-import RealtimeEventsSubscription from './RealtimeEventsSubscription';
+import environment from './Environment';
+
+//import RealtimeEventsSubscription from './RealtimeEventsSubscription';
 
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
 
+const realtimeEventsSubscription = graphql`
+  subscription EventList_Subscription {
+    traceAdded {
+      id
+      storyId
+      time
+      serviceName
+      serviceId
+      message
+      eventId
+      status
+    }
+  }
+`;
 
 type Props = {
   eventId: number,
   issued: Date
 };
-
 
 type State = {
     esbEvents: Array<Object>
@@ -47,6 +62,22 @@ class EventList extends React.Component<Props, State> {
     }
 
     this.rowRenderer = this.rowRenderer.bind(this);
+    this.publishEsbEvent = this.publishEsbEvent.bind(this);
+  }
+
+  publishEsbEvent(payload) {
+
+    this.props.dispatch({
+      type: 'NEW_EVENT',
+          data: {
+            storyId: payload.storyId,
+            serviceName: payload.serviceName,
+            message: payload.message,
+            eventId: payload.eventId,
+            issued: payload.time,
+            status: payload.status
+          }
+    })
   }
 
   componentDidMount() {
@@ -54,7 +85,40 @@ class EventList extends React.Component<Props, State> {
     // this.search.addDocuments([{eventId: 'ab'}, {eventId: 'cd'}, {eventId: 'ef'}]);
     //this.search.addIndex('eventId');
 
-    RealtimeEventsSubscription(345);
+    const self = this;
+    const subscriptionConfig = {
+      subscription: realtimeEventsSubscription,
+      variables: {},
+      onNext: payload => {
+
+        // TBD: Temporay solution: change this to use Relay fragment!
+        self.publishEsbEvent(payload.traceAdded);
+
+      },
+      updater: proxyStore => {
+        const createTraceField = proxyStore.getRootField('traceAdded');
+        const newTrace = createTraceField.getLinkedRecord('node');
+        // const updatedLink = newVote.getLinkedRecord('link')
+        // const linkId = updatedLink.getValue('id')
+        // const newVotes = updatedLink.getLinkedRecord('_votesMeta')
+        // const newVoteCount = newVotes.getValue('count')
+        //
+        // const link = proxyStore.get(linkId)
+        // link.getLinkedRecord('votes').setValue(newVoteCount, 'count')
+      },
+      onError: error => {
+        console.log(`An error occured:`, error);
+      }
+    };
+
+    this.subscription = requestSubscription(
+      environment,
+      subscriptionConfig
+    )
+  }
+
+  componentWillUnmount() {
+    //this.subscription.dispose();
   }
 
   componentWillReceiveProps(nextProps){
