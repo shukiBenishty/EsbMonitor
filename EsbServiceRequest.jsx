@@ -1,11 +1,11 @@
 // @flow
 import React from 'react';
-import { commitMutation, graphql } from 'react-relay';
+import { commitMutation, createFragmentContainer, graphql } from 'react-relay';
 
 import environment from './Environment';
 
 const publishServiceMutation = graphql`
-  mutation EsbServiceRequest_Mutation ($serviceId: Int) {
+  mutation EsbServiceRequest_Publish_Mutation ($serviceId: Int) {
     publishServiceRequest(input: $serviceId) {
       objectId
       name
@@ -13,6 +13,12 @@ const publishServiceMutation = graphql`
       categoryId
       when_published
     }
+  }
+`;
+
+const deleteServiceRequestMutation = graphql`
+  mutation EsbServiceRequest_DeleteRequest_Mutation ($serviceRequestId: Int) {
+    deleteServiceRequest(input: $serviceRequestId)
   }
 `;
 
@@ -33,6 +39,25 @@ class EsbServiceRequest extends React.Component<{}> {
     }
 
     this._publishService = this._publishService.bind(this);
+    this._deleteServiceRequest = this._deleteServiceRequest.bind(this);
+  }
+
+  _deleteServiceRequest() {
+
+    const variables = {
+      "serviceRequestId": this.props.serviceRequest.objectId
+    };
+
+    commitMutation(
+      this.props.relay.environment,
+      {
+        mutation: deleteServiceRequestMutation,
+        variables,
+        onCompleted: (response, errors) => {
+          console.log(response);
+        },
+        onError: err => console.error(err)
+      });
 
   }
 
@@ -43,7 +68,7 @@ class EsbServiceRequest extends React.Component<{}> {
     };
 
     commitMutation(
-      environment,
+      this.props.relay.environment,
       {
         mutation: publishServiceMutation,
         variables,
@@ -80,6 +105,12 @@ class EsbServiceRequest extends React.Component<{}> {
                         <div className="col actionItem">Publish</div>
                       </div>
                     </a>
+                    <a className="dropdown-item" onClick={this._deleteServiceRequest}>
+                      <div className="row">
+                        <span className="col icon ti-trash" />
+                        <div className="col actionItem">Delete Request</div>
+                      </div>
+                    </a>
                 </div>
               </div>
           </div>
@@ -87,4 +118,14 @@ class EsbServiceRequest extends React.Component<{}> {
 
 }
 
-export default EsbServiceRequest;
+export default createFragmentContainer(EsbServiceRequest,
+graphql`
+  fragment EsbServiceRequest_request on ServiceRequest {
+        name
+        objectId
+        address
+        sla
+        environment
+        categoryId
+  }
+`);
