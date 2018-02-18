@@ -120,7 +120,7 @@ class EsbServiceRequest extends React.Component<{}> {
 
 export default createFragmentContainer(EsbServiceRequest,
 graphql`
-  fragment EsbServiceRequest_request on ServiceRequest {
+  fragment EsbServiceRequest_serviceRequest on ServiceRequest {
         name
         objectId
         address
