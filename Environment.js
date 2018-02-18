@@ -67,7 +67,7 @@ function setupSubscription(
                                                     {
                                                       reconnect: true
                                                     });
-  const id = subscriptionClient.subscribe({query, variables},
+  subscriptionClient.subscribe({query, variables},
     (error, result) => {
       observer.onNext({data: result})
     })
