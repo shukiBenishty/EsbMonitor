@@ -602,11 +602,7 @@ graphql`
       ...EsbService_service
     }
     serviceRequests {
-      objectId
-      operationName
-      address
-      environment
-      created
+      ...EsbServiceRequest_serviceRequest
     }
 }
 `,
