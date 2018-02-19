@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { createRefetchContainer, commitMutation, graphql } from 'react-relay';
+import { requestSubscription, createRefetchContainer, commitMutation, graphql } from 'react-relay';
 import { AutoSizer, List } from 'react-virtualized';
 import Select from 'react-select';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,8 +17,22 @@ import environment from './Environment';
      $input: ServiceInput
    ) {
      addService(input: $input) {
+       id
        objectId
+       name
+       categoryId
+       environment
+       address
+       sla
        created
+     }
+   }
+ `;
+
+ const deleteServiceRequestSubscription = graphql`
+   subscription EsbAdmin_ServiceRequestDeleted_Subscription {
+     serviceRequestDeleted {
+       id
      }
    }
  `;
@@ -97,6 +111,29 @@ class EsbAdmin extends React.Component<Props, State> {
     this.rowRequestRenderer = this.rowRequestRenderer.bind(this);
   }
 
+  componentDidMount() {
+
+    const subscriptionConfig = {
+      subscription: deleteServiceRequestSubscription,
+      variables: {},
+      updater: (proxyStore: RecordSourceSelectorProxy) => {
+
+        const payloadProxy = proxyStore.getRootField('serviceRequestDeleted');
+        const _id = payloadProxy.getValue('id');
+
+        proxyStore.delete(_id);
+
+      }
+    };
+
+    let subscription = requestSubscription(
+      environment,
+      subscriptionConfig
+    );
+
+
+  }
+
   _addService() {
 
     let _serviceNameValid = this._serviceName.value != null
@@ -153,11 +190,43 @@ class EsbAdmin extends React.Component<Props, State> {
         {
             mutation: addServiceMutation,
             variables,
-            updater: (store) => {
+            updater: (proxyStore: RecordSourceSelectorProxy) => {
 
-              let root = store.getRoot();
-              console.log(root);
+              // Read off payload
+              const payloadProxy = proxyStore.getRootField('addService');
+              if( payloadProxy ) {
+                  const _id = payloadProxy.getValue('id');
+                  const _created = payloadProxy.getValue('created');
+                  const _objectId = payloadProxy.getValue('objectId');
+                  const _name = payloadProxy.getValue('name');
+                  const _categoryId = payloadProxy.getValue('categoryId');
+                  const _environment = payloadProxy.getValue('environment');
+                  const _address = payloadProxy.getValue('address');
+                  const _sla = payloadProxy.getValue('sla');
 
+                  // Read from store's root
+                  let root = proxyStore.getRoot();
+                  let __type = root.getType();
+                  let repositoryRecord = root.getLinkedRecord('repository');
+                  let repositoryDataId = repositoryRecord.getDataID();
+                  if( repositoryRecord ) {
+
+                      let serviceRequestsRecords = repositoryRecord.getLinkedRecords('serviceRequests') || [];
+
+                      const newServiceRequests = [...serviceRequestsRecords, {
+                            id: _id,
+                            created: _created,
+                            objectId: _objectId,
+                            name: _name,
+                            categoryId: _categoryId,
+                            environment: _environment,
+                            address: _address,
+                            sla: _sla
+                      }]
+
+                      repositoryRecord.setLinkedRecords(newServiceRequests, 'serviceRequests');
+                  }
+              }
             },
             onCompleted: (response, errors) => {
               if( errors ) {
