@@ -18,7 +18,9 @@ const publishServiceMutation = graphql`
 
 const deleteServiceRequestMutation = graphql`
   mutation EsbServiceRequest_DeleteRequest_Mutation ($serviceRequestId: Int) {
-    deleteServiceRequest(input: $serviceRequestId)
+    deleteServiceRequest(input: $serviceRequestId) {
+      id
+    }
   }
 `;
 
@@ -53,6 +55,14 @@ class EsbServiceRequest extends React.Component<{}> {
       {
         mutation: deleteServiceRequestMutation,
         variables,
+        // updater: (proxyStore: RecordSourceSelectorProxy) => {
+        //
+        //     const payloadProxy = proxyStore.getRootField('deleteServiceRequest');
+        //     const _id = payloadProxy.getValue('id');
+        //
+        //     proxyStore.delete(_id);
+        //
+        // },
         onCompleted: (response, errors) => {
           console.log(response);
         },
@@ -88,8 +98,8 @@ class EsbServiceRequest extends React.Component<{}> {
                 <div className="media-body text-truncate">
                   <h6>{serviceRequest.address}</h6>
                   <small>
-                    <span>{serviceRequest.operationName}</span>
-                    <span className="divider-dash">Domain: {serviceRequest.domain}</span>
+                    <span>{serviceRequest.name} (ID: {serviceRequest.objectId} )</span>
+                    <span className="divider-dash">Environment: {serviceRequest.environment}</span>
                   </small>
                 </div>
               </a>
