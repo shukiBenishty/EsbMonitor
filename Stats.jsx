@@ -235,8 +235,10 @@ Stats,
       )
       {
         services(categoryId: $categoryId) {
-          objectId
-          name
+          list{
+            objectId
+            name
+          }
         }
       }
   `
