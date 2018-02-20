@@ -18,7 +18,7 @@ const publishServiceMutation = graphql`
 
 const deleteServiceRequestMutation = graphql`
   mutation EsbServiceRequest_DeleteRequest_Mutation ($serviceRequestId: Int) {
-    deleteServiceRequest(input: $serviceRequestId) {
+    deleteServiceRequest(requestId: $serviceRequestId) {
       id
     }
   }
@@ -131,6 +131,7 @@ class EsbServiceRequest extends React.Component<{}> {
 export default createFragmentContainer(EsbServiceRequest,
 graphql`
   fragment EsbServiceRequest_serviceRequest on ServiceRequest {
+        id
         name
         objectId
         address
