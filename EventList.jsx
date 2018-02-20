@@ -96,15 +96,24 @@ class EventList extends React.Component<Props, State> {
 
       },
       updater: proxyStore => {
-        const createTraceField = proxyStore.getRootField('traceAdded');
-        const newTrace = createTraceField.getLinkedRecord('node');
-        // const updatedLink = newVote.getLinkedRecord('link')
-        // const linkId = updatedLink.getValue('id')
-        // const newVotes = updatedLink.getLinkedRecord('_votesMeta')
-        // const newVoteCount = newVotes.getValue('count')
-        //
-        // const link = proxyStore.get(linkId)
-        // link.getLinkedRecord('votes').setValue(newVoteCount, 'count')
+
+        //  Reading values off the Payload
+        const rootField = proxyStore.getRootField('traceAdded');
+        const __type = rootField.getType();
+        const __serviceName = rootField.getValue('serviceName');
+        const __message = rootField.getValue('message');
+
+        // Reading Values off the Relay Store
+        let root = proxyStore.getRoot();
+        let _type = root.getType();
+        let runtimeRecord = root.getLinkedRecord('runtime');
+        if( runtimeRecord ) {
+          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
+          if( totalCallsRecords ) {
+            let totalCalls = totalCallsRecords[0].getValue('value');
+            totalCallsRecords[0].setValue( totalCalls + 1, "value");
+          }
+        }
       },
       onError: error => {
         console.log(`An error occured:`, error);
@@ -186,24 +195,21 @@ class EventList extends React.Component<Props, State> {
 
     return(<main className="main-container maxHeight">
               <div className="main-content maxHeight">
-              <EventsFilter />
-              <div style={this.styles.eventListFrame}>
-                <AutoSizer >
-                    {({ height, width }) => (
+                <EventsFilter />
+                <div style={this.styles.eventListFrame}>
+                  <AutoSizer >
+                      {({ height, width }) => (
+                          <List ref={c => { this.vTable = c; }}
+                            width={width}
+                            height={height}
+                            rowHeight={60}
+                            rowCount={this.state.esbEvents.length}
+                            rowRenderer={this.rowRenderer}>
 
-                      <Table ref={c => { this.vTable = c; }}
-                        width={width}
-                        height={400}
-                        headerHeight={20}
-                        rowHeight={60}
-                        rowCount={this.state.esbEvents.length}
-                        rowGetter={({ index }) => this.state.esbEvents[index]}
-                        rowRenderer={this.rowRenderer}>
-
-                      </Table>
-                    )}
-              </AutoSizer>
-              </div>
+                          </List>
+                        )}
+                  </AutoSizer>
+                </div>
               <EsbStatus filter={this.props.filterValue}/>
             </div>
           </main>)
