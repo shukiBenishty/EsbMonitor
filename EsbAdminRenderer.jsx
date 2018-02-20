@@ -23,11 +23,7 @@ class EsbAdminRenderer extends React.Component {
 
   renderQueries({error, props}) {
     if( error ) {
-      return (<main className="main-container">
-                  <div className="main-content graphqlConnectionError">
-                    {error.message}
-                  </div>
-              </main>);
+      return <div>{error.message}</div>
     } else if ( props ) {
 
       let categories = props.repository.categories;
