@@ -262,7 +262,7 @@ class EsbAdmin extends React.Component<Props, State> {
     return (<main className="main-container maxHeight">
                 <ToastContainer />
                 <div className="main-content maxHeight">
-                  <div className="media-list media-list-divided media-list-hover">
+                  <div className="media-list media-list-divided media-list-hover maxHeight">
                     <header className="media-list-header bg-transparent b-0 py-16 pl-20">
                       <div style={this.styles.categoriesSelectorStyle}>
                         <Select
@@ -289,52 +289,52 @@ class EsbAdmin extends React.Component<Props, State> {
                           </div>
                       </div>
 
-                      <div className="col-lg-9 tab-content">
-                        <div className="card tab-pane fade in active show" id="tab1">
+                      <div className="col-lg-9 tab-content maxHeight">
+                        <div className="card tab-pane maxHeight fade in active show" id="tab1">
                           <h4 style={this.styles.listTitle}
                               className="card-title fw-400">Published Services</h4>
 
                           <div className="row">
-                          <div className="col-lg-10"></div>
-                          <div className="col-lg-2">
-                              <nav>
-                                <ul className="pagination pagination-circle">
-                                  {
-                                    [1,2,3,4].map( pageNumber => {
+                              <div className="col-lg-10"></div>
+                              <div className="col-lg-2">
+                                  <nav>
+                                    <ul className="pagination pagination-circle">
+                                      {
+                                        [1,2,3].map( pageNumber => {
 
-                                      var pageNumberClassName = classNames('page-item', {
-                                        'active': pageNumber == this.state.currentServicesPage
-                                      });
+                                          var pageNumberClassName = classNames('page-item', {
+                                            'active': pageNumber == this.state.currentServicesPage
+                                          });
 
-                                      return <li key={pageNumber} className={pageNumberClassName}
-                                                  onClick={()=>this.pageClicked(pageNumber)} >
-                                                <div className="page-link">{pageNumber}</div>
-                                             </li>
+                                          return <li key={pageNumber} className={pageNumberClassName}
+                                                      onClick={()=>this.pageClicked(pageNumber)} >
+                                                    <div className="page-link">{pageNumber}</div>
+                                                 </li>
 
-                                    })
-                                  }
-                                </ul>
-                              </nav>
+                                        })
+                                      }
+                                    </ul>
+                                  </nav>
+                              </div>
                           </div>
-                          </div>
+                          <AutoSizer>
+                            {
+                              ({height, width}) => (
 
-                            <AutoSizer>
-                              {
-                                ({height, width}) => (
+                                <List className="esbRepositoryList"
+                                  ref={ c => { this.vServicesList = c; }}
+                                  width={width}
+                                  height={height}
+                                  autoHeight={true}
+                                  rowHeight={60}
+                                  rowGetter={ ({index}) => _services[index] }
+                                  rowCount={_services.length}
+                                  rowRenderer={this.rowRenderer}
+                                />
 
-                                  <List ref={ c => { this.vServicesList = c; }}
-                                    width={width}
-                                    height={height}
-                                    autoHeight={true}
-                                    rowHeight={60}
-                                    rowGetter={ ({index}) => _services[index] }
-                                    rowCount={_services.length}
-                                    rowRenderer={this.rowRenderer}
-                                  />
-
-                                )
-                              }
-                            </AutoSizer>
+                              )
+                            }
+                          </AutoSizer>
 
                         </div>
                         <div className="card tab-pane fade" id="tab2">
@@ -345,7 +345,8 @@ class EsbAdmin extends React.Component<Props, State> {
                               {
                                 ({height, width}) => (
 
-                                  <List ref={ c => { this.vServiceRequestList = c; }}
+                                  <List className="esbRepositoryList"
+                                    ref={ c => { this.vServiceRequestList = c; }}
                                     width={width}
                                     height={height}
                                     autoHeight={true}
