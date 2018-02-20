@@ -1,7 +1,17 @@
 .ReactVirtualized__Grid {
-  height: 620px !important;
+  /* height: 620px !important; */
 }
 .ReactVirtualized__Grid__innerScrollContainer {
+  /* height: auto !important; */
+  /* height: 100% !important; */
+  /* max-height: none !important; */
+}
+
+.esbRepositoryList {
+
+}
+
+.esbRepositoryList div {
   height: auto !important;
   max-height: none !important;
 }
