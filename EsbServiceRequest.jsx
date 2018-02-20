@@ -92,6 +92,8 @@ class EsbServiceRequest extends React.Component<{}> {
   render() {
 
     let serviceRequest = this.props.serviceRequest;
+    if( !serviceRequest)
+      return null;
 
     return <div className="media align-items-center flexbox bg-white b-1">
               <a className="align-items-center flex-grow gap-items">
