@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 
 import EsbService from './EsbService';
 import EsbServiceRequest from './EsbServiceRequest';
+import AdminServicePanel from './AdminServicePanel';
 import environment from './Environment';
 
  const addServiceMutation = graphql`
@@ -58,16 +59,8 @@ class EsbAdmin extends React.Component<Props, State> {
     this.state = {
       servicePanelVisible: false,
       selectedCategory: {},
-      selectedCategoryForNewService: {},
-      environmentForNewService: {},
       categories: [],
       currentServicesPage: 1,
-
-      isNewServiceNameValid: true,
-      isNewServiceAddressValid: true,
-      isNewServiceCategoryIdValid: true,
-      isNewServiceSLAValid: true,
-      isNewServiceEnvironment: true
     };
 
     this.styles = {
@@ -82,33 +75,19 @@ class EsbAdmin extends React.Component<Props, State> {
       listTitle: {
         borderBottom: "0"
       },
-      textFieldStyle: {
-        marginTop: "-20px"
-      },
-      formItem: {
-        alignSelf: "flex-end",
-        color: "rgba(77, 82, 89, 0.8)"
-      },
-      formSelector: {
-        paddingLeft: "0px",
-        paddingRight: "0px"
-      },
-      formRow: {
-        marginTop: "18px"
-      }
     }
 
-    this._addService = this._addService.bind(this);
     this._openServicePanel = this._openServicePanel.bind(this);
     this._closeServicePanel = this._closeServicePanel.bind(this);
     this._updateCategory = this._updateCategory.bind(this);
-    this._addServiceCategoryChanged = this._addServiceCategoryChanged.bind(this);
-    this._addServiceEnvironmentChanged = this._addServiceEnvironmentChanged.bind(this);
 
     this.pageClicked = this.pageClicked.bind(this);
 
     this.rowRenderer = this.rowRenderer.bind(this);
     this.rowRequestRenderer = this.rowRequestRenderer.bind(this);
+
+    this._serviceAdding = this._serviceAdding.bind(this);
+    this._serviceAdded = this._serviceAdded.bind(this);
   }
 
   componentDidMount() {
@@ -134,134 +113,34 @@ class EsbAdmin extends React.Component<Props, State> {
 
   }
 
-  _addService() {
+  _serviceAdding() {
+      this.toastId = toast("Adding Service to Repository", { autoClose: false});
+  }
 
-    let _serviceNameValid = this._serviceName.value != null
-                            && this._serviceName.value != '';
-    let _serviceCategoryValid = this.state.selectedCategoryForNewService != null
-                                && this.state.selectedCategoryForNewService.value != null
-                                && this.state.selectedCategoryForNewService.value != '';
-    let _serviceEnvironmentValid = this.state.environmentForNewService != null
-                                  && this.state.environmentForNewService.value != null
-                                && this.state.environmentForNewService.value != ''
-    let _serviceNameAddressValid = this._serviceAddress.value != null
-                              && this._serviceAddress.value != '';
-    let _serviceSlaValid = this._expectedSLA.value != null
-                            && this._expectedSLA.value != '';
+  _serviceAdded({isAdded, message}) {
 
-    this.setState({
-      isNewServiceNameValid:  _serviceNameValid,
-      isNewServiceAddressValid: _serviceNameAddressValid,
-      isNewServiceCategoryIdValid: _serviceCategoryValid,
-      isNewServiceSLAValid: _serviceSlaValid,
-      isNewServiceEnvironment: _serviceEnvironmentValid
-    });
+    if( isAdded ) {
+      toast.update(this.toastId,
+                    {
+                      render: message,
+                      type: toast.TYPE.SUCCESS,
+                      autoClose: 3000,
+                      className: css({
+                        transform: "rotateY(360deg)",
+                        transition: "transform 0.6sec"
+                      })
+                    });
 
-    // End of validaton
-
-    if( _serviceNameValid &&
-        _serviceCategoryValid &&
-        _serviceNameAddressValid &&
-        _serviceSlaValid &&
-        _serviceEnvironmentValid ) {
-
-      this.setState({
-          servicePanelVisible: false
-      })
-
-      let servicePattern = this._servicePattern.checked ?
-                           "Soap" : "Rest" ;
-
-      const variables =
-      {
-        input: {
-          name: this._serviceName.value,
-          categoryId: this.state.selectedCategoryForNewService.value,
-          address: this._serviceAddress.value,
-          sla: this._expectedSLA.value,
-          environment: this.state.environmentForNewService.label,
-          pattern: servicePattern
-        },
-      };
-
-      const toastId = toast("Adding Service to Repository", { autoClose: false});
-      commitMutation(
-        this.props.relay.environment,
-        {
-            mutation: addServiceMutation,
-            variables,
-            updater: (proxyStore: RecordSourceSelectorProxy) => {
-
-              // Read off payload
-              const payloadProxy = proxyStore.getRootField('addService');
-              if( payloadProxy ) {
-                  const _id = payloadProxy.getValue('id');
-                  const _created = payloadProxy.getValue('created');
-                  const _objectId = payloadProxy.getValue('objectId');
-                  const _name = payloadProxy.getValue('name');
-                  const _categoryId = payloadProxy.getValue('categoryId');
-                  const _environment = payloadProxy.getValue('environment');
-                  const _address = payloadProxy.getValue('address');
-                  const _sla = payloadProxy.getValue('sla');
-
-                  // Read from store's root
-                  let root = proxyStore.getRoot();
-                  let __type = root.getType();
-                  let repositoryRecord = root.getLinkedRecord('repository');
-                  let repositoryDataId = repositoryRecord.getDataID();
-                  if( repositoryRecord ) {
-
-                      let serviceRequestsRecords = repositoryRecord.getLinkedRecords('serviceRequests') || [];
-
-                      const newServiceRequests = [...serviceRequestsRecords, {
-                            id: _id,
-                            created: _created,
-                            objectId: _objectId,
-                            name: _name,
-                            categoryId: _categoryId,
-                            environment: _environment,
-                            address: _address,
-                            sla: _sla
-                      }]
-
-                      repositoryRecord.setLinkedRecords(newServiceRequests, 'serviceRequests');
-                  }
-              }
-            },
-            onCompleted: (response, errors) => {
-              if( errors ) {
-                toast.update(toastId,
-                              {
-                                render: errors[0].message,
-                                type: toast.TYPE.ERROR,
-                                autoClose: 5000,
-                              }
-                            );
-              } else {
-                toast.update(toastId,
-                              {
-                                render: "Service Request with ID " + response.addService.objectId + " was added",
-                                type: toast.TYPE.SUCCESS,
-                                autoClose: 3000,
-                                className: css({
-                                  transform: "rotateY(360deg)",
-                                  transition: "transform 0.6sec"
-                                })
-                              });
-              }
-            },
-            onError: err => {
-              console.log(err.message);
-              toast.update(toastId,
-                {
-                  render: err.message,
-                  type: toast.TYPE.ERROR,
-                  autoClose: 5000
-                })
-            }
-
-        });
+    } else {
+      toast.update(this.toastId,
+                    {
+                      render: message,
+                      type: toast.TYPE.ERROR,
+                      autoClose: 5000,
+                    }
+                  );
     }
+
   }
 
   _openServicePanel() {
@@ -304,18 +183,6 @@ class EsbAdmin extends React.Component<Props, State> {
     )
   }
 
-  _addServiceCategoryChanged(newCategory) {
-    this.setState({
-      selectedCategoryForNewService: newCategory
-    });
-  }
-
-  _addServiceEnvironmentChanged(newEnvironment) {
-    this.setState({
-      environmentForNewService: newEnvironment
-    })
-  }
-
   pageClicked(pageNumber: number) {
 
     this.props.relay.refetch(
@@ -349,7 +216,7 @@ class EsbAdmin extends React.Component<Props, State> {
 
     //this.vServicesList.scrollToRow(index);
 
-    let _services = this.props.repository.services;
+    let _services = this.props.repository.services.list;
 
     return <EsbService key={index}
                        service={_services[index]} />
@@ -365,7 +232,8 @@ class EsbAdmin extends React.Component<Props, State> {
 
     //this.vServiceRequestList.scrollToRow(index);
 
-    let requests = this.props.repository.serviceRequests;
+    let requests = this.props.repository.serviceRequests
+                   .filter( sReq => sReq != null);
 
     return <EsbServiceRequest key={index}
                               serviceRequest={requests[index]} />
@@ -374,14 +242,6 @@ class EsbAdmin extends React.Component<Props, State> {
 
   render() {
 
-    let _environments = [{
-      value: 1,
-      label: 'External'
-    }, {
-      value: 0,
-      label: 'Internal'
-    }];
-
     let _categories = this.props.categories.map( (category, index) => {
         return {
           value: category.objectId,
@@ -389,8 +249,11 @@ class EsbAdmin extends React.Component<Props, State> {
         }
     })
 
-    let _services = this.props.repository.services;
-    let _serviceRequests = this.props.repository.serviceRequests;
+    let _services = this.props.repository.services.list;
+    let totalServices = this.props.repository.services.totalItems;
+
+    let _serviceRequests = this.props.repository.serviceRequests
+                           .filter( sReq => sReq != null );
 
     var servicePanelClass = classNames('quickview', 'quickview-lg', {
       'reveal': this.state. servicePanelVisible
@@ -398,28 +261,6 @@ class EsbAdmin extends React.Component<Props, State> {
 
     const { selectedCategory } = this.state;
     const _value = selectedCategory && selectedCategory.value;
-
-    const { selectedCategoryForNewService } = this.state;
-    const _newServiceCategoryValue = selectedCategoryForNewService && selectedCategoryForNewService.value;
-
-    const { environmentForNewService } = this.state
-    const _newServiceEnvironment= environmentForNewService && environmentForNewService.value;
-
-    // Validation errors
-    let errorMessage = !this.state.isNewServiceNameValid ?
-                       "This field is requied" : "";
-    let categoriesSelectorClassNames = classNames('col col-9', {
-         'inputValidationError': !this.state.isNewServiceCategoryIdValid
-    });
-    let environmentSelectorClassNames = classNames('col col-9', {
-        'inputValidationError': !this.state.isNewServiceEnvironment
-    });
-
-    let errorMessageAddress = !this.state.isNewServiceAddressValid ?
-                              "This field is requied" : "";
-    let errorMessageSLA = !this.state.isNewServiceSLAValid ?
-                              "This field is requied" : "";
-    // End od validation errors
 
     return (<main className="main-container maxHeight">
                 <ToastContainer />
@@ -533,122 +374,10 @@ class EsbAdmin extends React.Component<Props, State> {
                  </a>
                 </div>
                 <div className={servicePanelClass}>
-                  <header className="quickview-header">
-                    <p className='quickview-title lead fw-400'>Add new service</p>
-                    <span onClick={this._closeServicePanel}>
-                      <i className="ti-close"></i>
-                    </span>
-                  </header>
-                  <div className="quickview-body ps-container ps-theme-default ps-active-y">
-                    <div className="quickview-block form-type-material">
-                      <h6>Service Details</h6>
-                      <div>
-                         <TextField
-                                type='text'
-                                style={this.styles.textFieldStyle}
-                                hintText="Name"
-                                floatingLabelText="Serice's name"
-                                fullWidth={true}
-                                errorText = {errorMessage}
-                                ref={
-                                  (el) => {
-                                    if( el )
-                                      this._serviceName = el.input;
-                                  }
-                                } />
-                      </div>
-                      <div>
-                        <TextField
-                              style={this.styles.textFieldStyle}
-                              ref={
-                                  (el) => {
-                                    if( el )
-                                      this._serviceAddress = el.input
-                                  }
-                              }
-                              fullWidth={true}
-                              hintText="URL"
-                              errorText = { errorMessageAddress }
-                              floatingLabelText="Address (URL)"/>
-                      </div>
-
-                      <div style={this.styles.formRow}>
-                        <label className="switch">
-                          <input type="checkbox"
-                                  ref={
-                                    el => {
-                                      if( el )
-                                        this._servicePattern = el;
-                                    }
-                                  }/>
-                          <span className="switch-indicator">
-                          </span>
-                          <span className="switch-description">
-                            Old Fashion (SOAP)
-                          </span>
-                        </label>
-                      </div>
-
-                      <div className="row" style={this.styles.formRow}>
-                        <label style={this.styles.formItem}
-                               className="col col-3">Environment:</label>
-                        <Select
-                          ref={
-                            el => {
-                              if( el )
-                                this._serviceEnvironment = el ;
-                            }
-                          }
-                          style={this.styles.formSelector}
-                          className={environmentSelectorClassNames}
-                          name="addServiceDomainSelector"
-                          placeholder="Select environment"
-                          options={_environments}
-                          value={_newServiceEnvironment}
-                          onChange={this._addServiceEnvironmentChanged}
-                        />
-
-                      </div>
-                      <div className="row" style={this.styles.formRow}>
-                        <label style={this.styles.formItem}
-                               className="col col-3">Category:</label>
-                        <Select
-                          ref={
-                            el => {
-                              if( el )
-                                this._serviceCategory = el.input.input;
-                            }
-                          }
-                          style={this.styles.formSelector}
-                          className={categoriesSelectorClassNames}
-                          name="addServiceCategoriesSelector"
-                          placeholder="Select category"
-                          options={_categories}
-                          value={_newServiceCategoryValue}
-                          onChange={this._addServiceCategoryChanged} />
-
-                      </div>
-                      <div style={this.styles.formRow}>
-                        <TextField
-                              type='number'
-                              style={this.styles.textFieldStyle}
-                              ref={
-                                  (el) => {
-                                    if( el )
-                                      this._expectedSLA = el.input
-                                  }
-                              }
-                              fullWidth={true}
-                              errorText = { errorMessageSLA }
-                              hintText="Number of milliseconds"
-                              floatingLabelText="Expected SLA"/>
-                      </div>
-                    </div>
-                  </div>
-                  <footer className="p-12 text-right">
-                    <button className="btn btn-flat btn-primary"
-                      onClick={this._addService}>Add service</button>
-                  </footer>
+                  <AdminServicePanel onClose={this._closeServicePanel}
+                                     onServiceAdding={this._serviceAdding}
+                                     onServiceAdded={this._serviceAdded}
+                                     categories={_categories} />
                 </div>
             </main>
          );
@@ -668,7 +397,10 @@ graphql`
   )
   {
     services (categoryId: $categoryId, page: $page, pageSize: $pageSize){
-      ...EsbService_service
+      totalItems
+      list {
+        ...EsbService_service
+      }
     }
     serviceRequests {
       ...EsbServiceRequest_serviceRequest
