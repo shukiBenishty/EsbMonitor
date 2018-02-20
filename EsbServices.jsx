@@ -1,59 +1,139 @@
-// @flow
 import React from 'react';
-import Select from 'react-select';
+import { createFragmentContainer,
+         commitMutation,
+         graphql } from 'react-relay';
 
-import classNames from 'classnames';
+import environment from './Environment';
 
-class EsbServices extends React.Component {
+const disableServiceMutation = graphql`
+  mutation EsbService_DisableService_Mutation ($serviceId: Int) {
 
-  constructor() {
-    super();
+    disableService(input: $serviceId) {
+      objectId
+      when_published
+      address
+    }
+  }
+`;
 
-    this.state = {
-      selectedServices: null
+const deleteServiceMutation = graphql`
+  mutation EsbService_DeleteService_Mutation ($serviceId: Int) {
+
+    deleteService(input: $serviceId) {
+      objectId
+      when_published
+      address
+    }
+  }
+`;
+
+class EsbService extends React.Component {
+
+  constructor(props) {
+
+    super(props);
+
+    this.styles = {
+      serviceMenu: {
+        position: "absolute",
+        top: "19px",
+        left: "-147px",
+        willChange: "top, left"
+      }
     }
 
-    this._serviceChanged = this._serviceChanged.bind(this);
+    this._disableService = this._disableService.bind(this);
+    this._deleteService = this._deleteService.bind(this);
+
   }
 
-  get selectedServices() {
-    return this.state.selectedServices;
+  _disableService() {
+    const variables = {
+      "serviceId": this.props.service.objectId
+    };
+
+    commitMutation(
+      environment,
+      {
+        mutation: disableServiceMutation,
+        variables,
+        onCompleted: (response, errors) => {
+          console.log(response);
+        },
+        onError: err => console.error(err)
+      });
   }
 
-  _serviceChanged(services) {
-    this.setState({
-      selectedServices: services
-    })
+  _deleteService() {
+
+    const variables = {
+      "serviceId": this.props.service.objectId
+    };
+
+    commitMutation(
+      environment,
+      {
+        mutation: deleteServiceMutation,
+        variables,
+        onCompleted: (response, errors) => {
+          console.log(response);
+        },
+        onError: err => console.error(err)
+      });
+
   }
 
   render() {
 
-    let disabled = this.props.disabled;
-    let className = this.props.className;
+    let service = this.props.service;
 
-    const { selectedServices } = this.state;
-
-    let services = this.props.services.map( service => (
-        {
-          value: service.objectId,
-          label: service.name
-        }
-    ))
-
-    return <Select
-              className={className}
-              multi
-              simpleValue
-              disabled={disabled}
-              removeSelected={true}
-              name="servicesSelector"
-              placeholder="Select service"
-              options={services}
-              value={selectedServices}
-              onChange={this._serviceChanged}
-           />
+    return (<div className="media align-items-center bg-white b-1">
+              <a className="flexbox align-items-center flex-grow gap-items">
+                <div className="media-body text-truncate">
+                  <h6>{service.name}</h6>
+                  <small>
+                    <span>{service.address}</span>
+                    <span className="divider-dash">SLA: {service.sla} sec.</span>
+                  </small>
+                </div>
+              </a>
+              <span className="lead text-fade mr-25 d-none d-md-block">
+                System Affiliation
+              </span>
+              <div className="dropdown">
+                <a className="text-lighter" data-toggle="dropdown">
+                  <i className="ti-more-alt rotate-90"></i>
+                </a>
+                <div className="dropdown-menu dropdown-menu-right"
+                      x-placement="bottom-end"
+                      style={this.styles.serviceMenu}>
+                  <a className="dropdown-item" onClick={this._disableService}>
+                    <div className="row">
+                      <span className='icon ti-hand-stop' />
+                      <div className='actionItem'>Disable</div>
+                      </div>
+                  </a>
+                  <div className="dropdown-divider"></div>
+                  <a className="dropdown-item" onClick={this._deleteService}>
+                    <div className="row">
+                        <span className='icon ti-trash' />
+                        <div className='actionItem'>Delete</div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>);
   }
 
-}
+};
 
-export default EsbServices;
+export default createFragmentContainer(EsbService,
+  graphql`
+    fragment EsbService_service on Service {
+      objectId
+      name
+      address
+      sla
+    }
+  `
+);
