@@ -101,7 +101,6 @@ class EsbAdmin extends React.Component<Props, State> {
         const _id = payloadProxy.getValue('id');
 
         proxyStore.delete(_id);
-
       }
     };
 
@@ -109,8 +108,6 @@ class EsbAdmin extends React.Component<Props, State> {
       environment,
       subscriptionConfig
     );
-
-
   }
 
   _serviceAdding() {
@@ -252,15 +249,15 @@ class EsbAdmin extends React.Component<Props, State> {
     let _services = this.props.repository.services.list;
     let totalServices = this.props.repository.services.totalItems;
 
-    let _serviceRequests = this.props.repository.serviceRequests
-                           .filter( sReq => sReq != null );
-
     var servicePanelClass = classNames('quickview', 'quickview-lg', {
-      'reveal': this.state. servicePanelVisible
+       'reveal': this.state.servicePanelVisible
     });
 
     const { selectedCategory } = this.state;
     const _value = selectedCategory && selectedCategory.value;
+
+    let _serviceRequests = this.props.repository.serviceRequests
+                           .filter( sReq => sReq != null );
 
     return (<main className="main-container maxHeight">
                 <ToastContainer />
@@ -303,7 +300,7 @@ class EsbAdmin extends React.Component<Props, State> {
                               <nav>
                                 <ul className="pagination pagination-circle">
                                   {
-                                    [1,2,3].map( pageNumber => {
+                                    [1,2,3,4].map( pageNumber => {
 
                                       var pageNumberClassName = classNames('page-item', {
                                         'active': pageNumber == this.state.currentServicesPage
