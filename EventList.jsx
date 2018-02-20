@@ -100,8 +100,7 @@ class EventList extends React.Component<Props, State> {
         //  Reading values off the Payload
         const rootField = proxyStore.getRootField('traceAdded');
         const __type = rootField.getType();
-        const __serviceName = rootField.getValue('serviceName');
-        const __message = rootField.getValue('message');
+        const __status = rootField.getValue('status');
 
         // Reading Values off the Relay Store
         let root = proxyStore.getRoot();
@@ -111,7 +110,15 @@ class EventList extends React.Component<Props, State> {
           let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
           if( totalCallsRecords ) {
             let totalCalls = totalCallsRecords[0].getValue('value');
-            totalCallsRecords[0].setValue( totalCalls + 1, "value");
+            totalCallsRecords[0].setValue( ++totalCalls, "value");
+          }
+
+          if( __status == 'ERROR' ) {
+            let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 1});
+            if( errorsRecors ) {
+              let totalErrors = errorsRecors[0].getValue('value');
+              errorsRecors[0].setValue( ++totalErrors, 'value');
+            }
           }
         }
       },
