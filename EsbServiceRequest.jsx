@@ -55,14 +55,14 @@ class EsbServiceRequest extends React.Component<{}> {
       {
         mutation: deleteServiceRequestMutation,
         variables,
-        // updater: (proxyStore: RecordSourceSelectorProxy) => {
-        //
-        //     const payloadProxy = proxyStore.getRootField('deleteServiceRequest');
-        //     const _id = payloadProxy.getValue('id');
-        //
-        //     proxyStore.delete(_id);
-        //
-        // },
+        updater: (proxyStore: RecordSourceSelectorProxy) => {
+
+            const payloadProxy = proxyStore.getRootField('deleteServiceRequest');
+            const _id = payloadProxy.getValue('id');
+
+            proxyStore.delete(_id);
+
+        },
         onCompleted: (response, errors) => {
           console.log(response);
         },
@@ -92,8 +92,8 @@ class EsbServiceRequest extends React.Component<{}> {
   render() {
 
     let serviceRequest = this.props.serviceRequest;
-    if( !serviceRequest)
-      return null;
+    // if( serviceRequest.objectId == null )
+    //   return null;
 
     return <div className="media align-items-center flexbox bg-white b-1">
               <a className="align-items-center flex-grow gap-items">
@@ -113,14 +113,14 @@ class EsbServiceRequest extends React.Component<{}> {
                 <div className="dropdown-menu">
                     <a className="dropdown-item" onClick={this._publishService}>
                       <div className="row">
-                        <span className="col icon ti-cloud-up" />
-                        <div className="col actionItem">Publish</div>
+                        <span className="col-2 icon ti-cloud-up" />
+                        <div className="col-8 actionItem">Publish</div>
                       </div>
                     </a>
                     <a className="dropdown-item" onClick={this._deleteServiceRequest}>
                       <div className="row">
-                        <span className="col icon ti-trash" />
-                        <div className="col actionItem">Delete Request</div>
+                        <span className="col-2 icon ti-trash" />
+                        <div className="col-8 actionItem">Delete&nbsp;Request</div>
                       </div>
                     </a>
                 </div>
