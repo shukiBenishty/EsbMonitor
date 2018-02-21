@@ -97,6 +97,7 @@ graphql`
       datasets: series { #alias
         label
         data
+				serviceId
       }
     }
   }
