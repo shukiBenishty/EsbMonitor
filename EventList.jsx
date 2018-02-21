@@ -9,8 +9,6 @@ import EsbEvent from './EsbEvent';
 import EsbStatus from './EsbStatus';
 import environment from './Environment';
 
-//import RealtimeEventsSubscription from './RealtimeEventsSubscription';
-
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
 
@@ -101,12 +99,31 @@ class EventList extends React.Component<Props, State> {
         const rootField = proxyStore.getRootField('traceAdded');
         const __type = rootField.getType();
         const __status = rootField.getValue('status');
+        const __serviceId = rootField.getValue('serviceId');
 
         // Reading Values off the Relay Store
         let root = proxyStore.getRoot();
         let _type = root.getType();
         let runtimeRecord = root.getLinkedRecord('runtime');
         if( runtimeRecord ) {
+
+          let distributionRecord = runtimeRecord.getLinkedRecord('distribution',
+                                                    {daysBefore: 10, servicesIds: [3,4]});
+          if( distributionRecord ) {
+              let seriesRecords = distributionRecord.getLinkedRecords('series');
+              if( seriesRecords ) {
+                  for(let i = 0; i < seriesRecords.length; i++) {
+                      let serviceId = seriesRecords[i].getValue('serviceId');
+                      if( serviceId == __serviceId ) {
+                         let data = seriesRecords[i].getValue('data');
+                         let _data =   _.map(data, _.clone);
+                         _data[0] = data[0] + 1;
+                         seriesRecords[i].setValue(_data, 'data');
+                      }
+                  }
+              }
+          }
+
           let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
           if( totalCallsRecords ) {
             let totalCalls = totalCallsRecords[0].getValue('value');
