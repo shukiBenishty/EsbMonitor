@@ -2,7 +2,7 @@
 
 ## How to build
 
-This project depends on the <a href="https://github.com/Tel-Aviv/EsbGQLServer">GraphQL Server for TLV ESB</a>, i.e. it's the GraphQL client; so before you run this project, download, build and run its counterpart. Next, ajust the address of GraphQL server in <code>Environment.js</code>.
+This project depends on the <a href="https://github.com/Tel-Aviv/EsbGQLServer">GraphQL Server for TLV ESB</a>, i.e. it's the GraphQL client; so before you run this project, download, build and run its counterpart. Optionally, you may ajust the address of GraphQL server in <code>Environment.js</code>.
 
 When you are done with GraphQL Server,
 1. git pull, <code>$ npm i</code> (under Windows, try <code>$ npm i --no-optional</code>) to install all dependencies
