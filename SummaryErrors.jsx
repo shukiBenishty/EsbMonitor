@@ -4,8 +4,12 @@ import { css } from 'glamor';
 
 const SummaryErrors = ({title, totals, relay}) => {
 
-  let todayErrors = totals.errors[0].value.toLocaleString();
-  let percentage = Math.floor(totals.errors[0].value / totals.errors[1].value * 100) ;
+  let todayErrors = 0;
+  let percentage = 0;
+  if( totals.errors.length > 0 ){
+    todayErrors = totals.errors[0].value.toLocaleString();
+    percentage = Math.floor(totals.errors[0].value / totals.errors[1].value * 100) ;
+  }
 
   let progressBarWidth =  percentage + '%';
   let progressBarCss = css({
