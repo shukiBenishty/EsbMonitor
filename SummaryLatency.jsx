@@ -4,8 +4,13 @@ import { css } from 'glamor';
 
 const SummaryLatency = ({title, totals, relay}) => {
 
-  let todayLatency = totals.latency[0].value.toLocaleString();
-  let percentage = Math.floor(totals.latency[0].value / totals.latency[1].value * 100) ;
+  let todayLatency = 0;
+  let percentage = 0;
+
+  if( totals.latency.length > 0 ){
+    todayLatency = totals.latency[0].value.toLocaleString();
+    percentage = Math.floor(totals.latency[0].value / totals.latency[1].value * 100) ;
+  }
 
   let progressBarWidth = percentage + '3%';
   let progressBarCss = css({
