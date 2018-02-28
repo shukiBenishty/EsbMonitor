@@ -17,7 +17,7 @@ const MainContent = () => {
                 <Route exact path='/' component={Dashboard} />
                 <Route path='/realtime' component={EventList} />
                 <Route path='/stat' component={StatsRenderer} />
-                <Route path='/analytics' component={Analyze} />
+                <Route path='/analyze' component={Analyze} />
                 <Route path="/admin" component={EsbAdminRenderer} />
           </Switch>);
 }
