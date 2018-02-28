@@ -30,11 +30,7 @@ class Dashboard extends React.Component<{}> {
 
 	renderSummaries({error, props}) {
 		if( error ) {
-			return (<main className="main-container">
-                  <div className="main-content graphqlConnectionError">
-                    {error.message}
-                  </div>
-              </main>)
+			return <div>{error.message}</div>
 		} else if ( props ) {
 			return <React.Fragment>
 								<SummaryCalls title='Total Calls' totals={props.runtime} />
@@ -54,7 +50,7 @@ class Dashboard extends React.Component<{}> {
 			totalLatencyBefore: 1,
 			totalErrorsBefore: 1,
 			daysBefore: 10,
-			servicesIds: [3,4]
+			servicesIds: [919,959]
 		}
 
     return (<main className="main-container">
