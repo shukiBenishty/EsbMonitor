@@ -1,8 +1,8 @@
+// @flow
 import React from 'react';
 import elasticsearch from 'elasticsearch';
 import esb from 'elastic-builder';
 import elasticClient from './elastic/connection';
-import TextField from 'material-ui/TextField';
 
 class Analyze extends React.Component {
 
