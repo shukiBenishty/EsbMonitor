@@ -22,7 +22,7 @@
 }, {
   "id": 4,
   "type": "menu-item",
-  "to": "/analytics",
+  "to": "/analyze",
   "title": "Analyze",
   "icon": "icon ti-layers-alt",
   "badge": null
