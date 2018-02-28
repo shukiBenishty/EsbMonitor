@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { createFragmentContainer,
          commitMutation,
@@ -44,7 +45,11 @@ class EsbService extends React.Component {
 
     this._disableService = this._disableService.bind(this);
     this._deleteService = this._deleteService.bind(this);
+    this._editService = this._editService.bind(this);
+  }
 
+  _editService(service) {
+    console.log(service)
   }
 
   _disableService() {
@@ -100,6 +105,8 @@ class EsbService extends React.Component {
               <span className="lead text-fade mr-25 d-none d-md-block">
                 System Affiliation
               </span>
+              <div className="icon ti-pencil"
+                    onClick={() => this._editService(service)} />
               <div className="dropdown">
                 <a className="text-lighter" data-toggle="dropdown">
                   <i className="ti-more-alt rotate-90"></i>
