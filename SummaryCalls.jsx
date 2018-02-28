@@ -5,8 +5,12 @@ import { css } from 'glamor';
 
 const SummaryCalls = ({title, totals, relay}) => {
 
-    let todayCalls = totals.totalCalls[0].value.toLocaleString();
-    let percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
+    let todayCalls = 'No Calls';
+    let percentage = 0;
+    if( totals.totalCalls.length > 0 ){
+      todayCalls = totals.totalCalls[0].value.toLocaleString();
+      percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
+    }
 
     let progressBarWidth = percentage + '%';
     let progressBarCss = css({
@@ -14,7 +18,6 @@ const SummaryCalls = ({title, totals, relay}) => {
         height: "4px",
         backgroundColor: "#33cabb"
     });
-
 
     return (<div className="col-lg-4">
               <div className="card card-body esbCard">
