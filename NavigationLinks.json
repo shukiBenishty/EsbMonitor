@@ -24,7 +24,7 @@
   "type": "menu-item",
   "to": "/analyze",
   "title": "Analyze",
-  "icon": "icon ti-layers-alt",
+  "icon": "icon ti-search",
   "badge": null
 }, {
   "id": 5,
