@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import _ from 'lodash';
 import { CSSTransitionGroup } from 'react-transition-group'
 import elasticsearch from 'elasticsearch';
@@ -7,6 +8,7 @@ import esb from 'elastic-builder';
 import classNames from 'classnames';
 import elasticClient from '../elastic/connection';
 import Datetime from 'react-datetime';
+import Story from './Story';
 
 import Hit from './Hit';
 
@@ -117,10 +119,12 @@ class Analyze extends React.Component {
         type: 'correlate_msg',
         body: requestBody.toJSON()
     }).then( response => {
+
       this.setState({
         hits: response.hits.hits,
         hitsCount: response.hits.hits.length
       })
+      
     }).catch( error => {
       console.error(error);
     });
@@ -245,6 +249,9 @@ class Analyze extends React.Component {
                           onClick={ () => this.swapPanels(true) }>
                           Back to search
                         </button>
+
+                        <Story swapper={this.swapPanels}
+                        />
                      </div>
 
                 </div>
