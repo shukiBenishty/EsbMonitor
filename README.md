@@ -9,7 +9,5 @@
 When you are done with GraphQL Server and Elastic,
 1. git pull, <code>$ npm i</code> (under Windows, try <code>$ npm i --no-optional</code>) to install all dependencies
 2. <code>$ yarn relay</code> to compile graphql templates
-2. <code>$ yarn start</code> - to run server side for subscription to Kafka events and emitting sockets or <code>$ yarn start-mock</code> to create mock events without Kafka client
-3. Adjust server address in <code>client.jsx</code>
-4. Point Web Server for Chrome or IIS to file system folder to host <code>index.html</code>
-5. <code>$ yarn build</code> - to create <code>bundle.js</code> referenced in <code>index.html</code>
+3. Point Web Server for Chrome or IIS to file system folder to host <code>index.html</code>
+4. <code>$ yarn build</code> - to create <code>bundle.js</code> referenced in <code>index.html</code>
