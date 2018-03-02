@@ -1,10 +1,22 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import Modal from 'react-modal';
 import elasticClient from '../elastic/connection';
 import esb from 'elastic-builder';
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 class Story extends React.Component {
 
@@ -13,9 +25,21 @@ class Story extends React.Component {
     super(props);
 
     this.state = {
-      events: []
+      events: [],
+      modalIsOpen: false
     }
 
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+
+  }
+
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+
+  closeModal() {
+    this.setState({modalIsOpen: false});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,14 +75,26 @@ class Story extends React.Component {
       <VerticalTimeline>
         <VerticalTimelineElement
           className="vertical-timeline-element--work"
-          date="2011 - present"
+          date="28 Feb. 20:11:43"
           iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
 
         >
-          <h3 className="vertical-timeline-element-title">Creative Director</h3>
-          <h4 className="vertical-timeline-element-subtitle">Miami, FL</h4>
+          <h3 className="vertical-timeline-element-title">Message received </h3>
+          <h4 className="vertical-timeline-element-subtitle">by External (INT1) environment</h4>
           <p>
-            Creative Direction, User Experience, Visual Design, Project Management, Team Leading
+            From 192.5.34.22
+          </p>
+          <p>User INT1\Prd_ClientPool</p>
+          <p>
+            <button className='btn'
+                    onClick={this.openModal}>Payload</button>
+             <Modal
+                style={customStyles}
+                onRequestClose={this.closeModal}
+                isOpen={this.state.modalIsOpen}
+                contentLabel="Example Modal">
+                <div>I am a modal</div>
+             </Modal>
           </p>
         </VerticalTimelineElement>
         <VerticalTimelineElement
