@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import moment from 'moment';
 
@@ -8,11 +9,17 @@ class Hit extends React.Component {
   constructor(props) {
     super(props);
 
-    this._displayFlow = this._displayFlow.bind(this);
+    this._displayStory = this._displayStory.bind(this);
   }
 
-  _displayFlow(messageId) {
-    console.log(messageId);
+  _displayStory(storyId) {
+    console.log(storyId);
+
+    this.props.dispatch({
+      type: 'STORY_ID',
+      data: storyId
+    });
+
     this.props.swapper(false);
   }
 
@@ -45,11 +52,11 @@ class Hit extends React.Component {
               {this.props.source.status}
             </span>
             <div className='icon ti-control-forward'
-              onClick={ () => this._displayFlow(this.props.source.message_guid) }>
+              onClick={ () => this._displayStory(this.props.source.message_guid) }>
             </div>
       </div>
   }
 
 }
 
-export default Hit;
+export default connect()(Hit);
