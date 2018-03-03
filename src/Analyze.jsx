@@ -29,7 +29,17 @@ class Analyze extends React.Component {
         flexGrow: '1'
       },
       fieldLabel: {
-        fontWeight: '300'
+        fontWeight: '300',
+        fontSize: '13px'
+      },
+      selfAligned: {
+        alignSelf: 'center'
+      },
+      autoMargin: {
+        marginBottom: 'auto'
+      },
+      rigthAligned: {
+        marginLeft: 'auto'
       }
     }
 
@@ -124,7 +134,7 @@ class Analyze extends React.Component {
         hits: response.hits.hits,
         hitsCount: response.hits.hits.length
       })
-      
+
     }).catch( error => {
       console.error(error);
     });
@@ -158,11 +168,11 @@ class Analyze extends React.Component {
 
   render() {
 
-    const searchPanelClass = classNames('card tab-pane fade in', {
+    const searchPanelClass = classNames('tab-pane fade in', {
       'show': this.state.showSearchPanel,
       'active': this.state.showSearchPanel
     });
-    const flowPanelClass = classNames('card tab-pane fade in', {
+    const flowPanelClass = classNames('tab-pane fade in', {
       'show': !this.state.showSearchPanel,
       'active': !this.state.showSearchPanel
     });
@@ -177,9 +187,9 @@ class Analyze extends React.Component {
                     <div className={searchPanelClass} id="tab1">
                       <div className='row'>
                         <div className='col-lg-3 tab-content'>
-                          <div className='card'>
-                            <div>Look-up in these fields:</div>
-                            <ul className='nav nav-tabs nav-lg _flexColumn'>
+                          <div className='card card-bordered' >
+                            <div className='card-header card-header-sm'>Look-up in these fields:</div>
+                            <ul  style={this.styles.autoMargin} className='card-body'>
                               {
                                 this.state.fields.map( (field, index) => {
 
@@ -199,14 +209,26 @@ class Analyze extends React.Component {
                                 })
                               }
 
-                              <li>
-                                <div>From</div>
-                                <Datetime
-                                    className='timePicker'
-                                    closeOnSelect={true}
-                                    locale="he"/>
-                              </li>
                             </ul>
+                            <div className='card-footer'>
+                              <div className='row'>
+                                <div style={this.styles.selfAligned} className='col-3'>From</div>
+                                <div className='col-9'>
+                                  <Datetime
+                                      closeOnSelect={true}
+                                      locale="he"/>
+                                </div>
+                              </div>
+                              <br />
+                              <div className='row'>
+                                <div style={this.styles.selfAligned} className='col-3'>Until</div>
+                                <div className='col-9'>
+                                  <Datetime
+                                      closeOnSelect={true}
+                                      locale="he"/>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <div className='col-lg-9'>
@@ -245,10 +267,12 @@ class Analyze extends React.Component {
                     </div>
 
                     <div className={flowPanelClass} id="tab2">
-                        <button className="btn btn-info"
-                          onClick={ () => this.swapPanels(true) }>
-                          Back to search
-                        </button>
+                        <div className='flexbox'>
+                          <button style={this.styles.rigthAligned} className="btn btn-info"
+                            onClick={ () => this.swapPanels(true) }>
+                            Back to search
+                          </button>
+                        </div>
 
                         <Story swapper={this.swapPanels}
                         />
