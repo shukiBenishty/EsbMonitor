@@ -6,6 +6,9 @@ import Modal from 'react-modal';
 import elasticClient from '../elastic/connection';
 import esb from 'elastic-builder';
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
+import Icon from './Icon';
+// import { Icon } from 'antd';
+// import 'antd/dist/antd.css';
 import 'react-vertical-timeline-component/style.min.css';
 
 import sampleStory from './SampleStory';
@@ -91,10 +94,15 @@ class Story extends React.Component<Props, State> {
                               { background: 'rgb(33, 150, 243)', color: '#fff' } :
                               { background: 'rgb(233, 30, 99)', color: '#fff' };
 
+            let iconType = ( esbEvent.status == 'INFO' )  ?
+                            'icon ti-info' :
+                            'icon ti-alert';
+
             return <VerticalTimelineElement key={index}
-                      className="vertical-timeline-element--work"
+                      className="vertical-timeline-element"
                       date={moment(esbEvent.trace_Date).format('DD/MM/YYYY, h:mm:ss')}
                       iconStyle={iconStyle}
+                      icon={<Icon type={iconType}/>}
                       >
                       <h3 className="vertical-timeline-element-title"><b>{esbEvent.message}</b></h3>
                       <h4 className="vertical-timeline-element-subtitle"><b>by {esbEvent.environment} environment</b></h4>
