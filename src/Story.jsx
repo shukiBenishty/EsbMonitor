@@ -1,11 +1,14 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import Modal from 'react-modal';
 import elasticClient from '../elastic/connection';
 import esb from 'elastic-builder';
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
+
+import sampleStory from './SampleStory';
 
 const customStyles = {
   content : {
@@ -13,12 +16,21 @@ const customStyles = {
     left                  : '50%',
     right                 : 'auto',
     bottom                : 'auto',
+    width                 : '600px',
     marginRight           : '-50%',
     transform             : 'translate(-50%, -50%)'
   }
 };
 
-class Story extends React.Component {
+type State = {
+  modalIsOpen: boolean
+}
+
+type Props = {
+  storyId: string
+}
+
+class Story extends React.Component<Props, State> {
 
   constructor(props) {
 
@@ -43,7 +55,6 @@ class Story extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
 
     const requestBody = esb.requestBodySearch()
     .query(
@@ -55,7 +66,7 @@ class Story extends React.Component {
 
     elasticClient.search({
         index: 'esb_ppr',
-        type: 'correlate_msg',
+        type: 'msg',
         body: requestBody.toJSON()
     }).then( response => {
       console.log(response);
@@ -73,91 +84,37 @@ class Story extends React.Component {
 
     return (
       <VerticalTimeline>
-        <VerticalTimelineElement
-          className="vertical-timeline-element--work"
-          date="28 Feb. 20:11:43"
-          iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+        {
+          sampleStory.map( (esbEvent, index) => {
 
-        >
-          <h3 className="vertical-timeline-element-title"><b>Message received</b></h3>
-          <h4 className="vertical-timeline-element-subtitle"><b>by External (INT1) environment</b></h4>
-          <div>
-            From 192.5.34.22
-          </div>
-          <div>User INT1\Prd_ClientPool</div>
-          <p>
-            <button className='btn'
-                    onClick={this.openModal}>Payload</button>
-             <Modal
-                style={customStyles}
-                onRequestClose={this.closeModal}
-                isOpen={this.state.modalIsOpen}
-                contentLabel="Example Modal">
-                <div>Payload is display here</div>
-             </Modal>
-          </p>
-        </VerticalTimelineElement>
-        <VerticalTimelineElement
-          className="vertical-timeline-element--work"
-          date="+23 ms."
-          iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
+            let iconStyle = ( esbEvent.status == 'INFO' ) ?
+                              { background: 'rgb(33, 150, 243)', color: '#fff' } :
+                              { background: 'rgb(233, 30, 99)', color: '#fff' };
 
-        >
-          <h3 className="vertical-timeline-element-title">Message analyzed</h3>
-          <h4 className="vertical-timeline-element-subtitle">by External (INT1) environment</h4>
-          <p>
-            Creative Direction, User Experience, Visual Design, SEO, Online Marketing
-          </p>
-        </VerticalTimelineElement>
-        <VerticalTimelineElement
-          className="vertical-timeline-element--work"
-          date="+31 ms."
-          iconStyle={{ background: 'rgb(33, 150, 243)', color: '#fff' }}
-
-        >
-          <h3 className="vertical-timeline-element-title">Message routed</h3>
-          <h4 className="vertical-timeline-element-subtitle">To Internal (DOM) environment</h4>
-          <p>
-            User Experience, Visual Design
-          </p>
-        </VerticalTimelineElement>
-
-        <VerticalTimelineElement
-          className="vertical-timeline-element--education"
-          date="April 2013"
-          iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
-
-        >
-          <h3 className="vertical-timeline-element-title">Content Marketing for Web, Mobile and Social Media</h3>
-          <h4 className="vertical-timeline-element-subtitle">Online Course</h4>
-          <p>
-            Strategy, Social Media
-          </p>
-        </VerticalTimelineElement>
-        <VerticalTimelineElement
-          className="vertical-timeline-element--education"
-          date="November 2012"
-          iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
-
-        >
-          <h3 className="vertical-timeline-element-title">Agile Development Scrum Master</h3>
-          <h4 className="vertical-timeline-element-subtitle">Certification</h4>
-          <p>
-            Creative Direction, User Experience, Visual Design
-          </p>
-        </VerticalTimelineElement>
-        <VerticalTimelineElement
-          className="vertical-timeline-element--education"
-          date="2002 - 2006"
-          iconStyle={{ background: 'rgb(233, 30, 99)', color: '#fff' }}
-
-        >
-          <h3 className="vertical-timeline-element-title">Bachelor of Science in Interactive Digital Media Visual Imaging</h3>
-          <h4 className="vertical-timeline-element-subtitle">Bachelor Degree</h4>
-          <p>
-            Creative Direction, Visual Design
-          </p>
-        </VerticalTimelineElement>
+            return <VerticalTimelineElement key={index}
+                      className="vertical-timeline-element--work"
+                      date={moment(esbEvent.trace_Date).format('DD/MM/YYYY, h:mm:ss')}
+                      iconStyle={iconStyle}
+                      >
+                      <h3 className="vertical-timeline-element-title"><b>{esbEvent.message}</b></h3>
+                      <h4 className="vertical-timeline-element-subtitle"><b>by {esbEvent.environment} environment</b></h4>
+                      <div>From {esbEvent.client_ip}</div>
+                      <div>User {esbEvent.client_user}</div>
+                      <p>
+                        <button className='btn'
+                              onClick={this.openModal}>Payload</button>
+                        <Modal
+                           style={customStyles}
+                           onRequestClose={this.closeModal}
+                           isOpen={this.state.modalIsOpen}
+                           ariaHideApp={false}
+                           contentLabel="Payload">
+                           <div>{esbEvent.payload}</div>
+                        </Modal>
+                      </p>
+                   </VerticalTimelineElement>
+          })
+        }
       </VerticalTimeline>
     )
   }
