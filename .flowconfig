@@ -1,8 +1,7 @@
 [ignore]
 
 [include]
-App.jsx
-EventList.jsx
+src/App.jsx
 reducers.jsx
 
 [libs]
