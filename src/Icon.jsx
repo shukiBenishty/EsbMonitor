@@ -1,7 +1,8 @@
+// @flow
 import React from 'react';
 import classNames from 'classnames';
 
-const Icon = ({type}) => {
+const Icon = ({type}: { type: string }) => {
 
     let styles = {
       iconStyle: {
