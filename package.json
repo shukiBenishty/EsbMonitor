@@ -2,6 +2,7 @@
   "name": "EsbMonitor",
   "version": "1.0.0",
   "description": "",
+  "author": "Oleg Kleiman",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js --exec babel-node",
