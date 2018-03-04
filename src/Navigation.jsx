@@ -22,8 +22,7 @@ class Navigation extends React.Component {
     }
 
     this.state = {
-      currentLink: 1,
-      errorsNumber: 0
+      currentLink: 1
     }
 
     this.linkClicked = this.linkClicked.bind(this);
@@ -33,14 +32,6 @@ class Navigation extends React.Component {
     this.setState({
       currentLink: linkNumber
     })
-  }
-
-  componentWillReceiveProps(nextProps) {
-
-    this.setState({
-        errorsNumber: ++this.state.errorsNumber
-    })
-
   }
 
   render() {
@@ -65,9 +56,9 @@ class Navigation extends React.Component {
                         } else {
 
                           let badge = null;
-                          if( link.badge && this.state.errorsNumber > 0 ) {
+                          if( link.badge && this.props.errorsNumber > 0 ) {
                             let badgeClasName = 'badge badge-pill ' + link.badge.type;
-                            badge = <span className={badgeClasName}>{this.state.errorsNumber}</span>
+                            badge = <span className={badgeClasName}>{this.props.errorsNumber}</span>
                           }
 
                           return (<li key={index} className={linkClassName}>
@@ -92,12 +83,10 @@ class Navigation extends React.Component {
 
 function mapStateToProps(state) {
 
-  if( state.status == 'ERROR' ) {
-    return {
-        status: state.status
-    }
-  } else
-      return {};
+  return {
+    errorsNumber: state.errorsCount
+  }
+
 }
 
 export default connect(mapStateToProps)(Navigation);
