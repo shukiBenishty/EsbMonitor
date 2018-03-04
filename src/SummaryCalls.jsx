@@ -5,7 +5,7 @@ import { css } from 'glamor';
 
 const SummaryCalls = ({title, totals, relay}) => {
 
-    let todayCalls = 'No Calls';
+    let todayCalls = 0;
     let percentage = 0;
     if( totals.totalCalls.length > 1 ){
       todayCalls = totals.totalCalls[0].value.toLocaleString();
