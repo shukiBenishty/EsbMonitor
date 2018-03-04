@@ -3,7 +3,8 @@ import { withRouter } from 'react-router-dom'
 import { graphql, requestSubscription } from 'react-relay';
 import { connect } from 'react-redux';
 import environment from '../Environment';
-import Navigation from './Navigation';
+//import Navigation from './Navigation';
+import NavigationRenderer from './NavigationRenderer';
 import Header from './Header';
 import MainContent from './MainContent';
 import Footer from './Footer';
@@ -105,17 +106,20 @@ class AppLayout extends React.Component {
           }
 
           let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
-          if( totalCallsRecords && totalCallsRecords.length > 0) {
+          if( totalCallsRecords && totalCallsRecords.length > 0
+              && totalCallsRecords[0] ) {
             let totalCalls = totalCallsRecords[0].getValue('value');
             totalCallsRecords[0].setValue( ++totalCalls, "value");
           }
 
           if( __status == 'ERROR' ) {
             let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 1});
-            if( errorsRecors && errorsRecors.length > 0) {
+            if( errorsRecors && errorsRecors.length > 0
+                && errorsRecors[0]) {
               let totalErrors = errorsRecors[0].getValue('value');
               errorsRecors[0].setValue( ++totalErrors, 'value');
             }
+
           }
         }
       },
@@ -133,7 +137,7 @@ class AppLayout extends React.Component {
 
   render() {
     return (<div className="maxHeight">
-              <Navigation />
+              <NavigationRenderer />
               <Header userName='Oleg Kleiman'/>
               <MainContent />
             </div>);
