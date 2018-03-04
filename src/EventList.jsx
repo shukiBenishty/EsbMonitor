@@ -12,21 +12,6 @@ import environment from '../Environment';
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
 
-const realtimeEventsSubscription = graphql`
-  subscription EventList_Subscription {
-    traceAdded {
-      id
-      storyId
-      time
-      serviceName
-      serviceId
-      message
-      eventId
-      status
-    }
-  }
-`;
-
 type Props = {
   eventId: number,
   issued: Date
@@ -60,98 +45,12 @@ class EventList extends React.Component<Props, State> {
     }
 
     this.rowRenderer = this.rowRenderer.bind(this);
-    this.publishEsbEvent = this.publishEsbEvent.bind(this);
-  }
-
-  publishEsbEvent(payload) {
-
-    this.props.dispatch({
-      type: 'NEW_EVENT',
-      data: {
-        storyId: payload.storyId,
-        serviceName: payload.serviceName,
-        message: payload.message,
-        eventId: payload.eventId,
-        issued: payload.time,
-        status: payload.status
-      }
-    })
   }
 
   componentDidMount() {
     this.search = new JsSearch.Search('eventId');
     // this.search.addDocuments([{eventId: 'ab'}, {eventId: 'cd'}, {eventId: 'ef'}]);
     //this.search.addIndex('eventId');
-
-    const self = this;
-    const subscriptionConfig = {
-      subscription: realtimeEventsSubscription,
-      variables: {},
-      onNext: payload => {
-
-        // TBD: Temporay solution: change this to use Relay fragment!
-        self.publishEsbEvent(payload.traceAdded);
-
-      },
-      updater: proxyStore => {
-
-        //  Reading values off the Payload
-        const rootField = proxyStore.getRootField('traceAdded');
-        const __type = rootField.getType();
-        const __status = rootField.getValue('status');
-        const __serviceId = rootField.getValue('serviceId');
-
-        // Reading Values off the Relay Store
-        let root = proxyStore.getRoot();
-        let _type = root.getType();
-        let runtimeRecord = root.getLinkedRecord('runtime');
-        if( runtimeRecord ) {
-
-          let distributionRecord = runtimeRecord.getLinkedRecord('distribution',
-                                                    {daysBefore: 10, servicesIds: [3,4]});
-          if( distributionRecord ) {
-              let seriesRecords = distributionRecord.getLinkedRecords('series');
-              if( seriesRecords ) {
-                  for(let i = 0; i < seriesRecords.length; i++) {
-                      let serviceId = seriesRecords[i].getValue('serviceId');
-                      if( serviceId == __serviceId ) {
-                         let data = seriesRecords[i].getValue('data');
-                         let _data =   _.map(data, _.clone);
-                         _data[0] = data[0] + 1;
-                         seriesRecords[i].setValue(_data, 'data');
-                      }
-                  }
-              }
-          }
-
-          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
-          if( totalCallsRecords ) {
-            let totalCalls = totalCallsRecords[0].getValue('value');
-            totalCallsRecords[0].setValue( ++totalCalls, "value");
-          }
-
-          if( __status == 'ERROR' ) {
-            let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 1});
-            if( errorsRecors ) {
-              let totalErrors = errorsRecors[0].getValue('value');
-              errorsRecors[0].setValue( ++totalErrors, 'value');
-            }
-          }
-        }
-      },
-      onError: error => {
-        console.log(`An error occured:`, error);
-      }
-    };
-
-    this.subscription = requestSubscription(
-      environment,
-      subscriptionConfig
-    )
-  }
-
-  componentWillUnmount() {
-    //this.subscription.dispose();
   }
 
   componentWillReceiveProps(nextProps){
