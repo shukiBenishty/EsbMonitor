@@ -76,8 +76,12 @@ class AppLayout extends React.Component {
         let runtimeRecord = root.getLinkedRecord('runtime');
         if( runtimeRecord ) {
 
-          let distributionRecord = runtimeRecord.getLinkedRecord('distribution',
-                                                    {daysBefore: 7, servicesIds: [1,3]});
+          let daysBefore = 7;
+
+          let distributionRecord =
+            runtimeRecord.getOrCreateLinkedRecord('distribution', 'Series',
+                                                  {daysBefore: daysBefore, servicesIds: [1,3]});
+
           if( distributionRecord ) {
               let seriesRecords = distributionRecord.getLinkedRecords('series');
               if( seriesRecords ) {
@@ -85,8 +89,15 @@ class AppLayout extends React.Component {
                       let serviceId = seriesRecords[i].getValue('serviceId');
                       if( serviceId == __serviceId ) {
                          let data = seriesRecords[i].getValue('data');
-                         let _data =   _.map(data, _.clone);
-                         _data[0] = data[0] + 1;
+                         let _data =   _.map(data, _.clone); // clone data in order to be able to change it
+                         if( !_data[0] ) { // in case the 'distrubution' record was just created
+                            _data[0] = 1; // consider today ([0])
+                            for(let j = 1; j < daysBefore; j++) { // fill the rest
+                              _data[j] = 0;
+                            }
+                         } else {
+                           _data[0] = data[0] + 1;
+                         }
                          seriesRecords[i].setValue(_data, 'data');
                       }
                   }
