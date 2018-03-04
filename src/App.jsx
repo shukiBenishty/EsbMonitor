@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom'
 import { graphql, requestSubscription } from 'react-relay';
 import { connect } from 'react-redux';
 import environment from '../Environment';
-//import Navigation from './Navigation';
 import NavigationRenderer from './NavigationRenderer';
 import Header from './Header';
 import MainContent from './MainContent';
