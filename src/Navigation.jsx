@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import { createFragmentContainer, graphql} from 'react-relay';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
@@ -8,8 +9,8 @@ import navigationLinks from './NavigationLinks.json'
 
 class Navigation extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.styles = {
       logoStyle: {
@@ -35,6 +36,10 @@ class Navigation extends React.Component {
   }
 
   render() {
+
+    let _totalErrors = ( this.props.totals.errors ) ?
+                this.props.totals.errors : [{value:0}];
+
     return (<aside className="sidebar sidebar-expand-lg sidebar-light sidebar-sm sidebar-color-info">
                 <header className="sidebar-header bg-info">
                   <span className="logo">ESB Monitor</span>
@@ -56,9 +61,9 @@ class Navigation extends React.Component {
                         } else {
 
                           let badge = null;
-                          if( link.badge && this.props.errorsNumber > 0 ) {
+                          if( link.badge && _totalErrors.length > 0 ) {
                             let badgeClasName = 'badge badge-pill ' + link.badge.type;
-                            badge = <span className={badgeClasName}>{this.props.errorsNumber}</span>
+                            badge = <span className={badgeClasName}>{_totalErrors[0].value}</span>
                           }
 
                           return (<li key={index} className={linkClassName}>
@@ -81,12 +86,26 @@ class Navigation extends React.Component {
 
 };
 
-function mapStateToProps(state) {
+// function mapStateToProps(state) {
+//
+//   return {
+//     errorsNumber: state.errorsCount
+//   }
+//
+// }
+//
+// export default connect(mapStateToProps)(Navigation);
 
-  return {
-    errorsNumber: state.errorsCount
+export default createFragmentContainer(Navigation,
+graphql`
+fragment Navigation_totals on Runtime
+@argumentDefinitions(
+  before: { type: "Date", defaultValue: 2 }
+)
+{
+  errors(before: $before) {
+    date
+    value
   }
-
 }
-
-export default connect(mapStateToProps)(Navigation);
+`);
