@@ -28,7 +28,7 @@ const SummaryLatency = ({title, totals, relay}) => {
                   </span>
                 </h6>
                 <br />
-                <p className="fs-28 fw-100">{todayLatency} sec.</p>
+                <p className="fs-28 fw-100">{todayLatency} ms.</p>
                 <div className="progress">
                   <div className="progress-bar bg-danger" role="progressbar" className={progressBarCss}>
                   </div>
