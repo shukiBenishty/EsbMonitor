@@ -1,11 +1,124 @@
 import React from 'react';
-
+import { withRouter } from 'react-router-dom'
+import { graphql, requestSubscription } from 'react-relay';
+import { connect } from 'react-redux';
+import environment from '../Environment';
 import Navigation from './Navigation';
 import Header from './Header';
 import MainContent from './MainContent';
 import Footer from './Footer';
 
+const realtimeEventsSubscription = graphql`
+  subscription App_Subscription {
+    traceAdded {
+      id
+      storyId
+      time
+      serviceName
+      serviceId
+      message
+      eventId
+      status
+    }
+  }
+`;
+
 class AppLayout extends React.Component {
+
+  constructor(props){
+
+    super(props);
+
+    this.publishEsbEvent = this.publishEsbEvent.bind(this);
+
+  }
+
+  publishEsbEvent(payload) {
+
+    this.props.dispatch({
+      type: 'NEW_EVENT',
+      data: {
+        storyId: payload.storyId,
+        serviceName: payload.serviceName,
+        message: payload.message,
+        eventId: payload.eventId,
+        issued: payload.time,
+        status: payload.status
+      }
+    })
+
+  }
+
+  componentDidMount() {
+
+    const self = this;
+
+    const subscriptionConfig = {
+      subscription: realtimeEventsSubscription,
+      variables: {},
+      onNext: payload => {
+
+        // TBD: Temporay solution: change this to use Relay fragment!
+        self.publishEsbEvent(payload.traceAdded);
+
+      },
+      updater: proxyStore => {
+
+        //  Reading values off the Payload
+        const rootField = proxyStore.getRootField('traceAdded');
+        const __type = rootField.getType();
+        const __status = rootField.getValue('status');
+        const __serviceId = rootField.getValue('serviceId');
+
+        // Reading Values off the Relay Store
+        let root = proxyStore.getRoot();
+        let _type = root.getType();
+        let runtimeRecord = root.getLinkedRecord('runtime');
+        if( runtimeRecord ) {
+
+          let distributionRecord = runtimeRecord.getLinkedRecord('distribution',
+                                                    {daysBefore: 10, servicesIds: [3,4]});
+          if( distributionRecord ) {
+              let seriesRecords = distributionRecord.getLinkedRecords('series');
+              if( seriesRecords ) {
+                  for(let i = 0; i < seriesRecords.length; i++) {
+                      let serviceId = seriesRecords[i].getValue('serviceId');
+                      if( serviceId == __serviceId ) {
+                         let data = seriesRecords[i].getValue('data');
+                         let _data =   _.map(data, _.clone);
+                         _data[0] = data[0] + 1;
+                         seriesRecords[i].setValue(_data, 'data');
+                      }
+                  }
+              }
+          }
+
+          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
+          if( totalCallsRecords && totalCallsRecords.length > 0) {
+            let totalCalls = totalCallsRecords[0].getValue('value');
+            totalCallsRecords[0].setValue( ++totalCalls, "value");
+          }
+
+          if( __status == 'ERROR' ) {
+            let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 1});
+            if( errorsRecors && errorsRecors.length > 0) {
+              let totalErrors = errorsRecors[0].getValue('value');
+              errorsRecors[0].setValue( ++totalErrors, 'value');
+            }
+          }
+        }
+      },
+      onError: error => {
+        console.log(`An error occured:`, error);
+      }
+    };
+
+    requestSubscription(
+      environment,
+      subscriptionConfig
+    )
+
+  }
 
   render() {
     return (<div className="maxHeight">
@@ -17,4 +130,9 @@ class AppLayout extends React.Component {
 
 };
 
-export default AppLayout;
+const mapStateToProps = state => {
+  return {
+  }
+}
+
+export default withRouter(connect()(AppLayout))
