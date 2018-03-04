@@ -77,7 +77,7 @@ class AppLayout extends React.Component {
         if( runtimeRecord ) {
 
           let distributionRecord = runtimeRecord.getLinkedRecord('distribution',
-                                                    {daysBefore: 10, servicesIds: [3,4]});
+                                                    {daysBefore: 7, servicesIds: [1,3]});
           if( distributionRecord ) {
               let seriesRecords = distributionRecord.getLinkedRecords('series');
               if( seriesRecords ) {
