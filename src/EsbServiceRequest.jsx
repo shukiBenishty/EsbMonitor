@@ -2,7 +2,7 @@
 import React from 'react';
 import { commitMutation, createFragmentContainer, graphql } from 'react-relay';
 
-import environment from '../Environment';
+import environment from './Environment';
 
 const publishServiceMutation = graphql`
   mutation EsbServiceRequest_Publish_Mutation ($serviceId: Int) {
