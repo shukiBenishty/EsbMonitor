@@ -11,7 +11,7 @@ import TextField from 'material-ui/TextField';
 import EsbService from './EsbService';
 import EsbServiceRequest from './EsbServiceRequest';
 import AdminServicePanel from './AdminServicePanel';
-import environment from '../Environment';
+import environment from './Environment';
 
  const addServiceMutation = graphql`
    mutation EsbAdminMutation(
@@ -44,24 +44,28 @@ type Props = {
 type State = {
   servicePanelVisible: boolean,
   selectedCategory: Object,
+  categories: [],
   currentServicesPage: number
 }
 
 class EsbAdmin extends React.Component<Props, State> {
 
-  // state = {
-  //   servicePanelVisible: false
-  // };
+  state = {
+     servicePanelVisible: false,
+     selectedCategory: {},
+     categories: [],
+     currentServicesPage: 1
+  };
 
   constructor() {
     super();
 
-    this.state = {
-      servicePanelVisible: false,
-      selectedCategory: {},
-      categories: [],
-      currentServicesPage: 1,
-    };
+    // this.state = {
+    //   servicePanelVisible: false,
+    //   selectedCategory: {},
+    //   categories: [],
+    //   currentServicesPage: 1,
+    // };
 
     this.styles = {
       categoriesSelectorStyle: {
