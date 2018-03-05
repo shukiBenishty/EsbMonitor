@@ -3,7 +3,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import { QueryRenderer } from 'react-relay';
-import environment from '../Environment';
+import environment from './Environment';
 
 import Dashboard from './Dashboard';
 import EventList from './EventList';
