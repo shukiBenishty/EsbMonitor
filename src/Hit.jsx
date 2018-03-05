@@ -6,13 +6,7 @@ import moment from 'moment';
 
 class Hit extends React.Component {
 
-  constructor(props) {
-    super(props);
-
-    this._displayStory = this._displayStory.bind(this);
-  }
-
-  _displayStory(storyId) {
+  _displayStory = (storyId) => {
     console.log(storyId);
 
     this.props.dispatch({
