@@ -2,7 +2,7 @@ import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import environment from '../Environment';
+import environment from './Environment';
 import EsbAdmin from './EsbAdmin';
 
 const rootQuery = graphql`
