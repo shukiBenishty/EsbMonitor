@@ -11,7 +11,7 @@ import { Chart } from 'react-google-charts';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 
-import environment from '../Environment';
+import environment from './Environment';
 import EsbServices from './EsbServices';
 
 type Props = {
