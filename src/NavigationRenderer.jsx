@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
-import environment from '../Environment';
+import environment from './Environment';
 import Navigation from './Navigation';
 
 const errorsQuery = graphql`
