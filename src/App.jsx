@@ -96,7 +96,7 @@ class AppLayout extends React.Component {
               }
           }
 
-          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
+          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 0});
           if( totalCallsRecords && totalCallsRecords.length > 0
               && totalCallsRecords[0] ) {
             let totalCalls = totalCallsRecords[0].getValue('value');
@@ -104,7 +104,7 @@ class AppLayout extends React.Component {
           }
 
           if( __status == 'ERROR' ) {
-            let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 1});
+            let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 0});
             if( errorsRecors && errorsRecors.length > 0
                 && errorsRecors[0]) {
               let totalErrors = errorsRecors[0].getValue('value');
