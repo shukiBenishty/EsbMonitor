@@ -51,7 +51,6 @@ graphql`
   )
   {
     todayTotalCalls: totalCalls(before: 0) {
-      date
       value
     }
     totalCalls(before: $before) {
