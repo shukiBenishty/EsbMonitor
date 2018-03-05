@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import TextField from 'material-ui/TextField';
 import Select from 'react-select';
 
-import environment from '../Environment';
+import environment from './Environment';
 
 //import AddServiceMutation from '../mutations/AddServiceMutation'
 
