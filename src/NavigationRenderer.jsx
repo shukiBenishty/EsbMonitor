@@ -27,7 +27,7 @@ class NavigationRenderer extends React.Component{
   render() {
 
     let queryVariables = {
-			daysBefore: 1 // get errors just for today
+			daysBefore: 0 // get errors just for today
 		}
 
      return <QueryRenderer
