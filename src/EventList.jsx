@@ -7,7 +7,7 @@ import * as JsSearch from 'js-search';
 import EventsFilter from './EventsFilter';
 import EsbEvent from './EsbEvent';
 import EsbStatus from './EsbStatus';
-import environment from '../Environment';
+import environment from './Environment';
 
 import { AutoSizer, List , Table, Column } from 'react-virtualized';
 import 'react-virtualized/styles.css'; // no CSS modules!!!
