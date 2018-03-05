@@ -7,9 +7,9 @@ const SummaryCalls = ({title, totals, relay}) => {
 
     let todayCalls = 0;
     let percentage = 0;
-    if( totals.totalCalls.length > 1 ){
-      todayCalls = totals.totalCalls[0].value.toLocaleString();
-      percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
+    if( totals.totalCalls.length > 0 && totals.todayTotalCalls.length > 0 ){
+      todayCalls = totals.todayTotalCalls[0].value.toLocaleString();
+      percentage = Math.floor(totals.todayTotalCalls[0].value / totals.totalCalls[0].value * 100) ;
     }
 
     let progressBarWidth = percentage + '%';
@@ -50,6 +50,10 @@ graphql`
     before: { type: "Date", defaultValue: 2 }
   )
   {
+    todayTotalCalls: totalCalls(before: 0) {
+      date
+      value
+    }
     totalCalls(before: $before) {
       date
       value
