@@ -2,12 +2,19 @@
 import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import classNames from 'classnames';
 
 import navigationLinks from './NavigationLinks.json'
 
-class Navigation extends React.Component {
+type State = {
+  currentLink: number
+}
+
+class Navigation extends React.Component<{}, State> {
+
+  state = {
+    currentLink: 1
+  }
 
   constructor(props) {
     super(props);
@@ -21,15 +28,9 @@ class Navigation extends React.Component {
         marginTop: "1px"
       }
     }
-
-    this.state = {
-      currentLink: 1
-    }
-
-    this.linkClicked = this.linkClicked.bind(this);
   }
 
-  linkClicked(linkNumber: number) {
+  linkClicked = (linkNumber: number) => {
     this.setState({
       currentLink: linkNumber
     })
@@ -85,16 +86,6 @@ class Navigation extends React.Component {
   }
 
 };
-
-// function mapStateToProps(state) {
-//
-//   return {
-//     errorsNumber: state.errorsCount
-//   }
-//
-// }
-//
-// export default connect(mapStateToProps)(Navigation);
 
 export default createFragmentContainer(Navigation,
 graphql`
