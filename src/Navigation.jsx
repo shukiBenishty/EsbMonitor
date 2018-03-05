@@ -91,7 +91,7 @@ export default createFragmentContainer(Navigation,
 graphql`
 fragment Navigation_totals on Runtime
 @argumentDefinitions(
-  before: { type: "Date", defaultValue: 2 }
+  before: { type: "Date", defaultValue: 0 }
 )
 {
   errors(before: $before) {
