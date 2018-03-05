@@ -7,9 +7,9 @@ const SummaryLatency = ({title, totals, relay}) => {
   let todayLatency = 0;
   let percentage = 0;
 
-  if( totals.latency.length > 1 ){
-    todayLatency = totals.latency[0].value.toLocaleString();
-    percentage = Math.floor(totals.latency[0].value / totals.latency[1].value * 100) ;
+  if( totals.latency.length > 0 && totals.todayLatency.length > 0 ){
+    todayLatency = totals.todayLatency[0].value.toLocaleString();
+    percentage = Math.floor(totals.todayLatency[0].value / totals.latency[0].value * 100) ;
   }
 
   let progressBarWidth = percentage + '3%';
@@ -49,10 +49,12 @@ graphql`
     before: { type: "Date", defaultValue: 2 }
   )
   {
+    todayLatency: latency(before:0) {
+      value
+    }
     latency(before: $before) {
       date
       value
-      id
     }
   }
 `);
