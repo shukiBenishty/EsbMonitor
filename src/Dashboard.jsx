@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import { QueryRenderer, graphql } from 'react-relay';
-import environment from '../Environment';
+import environment from './Environment';
 
 import SummaryCalls from './SummaryCalls';
 import SummaryLatency from './SummaryLatency';
