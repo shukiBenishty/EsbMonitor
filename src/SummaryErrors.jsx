@@ -49,7 +49,6 @@ fragment SummaryErrors_totals on Runtime
 )
 {
   todayErrors: errors(before: 0) {
-    date
     value
   }
   errors(before: $before) {
