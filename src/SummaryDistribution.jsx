@@ -1,6 +1,6 @@
 import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
-
+import _ from 'lodash';
 var LineChart = require("react-chartjs").Line;
 
 //
@@ -45,7 +45,9 @@ var chartOptions = {
 
 const SummaryDistribution = ({title, totals, relay}) => {
 
+  let todayDistribution = totals.todayDistribution;
 	let distribution = totals.distribution;
+  let labels = _.concat(todayDistribution.labels, distribution.labels);
 
 	let datasets = distribution.datasets.map( (ds, index) => {
 
@@ -61,8 +63,12 @@ const SummaryDistribution = ({title, totals, relay}) => {
 		}
 	});
 
+  for(let i = 0; i < datasets.length; i++ ) {
+    datasets[i].data = _.concat(todayDistribution.datasets[i].data, datasets[i].data);
+  }
+
 	let _chartData = {
-		labels: distribution.labels,
+		labels: labels, // distribution.labels,
 		datasets: datasets
 	};
 
@@ -92,6 +98,14 @@ graphql`
 		servicesIds: { type: "[Int]!", defaultValue: [1,2] }
 	)
 	{
+    todayDistribution: distribution(daysBefore: 0, servicesIds: $servicesIds) {
+      labels
+      datasets: series {
+        label
+        data
+        serviceId
+      }
+    }
   	distribution(daysBefore: $daysBefore, servicesIds: $servicesIds) {
       labels
       datasets: series { #alias
