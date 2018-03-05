@@ -25,15 +25,7 @@ const realtimeEventsSubscription = graphql`
 
 class AppLayout extends React.Component {
 
-  constructor(props){
-
-    super(props);
-
-    this.publishEsbEvent = this.publishEsbEvent.bind(this);
-
-  }
-
-  publishEsbEvent(payload) {
+  publishEsbEvent = (payload) => {
 
     this.props.dispatch({
       type: 'NEW_EVENT',
@@ -143,10 +135,5 @@ class AppLayout extends React.Component {
   }
 
 };
-
-const mapStateToProps = state => {
-  return {
-  }
-}
 
 export default withRouter(connect()(AppLayout))
