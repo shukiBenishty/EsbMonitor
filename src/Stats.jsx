@@ -177,6 +177,11 @@ class Stats extends React.Component<Props, State> {
                       />
                    </div> : null;
 
+     let valid = function( current ){
+         return current.isBefore( moment() );
+     };
+
+
     return (<main className="main-container maxHeight">
               <div className="main-content maxHeight">
                 <div className="media-list media-list-divided media-list-hover">
@@ -205,12 +210,14 @@ class Stats extends React.Component<Props, State> {
                               className={fromDateClassName}
                               onChange={this._fromDateChanged}
                               closeOnSelect={true}
+                              isValidDate={ valid }
                               locale="he"/>
                           <div>Till</div>
                           <Datetime
                               className={tillDateClassName}
                               onChange={this._tillDateChanged}
                               closeOnSelect={true}
+                              isValidDate={ valid }
                               locale="he"/>
                           <button className="btn btn-info"
                             onClick={this._apply}>Apply</button>
