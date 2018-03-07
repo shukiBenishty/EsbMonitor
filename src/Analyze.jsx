@@ -61,8 +61,8 @@ class Analyze extends React.Component {
     const self = this;
 
     elasticClient.indices.getMapping({
-      index: 'esb_ppr',
-      type: 'correlate_msg',
+      index: 'esb_ppr_summary',
+      type: 'summary',
     },  (error,response) => {
 
       if( error ) {
@@ -71,7 +71,7 @@ class Analyze extends React.Component {
 
           let _fields = [];
 
-          const esProps = {...response.esb_ppr.mappings.correlate_msg.properties};
+          const esProps = {...response.esb_ppr_summary.mappings.summary.properties};
 
           for(let esPropName in esProps) {
 
@@ -125,8 +125,8 @@ class Analyze extends React.Component {
     .sort(esb.sort('trace_Date', 'desc'));
 
     return elasticClient.search({
-        index: 'esb_ppr',
-        type: 'correlate_msg',
+        index: 'esb_ppr_summary',
+        type: 'summary',
         body: requestBody.toJSON()
     }).then( response => {
 
