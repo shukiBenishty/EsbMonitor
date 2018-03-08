@@ -1,6 +1,6 @@
 import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
-import _ from 'lodash';
+
 var LineChart = require("react-chartjs").Line;
 
 //
@@ -45,32 +45,34 @@ var chartOptions = {
 
 const SummaryDistribution = ({title, totals, relay}) => {
 
-  let todayDistribution = totals.todayDistribution;
 	let distribution = totals.distribution;
-  let labels = _.concat(todayDistribution.labels, distribution.labels);
+	let _chartData = {};
 
-	let datasets = distribution.datasets.map( (ds, index) => {
+	if( distribution ) {
+		let datasets = distribution.datasets.map( (ds, index) => {
 
-		return {
-			data: ds.data,
-			label: ds.label,
-			fillColor: "rgba(151,187,205,0.2)",
-			strokeColor: "rgba(151,187,205,1)",
-			pointColor: "rgba(151,187,205,1)",
-			pointStrokeColor: "#fff",
-			pointHighlightFill: "#fff",
-			pointHighlightStroke: "rgba(151,187,205,1)"
+			return {
+				data: ds.data,
+				label: ds.label,
+				fillColor: "rgba(151,187,205,0.2)",
+				strokeColor: "rgba(151,187,205,1)",
+				pointColor: "rgba(151,187,205,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(151,187,205,1)"
+			}
+		});
+
+		_chartData = {
+			labels: distribution.labels,
+			datasets: datasets
+		};
+	} else {
+		_chartData ={
+			labels: [],
+			datasets: []
 		}
-	});
-
-  for(let i = 0; i < datasets.length; i++ ) {
-    datasets[i].data = _.concat(todayDistribution.datasets[i].data, datasets[i].data);
-  }
-
-	let _chartData = {
-		labels: labels, // distribution.labels,
-		datasets: datasets
-	};
+	}
 
   return (
     <div className="col-12">
@@ -98,14 +100,6 @@ graphql`
 		servicesIds: { type: "[Int]!", defaultValue: [1,2] }
 	)
 	{
-    todayDistribution: distribution(daysBefore: 0, servicesIds: $servicesIds) {
-      labels
-      datasets: series {
-        label
-        data
-        serviceId
-      }
-    }
   	distribution(daysBefore: $daysBefore, servicesIds: $servicesIds) {
       labels
       datasets: series { #alias
