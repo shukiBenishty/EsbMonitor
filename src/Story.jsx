@@ -68,15 +68,17 @@ class Story extends React.Component<Props, State> {
     const self = this;
 
     elasticClient.search({
-        index: 'esb_ppr',
-        type: 'msg',
+        index: 'esb_ppr_row',
+        type: 'track',
         body: requestBody.toJSON()
     }).then( response => {
       console.log(response);
 
-      self.setState({
-        events: response.hits.hits
-      })
+      if( response.hits.hits.length > 0  ) {
+        self.setState({
+          events: response.hits.hits
+        })
+      }
 
     }).catch( error => {
       console.error(error);
@@ -88,26 +90,26 @@ class Story extends React.Component<Props, State> {
     return (
       <VerticalTimeline>
         {
-          sampleStory.map( (esbEvent, index) => {
+          this.state.events.map( (esbEvent, index) => {
 
-            let iconStyle = ( esbEvent.status == 'INFO' ) ?
+            let iconStyle = ( esbEvent._source.status == 'Success' ) ?
                               { background: 'rgb(33, 150, 243)', color: '#fff' } :
                               { background: 'rgb(233, 30, 99)', color: '#fff' };
 
-            let iconType = ( esbEvent.status == 'INFO' )  ?
+            let iconType = ( esbEvent._source.status == 'Success' )  ?
                             'icon ti-info' :
                             'icon ti-alert';
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent.trace_Date).format('DD/MM/YYYY, h:mm:ss')}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS')}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
-                      <h3 className="vertical-timeline-element-title"><b>{esbEvent.message}</b></h3>
-                      <h4 className="vertical-timeline-element-subtitle"><b>by {esbEvent.environment} environment</b></h4>
-                      <div>From {esbEvent.client_ip}</div>
-                      <div>User {esbEvent.client_user}</div>
+                      <h3 className="vertical-timeline-element-title"><b>{esbEvent._source.message}</b></h3>
+                      <h4 className="vertical-timeline-element-subtitle"><b>by {esbEvent._source.environment} environment</b></h4>
+                      <div>From {esbEvent._source.client_ip}</div>
+                      <div>User {esbEvent._source.client_user}</div>
                       <p>
                         <button className='btn'
                               onClick={this.openModal}>Payload</button>
@@ -117,7 +119,7 @@ class Story extends React.Component<Props, State> {
                            isOpen={this.state.modalIsOpen}
                            ariaHideApp={false}
                            contentLabel="Payload">
-                           <div>{esbEvent.payload}</div>
+                           <div>{esbEvent._source.payload}</div>
                         </Modal>
                       </p>
                    </VerticalTimelineElement>
