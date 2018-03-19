@@ -26,7 +26,8 @@ const customStyles = {
 };
 
 type State = {
-  modalIsOpen: boolean
+  modalIsOpen: boolean,
+  events: []
 }
 
 type Props = {
@@ -82,6 +83,11 @@ class Story extends React.Component<Props, State> {
 
     }).catch( error => {
       console.error(error);
+
+      // Only for tests purpose
+      self.setState({
+        events: sampleStory
+      })
     });
   }
 
@@ -100,9 +106,11 @@ class Story extends React.Component<Props, State> {
                             'icon ti-info' :
                             'icon ti-alert';
 
+            let latency = moment.duration(moment(esbEvent._source.end_date).diff(moment(esbEvent._source.start_date)));
+
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS')}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
@@ -133,7 +141,7 @@ class Story extends React.Component<Props, State> {
 
 function mapStateToProps(state) {
     return {
-      storyId: state.storyId
+      storyId: state.analyzedStoryID
     }
 }
 
