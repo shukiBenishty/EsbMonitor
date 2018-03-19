@@ -10,12 +10,20 @@ const INITIAL_STATE = {
   issued: Date(),
   status: '',
   filterValue: '',
-  categories: []  
+  categories: []
 };
 
 const reducers = (state = INITIAL_STATE, action) => {
 
   switch( action.type ) {
+
+    case 'STORY_ID': {
+      state = _.assign({}, state, {
+                                    storyId: action.data
+                                  }
+                      )
+    }
+    break;
 
     case 'NEW_EVENT': {
 
