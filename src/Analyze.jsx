@@ -13,7 +13,21 @@ import Story from './Story';
 
 import Hit from './Hit';
 
-class Analyze extends React.Component {
+type Props = {
+  styles: [],
+  _searchField: string
+}
+
+type State = {
+  showSearchPanel: boolean,
+  fields: string[],
+  hits: number[],
+  hitsCount: number,
+  fromDate: Date,
+  tillDate: Date
+}
+
+class Analyze extends React.Component<Props, State>  {
 
   constructor() {
 
@@ -59,16 +73,18 @@ class Analyze extends React.Component {
 
     this._fromDateChanged = this._fromDateChanged.bind(this);
     this._tillDateChanged = this._tillDateChanged.bind(this);
+
+    this.buildRequestBody = this.buildRequestBody.bind(this);
   }
 
-  _fromDateChanged(_date) {
+  _fromDateChanged(_date: Date) {
 
     this.setState({
       fromDate: _date.toDate()
     })
   }
 
-  _tillDateChanged(_date) {
+  _tillDateChanged(_date: Date) {
 
     this.setState({
       tillDate: _date.toDate()
@@ -123,21 +139,78 @@ class Analyze extends React.Component {
     });
   }
 
+  buildRequestBody(_from: Date,
+                   _till: Date,
+                   searchFields: string[],
+                   searchText: string) {
+
+    if( !_from && !_till) {
+
+      return esb.requestBodySearch()
+      .query(
+          esb.multiMatchQuery(searchFields,
+                              searchText)
+              .lenient(true) // lenient allows to ignore exceptions caused by
+                             // data-type mismatches such as trying
+                             // to query a numeric field with a text query string
+      )
+      .sort(esb.sort('trace_Date', 'desc'));
+
+    } else if( _from && _till ) {
+
+      let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+      let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+
+      return esb.requestBodySearch()
+      .query(
+              esb.boolQuery()
+              .must(esb.rangeQuery('trace_Date')
+                  .gte(from)
+                  .lte(till)
+            )
+            .filter(esb.multiMatchQuery(searchFields,
+                          searchText)
+                          .lenient(true))
+      )
+      .sort(esb.sort('trace_Date', 'desc'));
+
+    } else if( _from ) {
+
+        let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+        return esb.requestBodySearch()
+        .query(
+                esb.boolQuery()
+                .must(esb.rangeQuery('trace_Date')
+                    .gte(from)
+              )
+              .filter(esb.multiMatchQuery(searchFields,
+                            searchText)
+                            .lenient(true))
+        )
+        .sort(esb.sort('trace_Date', 'desc'));
+
+    } else if( _till ) {
+
+      let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+
+      return esb.requestBodySearch()
+      .query(
+              esb.boolQuery()
+              .must(esb.rangeQuery('trace_Date')
+                  .lte(till)
+            )
+            .filter(esb.multiMatchQuery(searchFields,
+                          searchText)
+                          .lenient(true))
+      )
+      .sort(esb.sort('trace_Date', 'desc'));
+    }
+
+  }
+
   _search() {
 
-    let _from = moment(this.state.fromDate).format('YYYY-MM-DDTHH:mm:ss');
-    let _till = moment(this.state.tillDate).format('YYYY-MM-DDTHH:mm:ss');
-
-    // clean up previous search results
-    this.setState({
-      hits: [],
-      hitsCount: 0
-    })
-
     let searchText = this._searchField.value.trim();
-
-    let before = 7;
-    let from = `now-${before}d/d`;
 
     const searchFields = [];
     this.state.fields. forEach( field => {
@@ -145,7 +218,20 @@ class Analyze extends React.Component {
         searchFields.push(field.name)
     });
 
-    const requestBody = esb.requestBodySearch()
+    const requestBody =
+      this.buildRequestBody(this.state.fromDate,
+                           this.state.tillDate,
+                           searchFields,
+                           searchText);
+
+
+    // clean up previous search results
+    this.setState({
+      hits: [],
+      hitsCount: 0
+    })
+
+    //const requestBody = esb.requestBodySearch()
     // .query(
     //         esb.boolQuery()
     //         .must(esb.rangeQuery('trace_Date')
@@ -156,16 +242,16 @@ class Analyze extends React.Component {
     //                     searchText)
     //                     .lenient(true))
     // )
-    // .sort(esb.sort('trace_Date', 'desc'));;
+    // .sort(esb.sort('trace_Date', 'desc'));
 
-    .query(
-        esb.multiMatchQuery(searchFields,
-                            searchText)
-            .lenient(true) // lenient allows to ignore exceptions caused by
-                           // data-type mismatches such as trying
-                           // to query a numeric field with a text query string
-    )
-    .sort(esb.sort('trace_Date', 'desc'));
+    // .query(
+    //     esb.multiMatchQuery(searchFields,
+    //                         searchText)
+    //         .lenient(true) // lenient allows to ignore exceptions caused by
+    //                        // data-type mismatches such as trying
+    //                        // to query a numeric field with a text query string
+    // )
+    // .sort(esb.sort('trace_Date', 'desc'));
 
     return elasticClient.search({
         index: 'esb_ppr_summary',
@@ -232,7 +318,7 @@ class Analyze extends React.Component {
                         <div className='col-lg-3 tab-content'>
                           <div className='card card-bordered' >
                             <div className='card-header card-header-sm'>Look-up in these fields:</div>
-                            <ul  style={this.styles.autoMargin} className='card-body'>
+                            <ul style={this.styles.autoMargin} className='card-body'>
                               {
                                 this.state.fields.map( (field, index) => {
 
