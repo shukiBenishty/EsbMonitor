@@ -6,6 +6,7 @@ import { CSSTransitionGroup } from 'react-transition-group'
 import elasticsearch from 'elasticsearch';
 import esb from 'elastic-builder';
 import classNames from 'classnames';
+import moment from 'moment';
 import elasticClient from '../elastic/connection';
 import Datetime from 'react-datetime';
 import Story from './Story';
@@ -47,12 +48,31 @@ class Analyze extends React.Component {
       showSearchPanel: true,
       fields: [],
       hits: [],
-      hitsCount: 0
+      hitsCount: 0,
+      fromDate: null,
+      tillDate: null
     }
 
     this._search = this._search.bind(this);
     this.toggleField = this.toggleField.bind(this);
     this.swapPanels = this.swapPanels.bind(this);
+
+    this._fromDateChanged = this._fromDateChanged.bind(this);
+    this._tillDateChanged = this._tillDateChanged.bind(this);
+  }
+
+  _fromDateChanged(_date) {
+
+    this.setState({
+      fromDate: _date.toDate()
+    })
+  }
+
+  _tillDateChanged(_date) {
+
+    this.setState({
+      tillDate: _date.toDate()
+    })
   }
 
   componentDidMount() {
@@ -78,12 +98,20 @@ class Analyze extends React.Component {
             if( esProps.hasOwnProperty(esPropName) ) {
               const _prop = esProps[esPropName];
 
-              if( _.includes(searchAllowedFields, _prop.type ) ) {
+              if( esPropName === 'service_name' ) { // Temporary solution => change mapping or search query
                 _fields.push({
                                name: esPropName,
-                               isSelected: true
+                               isSelected: false
                               });
-              }
+              } else {
+
+                if( _.includes(searchAllowedFields, _prop.type ) ) {
+                  _fields.push({
+                                 name: esPropName,
+                                 isSelected: true
+                                });
+                }
+             }
             }
           }
 
@@ -97,13 +125,16 @@ class Analyze extends React.Component {
 
   _search() {
 
+    let _from = moment(this.state.fromDate).format('YYYY-MM-DDTHH:mm:ss');
+    let _till = moment(this.state.tillDate).format('YYYY-MM-DDTHH:mm:ss');
+
     // clean up previous search results
     this.setState({
       hits: [],
       hitsCount: 0
     })
 
-    let searchText = this._searchField.value;
+    let searchText = this._searchField.value.trim();
 
     let before = 7;
     let from = `now-${before}d/d`;
@@ -115,6 +146,18 @@ class Analyze extends React.Component {
     });
 
     const requestBody = esb.requestBodySearch()
+    // .query(
+    //         esb.boolQuery()
+    //         .must(esb.rangeQuery('trace_Date')
+    //             .gte(_from)
+    //             .lte(_till)
+    //       )
+    //       .filter(esb.multiMatchQuery(searchFields,
+    //                     searchText)
+    //                     .lenient(true))
+    // )
+    // .sort(esb.sort('trace_Date', 'desc'));;
+
     .query(
         esb.multiMatchQuery(searchFields,
                             searchText)
@@ -215,6 +258,7 @@ class Analyze extends React.Component {
                                 <div style={this.styles.selfAligned} className='col-3'>From</div>
                                 <div className='col-9'>
                                   <Datetime
+                                      onChange={this._fromDateChanged}
                                       closeOnSelect={true}
                                       locale="he"/>
                                 </div>
@@ -224,6 +268,7 @@ class Analyze extends React.Component {
                                 <div style={this.styles.selfAligned} className='col-3'>Until</div>
                                 <div className='col-9'>
                                   <Datetime
+                                      onChange={this._tillDateChanged}
                                       closeOnSelect={true}
                                       locale="he"/>
                                 </div>
