@@ -4,6 +4,7 @@ import _ from 'lodash';
 const INITIAL_STATE = {
   errorsCount: 0,
   storyId: '',
+  analyzedStoryID: '',
   serviceName: '',
   message: '',
   eventId: 0,
@@ -19,7 +20,7 @@ const reducers = (state = INITIAL_STATE, action) => {
 
     case 'STORY_ID': {
       state = _.assign({}, state, {
-                                    storyId: action.data
+                                    analyzedStoryID: action.data
                                   }
                       )
     }
