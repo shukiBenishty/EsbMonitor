@@ -20,7 +20,7 @@ type Props = {
 
 type State = {
   showSearchPanel: boolean,
-  fields: string[],
+  fields: Array<any>,
   hits: number[],
   hitsCount: number,
   fromDate: Date,
@@ -30,6 +30,10 @@ type State = {
 }
 
 class Analyze extends React.Component<Props, State>  {
+
+  state = {
+    showSearchPanel: true
+  };
 
   constructor() {
 
@@ -83,6 +87,17 @@ class Analyze extends React.Component<Props, State>  {
 
   _fromDateChanged(_date: Date) {
 
+    if( !_date ) { // null/empty value
+
+      this.setState({
+        fromDate: null,
+        isFromDateInvalid: false
+      });
+
+      return;
+
+    }
+
     if( moment(_date).isValid() ) {
 
       this.setState({
@@ -100,6 +115,17 @@ class Analyze extends React.Component<Props, State>  {
   }
 
   _tillDateChanged(_date: Date) {
+
+    if( !_date ) { // null/empty value
+
+      this.setState({
+        tillDate: null,
+        isTillDateInvalid: false
+      });
+
+      return;
+
+    }
 
     if( moment(_date).isValid() ) {
 
@@ -308,7 +334,7 @@ class Analyze extends React.Component<Props, State>  {
 
   }
 
-  toggleField(e){
+  toggleField(e: SyntheticEvent<HTMLButtonElement>){
 
     let _fields = this.state.fields;
     let index = _.findIndex(_fields, {name: e.target.title} );
