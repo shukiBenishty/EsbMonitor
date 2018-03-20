@@ -20,9 +20,9 @@ class Hit extends React.Component {
   render() {
 
     const statusClass = classNames('lead text-fade mr-25 d-none d-md-block', {
-      'infoText': this.props.source.status == "INFO",
-      'warningText': this.props.source.status == "WARNING",
-      'errorText': this.props.source.status == "ERROR"
+      'infoText': this.props.source.status == "Success",
+      'warningText': this.props.source.status == "Warning",
+      'errorText': this.props.source.status == "Failure"
     });
 
     return <div className='media align-items-center bg-white b-1'>
