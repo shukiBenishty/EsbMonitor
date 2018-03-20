@@ -24,7 +24,9 @@ type State = {
   hits: number[],
   hitsCount: number,
   fromDate: Date,
-  tillDate: Date
+  isFromDateInvalid: boolean,
+  tillDate: Date,
+  isTillDateInvalid: boolean
 }
 
 class Analyze extends React.Component<Props, State>  {
@@ -64,7 +66,9 @@ class Analyze extends React.Component<Props, State>  {
       hits: [],
       hitsCount: 0,
       fromDate: null,
-      tillDate: null
+      isFromDateInvalid: false,
+      tillDate: null,
+      isTillDateInvalid: false
     }
 
     this._search = this._search.bind(this);
@@ -79,16 +83,39 @@ class Analyze extends React.Component<Props, State>  {
 
   _fromDateChanged(_date: Date) {
 
-    this.setState({
-      fromDate: _date.toDate()
-    })
+    if( moment(_date).isValid() ) {
+
+      this.setState({
+        fromDate: _date.toDate(),
+        isFromDateInvalid: false
+      });
+
+    } else {
+
+      this.setState({
+        isFromDateInvalid: true
+      });
+
+    }
   }
 
   _tillDateChanged(_date: Date) {
 
-    this.setState({
-      tillDate: _date.toDate()
-    })
+    if( moment(_date).isValid() ) {
+
+      this.setState({
+        tillDate: _date.toDate(),
+        isTillDateInvalid: false
+      });
+
+    } else {
+
+      this.setState({
+        isTillDateInvalid: true
+      });
+
+    }
+
   }
 
   componentDidMount() {
@@ -210,6 +237,15 @@ class Analyze extends React.Component<Props, State>  {
 
   _search() {
 
+    // clean up previous search results
+    this.setState({
+      hits: [],
+      hitsCount: 0
+    })
+
+    if( this.state.isFromDateInvalid || this.state.isTillDateInvalid )
+      return;
+
     let searchText = this._searchField.value.trim();
 
     const searchFields = [];
@@ -224,12 +260,6 @@ class Analyze extends React.Component<Props, State>  {
                            searchFields,
                            searchText);
 
-
-    // clean up previous search results
-    this.setState({
-      hits: [],
-      hitsCount: 0
-    })
 
     //const requestBody = esb.requestBodySearch()
     // .query(
@@ -310,6 +340,14 @@ class Analyze extends React.Component<Props, State>  {
                       <div>Top {this.state.hitsCount} results, sorted by descending issued date</div> :
                       null;
 
+
+    let fromDateClassName = classNames('', {
+      'inputValidationError': this.state.isFromDateInvalid
+    })
+    let tillDateClassName = classNames('', {
+      'inputValidationError': this.state.isTillDateInvalid
+    })
+
     return(<main className="main-container">
               <div className="main-content">
                 <div className='tab-content'>
@@ -344,6 +382,7 @@ class Analyze extends React.Component<Props, State>  {
                                 <div style={this.styles.selfAligned} className='col-3'>From</div>
                                 <div className='col-9'>
                                   <Datetime
+                                      className={fromDateClassName}
                                       onChange={this._fromDateChanged}
                                       closeOnSelect={true}
                                       locale="he"/>
@@ -354,6 +393,7 @@ class Analyze extends React.Component<Props, State>  {
                                 <div style={this.styles.selfAligned} className='col-3'>Until</div>
                                 <div className='col-9'>
                                   <Datetime
+                                      className={tillDateClassName}
                                       onChange={this._tillDateChanged}
                                       closeOnSelect={true}
                                       locale="he"/>
