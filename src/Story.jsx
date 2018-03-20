@@ -133,7 +133,7 @@ class Story extends React.Component<Props, State> {
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, HH:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
