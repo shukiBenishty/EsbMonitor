@@ -45,6 +45,13 @@ class Story extends React.Component<Props, State> {
       modalIsOpen: false
     }
 
+    this.styles = {
+      noDataStyle: {
+        width: '36%',
+        margin: '0 auto'
+      }
+    }
+
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
@@ -64,7 +71,8 @@ class Story extends React.Component<Props, State> {
     .query(
       esb.matchQuery('message_guid',
                      nextProps.storyId)
-    );
+    )
+    .sort(esb.sort('start_date', 'asc'));
 
     const self = this;
 
@@ -78,6 +86,10 @@ class Story extends React.Component<Props, State> {
       if( response.hits.hits.length > 0  ) {
         self.setState({
           events: response.hits.hits
+        })
+      } else {
+        self.setState({
+          events: []
         })
       }
 
@@ -93,6 +105,16 @@ class Story extends React.Component<Props, State> {
 
   render() {
 
+    if( this.state.events.length == 0 ) {
+      return (
+              <main className="main-container maxHeight">
+                <div className="main-content maxHeight">
+                  <h4 style={this.styles.noDataStyle}>No data was collected for this invocation</h4>
+                </div>
+              </main>
+              )
+    }
+
     return (
       <VerticalTimeline>
         {
@@ -107,6 +129,7 @@ class Story extends React.Component<Props, State> {
                             'icon ti-alert';
 
             let latency = moment.duration(moment(esbEvent._source.end_date).diff(moment(esbEvent._source.start_date)));
+            let environment = ( esbEvent._source.environment == 2 ) ? 'External' : 'Internal';
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
@@ -115,7 +138,7 @@ class Story extends React.Component<Props, State> {
                       icon={<Icon type={iconType}/>}
                       >
                       <h3 className="vertical-timeline-element-title"><b>{esbEvent._source.message}</b></h3>
-                      <h4 className="vertical-timeline-element-subtitle"><b>by {esbEvent._source.environment} environment</b></h4>
+                      <h4 className="vertical-timeline-element-subtitle"><b>by {environment} environment</b></h4>
                       <div>From {esbEvent._source.client_ip}</div>
                       <div>User {esbEvent._source.client_user}</div>
                       <p>
