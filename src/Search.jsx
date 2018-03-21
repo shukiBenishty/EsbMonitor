@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import { CSSTransitionGroup } from 'react-transition-group'
 import classNames from 'classnames';
 import moment from 'moment';
 import Datetime from 'react-datetime';
@@ -308,7 +307,7 @@ class Search extends React.Component<Props, State> {
     let {match} = this.props;
 
     const hitsCount = this.state.hitsCount > 0 ?
-                  <div>Top {this.state.hitsCount} results, sorted by descending issued date</div> :
+                  <div>Top {this.state.hitsCount} results, sorted by descending issued date.</div> :
                   null;
 
     let fromDateClassName = classNames('', {
@@ -388,21 +387,18 @@ class Search extends React.Component<Props, State> {
                         </div>
                         {hitsCount}
                         <div>
-                            <CSSTransitionGroup
-                                transitionAppear={true}
-                                transitionName="example"
-                                transitionAppearTimeout={500}
-                                transitionEnterTimeout={500}
-                                transitionLeaveTimeout={300}>
+
                             {
                               this.state.hits.map( (hit, index) => {
-                                return <Link key={index} to={match.url + '/story/' + hit._source.message_guid}>
+                                return <Link key={index}
+                                             storyid={hit._source.message_guid}
+                                             to={match.url + '/story/' + hit._source.message_guid}>
                                           <Hit source={hit._source}/>
                                        </Link>
 
                               })
                             }
-                            </CSSTransitionGroup>
+
                        </div>
 
                       </div>
