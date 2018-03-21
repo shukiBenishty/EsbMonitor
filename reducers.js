@@ -18,14 +18,6 @@ const reducers = (state = INITIAL_STATE, action) => {
 
   switch( action.type ) {
 
-    case 'STORY_ID': {
-      state = _.assign({}, state, {
-                                    analyzedStoryID: action.data
-                                  }
-                      )
-    }
-    break;
-
     case 'NEW_EVENT': {
 
       state = _.assign({}, state, {
