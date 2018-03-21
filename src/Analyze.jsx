@@ -18,7 +18,6 @@ const Analyze = ({ match }) => {
             </Switch>
 
           </div>
-
         </div>
       </main>
     );
