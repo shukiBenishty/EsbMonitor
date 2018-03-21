@@ -7,7 +7,7 @@ import { installRelayDevTools } from 'relay-devtools';
 
 import openSocket from 'socket.io-client';
 
-import reducers from './reducers';
+import reducers from './src/reducers';
 import App from './src/App.jsx';
 
 // Useful for debugging, but remember to remove for a production deploy.
