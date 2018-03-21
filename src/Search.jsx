@@ -375,6 +375,11 @@ class Search extends React.Component<Props, State> {
 
                           <input style={this.styles.searchBoxStyle}
                             placeholder='Type to search...'
+                            onKeyPress={ (e) => {
+                              if (e.key === 'Enter') {
+                                this._search()
+                              }
+                            }}
                             type='text'
                             ref={
                               (el) => {
@@ -382,7 +387,7 @@ class Search extends React.Component<Props, State> {
                               }
                             }
                           />
-                          <button className='btn btn-info'
+                          <button className='btn btn-info btn-default'
                             onClick={::this._search}>Search</button>
                         </div>
                         {hitsCount}
