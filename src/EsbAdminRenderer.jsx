@@ -1,9 +1,14 @@
 import React from 'react';
+import Loadable from 'react-loadable';
 import { QueryRenderer, graphql } from 'react-relay';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import environment from './Environment';
-import EsbAdmin from './EsbAdmin';
+
+const LoadableEsbAdminComponent = Loadable({
+  loader: () => import('./EsbAdmin'),
+  loading: () => { return <div>Loading...</div> }
+})
 
 const rootQuery = graphql`
   query EsbAdminRendererQuery {
@@ -29,7 +34,7 @@ class EsbAdminRenderer extends React.Component {
       let categories = props.repository.categories;
 
       return(<MuiThemeProvider>
-                <EsbAdmin repository={props.repository}
+                <LoadableEsbAdminComponent repository={props.repository}
                        categories={categories} />
              </MuiThemeProvider>
             )
@@ -50,5 +55,7 @@ class EsbAdminRenderer extends React.Component {
     }
 
 }
+
+
 
 export default EsbAdminRenderer;
