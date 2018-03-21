@@ -1,14 +1,11 @@
 // @flow
 import React from 'react';
-import { connect } from 'react-redux';
 import moment from 'moment';
 import Modal from 'react-modal';
 import elasticClient from '../elastic/connection';
 import esb from 'elastic-builder';
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import Icon from './Icon';
-// import { Icon } from 'antd';
-// import 'antd/dist/antd.css';
 import 'react-vertical-timeline-component/style.min.css';
 
 import sampleStory from './SampleStory';
@@ -160,10 +157,4 @@ class Story extends React.Component<Props, State> {
 
 }
 
-function mapStateToProps(state) {
-    return {
-      storyId: state.analyzedStoryID
-    }
-}
-
-export default connect(mapStateToProps)(Story);
+export default Story;
