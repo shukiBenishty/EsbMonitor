@@ -12,7 +12,9 @@ var config = {
   ],
   output: {
       path: BUILD_DIR,
-      filename: 'bundle.js'
+      filename: 'bundle.js',
+      publicPath: '/assets/',
+      chunkFilename: '[name].bundle.js'
   },
   resolve: {
       extensions: ['.js', '.jsx', '.css']
@@ -32,6 +34,10 @@ var config = {
                 modules: false
               }
             })
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
