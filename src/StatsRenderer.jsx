@@ -1,8 +1,13 @@
 import React from 'react';
+import Loadable from 'react-loadable';
 import { QueryRenderer, graphql } from 'react-relay';
 
 import environment from './Environment';
-import Stats from './Stats';
+
+const LoadableStatsComponent = Loadable({
+  loader: () => import('./Stats'),
+  loading: () => { return <div>Loading...</div> }
+})
 
 const StatsRootQuery = graphql`
   query StatsRendererQuery {
@@ -30,8 +35,8 @@ class StatsRenderer extends React.Component {
 
       let categories = props.repository.categories;
 
-      return(<Stats repository={props.repository}
-                    categories={categories}
+      return(<LoadableStatsComponent repository={props.repository}
+                                     categories={categories}
               />
             )
     }
