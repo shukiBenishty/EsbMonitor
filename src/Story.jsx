@@ -40,6 +40,8 @@ class Story extends React.Component<Props, State> {
 
     super(props);
 
+    const { match } = this.props;
+
     this.state = {
       events: [],
       modalIsOpen: false
@@ -70,7 +72,7 @@ class Story extends React.Component<Props, State> {
     const requestBody = esb.requestBodySearch()
     .query(
       esb.matchQuery('message_guid',
-                     nextProps.storyId)
+                     nextProps.match.params.storyId)
     )
     .sort(esb.sort('start_date', 'asc'));
 
@@ -106,12 +108,8 @@ class Story extends React.Component<Props, State> {
   render() {
 
     if( this.state.events.length == 0 ) {
-      return (
-              <main className="main-container maxHeight">
-                <div className="main-content maxHeight">
-                  <h4 style={this.styles.noDataStyle}>No data was collected for this invocation</h4>
-                </div>
-              </main>
+      return (<h4 style={this.styles.noDataStyle}>No data was collected for this invocation</h4>
+
               )
     }
 
@@ -133,7 +131,7 @@ class Story extends React.Component<Props, State> {
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, HH:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
