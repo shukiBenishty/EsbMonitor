@@ -64,12 +64,13 @@ class Story extends React.Component<Props, State> {
     this.setState({modalIsOpen: false});
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidMount() {
+    let storyId = this.props.match.params.storyId;
 
     const requestBody = esb.requestBodySearch()
     .query(
       esb.matchQuery('message_guid',
-                     nextProps.match.params.storyId)
+                     storyId)
     )
     .sort(esb.sort('start_date', 'asc'));
 
