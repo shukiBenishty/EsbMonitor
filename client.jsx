@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { HashRouter }  from 'react-router-dom';
 import { installRelayDevTools } from 'relay-devtools';
 
-import openSocket from 'socket.io-client';
+//import openSocket from 'socket.io-client';
 
 import reducers from './src/reducers';
 import App from './src/App.jsx';
