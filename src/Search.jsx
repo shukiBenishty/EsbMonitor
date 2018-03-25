@@ -130,7 +130,7 @@ class Search extends React.Component<Props, State> {
                   searchFields: string[],
                   searchText: string) {
 
-  let tokens = searchText.split('^');
+  let tokens = searchText.split('∑');
   if( tokens.length > 1 ) {
     let sortField = tokens[1];
     return esb.requestBodySearch()
@@ -262,6 +262,8 @@ class Search extends React.Component<Props, State> {
 
   componentDidMount() {
 
+    // As alternative to Gang's Delta,
+    // ∆ means 'nothing' here, indicates that browsed from navigation menu
     if( this.props.match.params.searchText && this.props.match.params.searchText != '∆' ) {
       this.searchText = this.props.match.params.searchText;
     }
