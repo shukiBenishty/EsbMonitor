@@ -25,7 +25,7 @@ const SummaryLatency = ({title, totals, relay}) => {
                 <h6>
                   <span className="text-uppercase esbCaption">{title}</span>
                   <span className="float-right">
-                    <Link to='/analyze/^Latency'>
+                    <Link to='/analyze/^esb_Latency'>
                       <button className='btn btn-xs btn-primary'>View</button>
                     </Link>
                   </span>
