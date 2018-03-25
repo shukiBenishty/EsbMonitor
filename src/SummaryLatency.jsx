@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { css } from 'glamor';
 
@@ -7,7 +8,7 @@ const SummaryLatency = ({title, totals, relay}) => {
   let todayLatency = 0;
   let percentage = 0;
 
-  if( totals.latency.length > 0 && totals.todayLatency.length > 0 ){
+  if( totals.latency && totals.latency.length > 0 && totals.todayLatency.length > 0 ){
     todayLatency = totals.todayLatency[0].value.toLocaleString();
     percentage = Math.floor(totals.todayLatency[0].value / totals.latency[0].value * 100) ;
   }
@@ -24,7 +25,9 @@ const SummaryLatency = ({title, totals, relay}) => {
                 <h6>
                   <span className="text-uppercase esbCaption">{title}</span>
                   <span className="float-right">
-                    <a className="btn btn-xs btn-primary" href="#">View</a>
+                    <Link to='/analyze/^Latency'>
+                      <button className='btn btn-xs btn-primary'>View</button>
+                    </Link>
                   </span>
                 </h6>
                 <br />
