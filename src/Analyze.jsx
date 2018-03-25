@@ -24,7 +24,7 @@ const Analyze = ({ match }) => {
           <div className='tab-content'>
 
             <Switch>
-              <Route exact path={match.url + '/:searchText'} component={Search} />
+              <Route exact path={match.path + '/:searchText'} component={Search} />
               <Route path={match.path + '/story/:storyId'} component={Story} />
             </Switch>
 
