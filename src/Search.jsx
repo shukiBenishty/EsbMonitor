@@ -16,7 +16,8 @@ type Props = {
     url: string
   },
   styles: {},
-  _searchField: HTMLInputElement
+  _searchField: HTMLInputElement,
+  searchText: string
 }
 
 type State = {
@@ -38,9 +39,9 @@ class Search extends React.Component<Props, State> {
     isTillDateInvalid: false
   }
 
-  constructor() {
+  constructor(props) {
 
-    super();
+    super(props);
 
     this.styles = {
       searchBoxStyle: {
@@ -129,67 +130,74 @@ class Search extends React.Component<Props, State> {
                   searchFields: string[],
                   searchText: string) {
 
-        if( !_from && !_till) {
+  let tokens = searchText.split('^');
+  if( tokens.length > 1 ) {
+    let sortField = tokens[1];
+    return esb.requestBodySearch()
+          .sort(esb.sort(sortField, 'desc'));
+  }
 
-              return esb.requestBodySearch()
-              .query(
-                  esb.multiMatchQuery(searchFields,
-                                      searchText)
-                      .lenient(true) // lenient allows to ignore exceptions caused by
-                                     // data-type mismatches such as trying
-                                     // to query a numeric field with a text query string
+  if( !_from && !_till) {
+
+        return esb.requestBodySearch()
+        .query(
+            esb.multiMatchQuery(searchFields,
+                                searchText)
+                .lenient(true) // lenient allows to ignore exceptions caused by
+                               // data-type mismatches such as trying
+                               // to query a numeric field with a text query string
+        )
+        .sort(esb.sort('trace_Date', 'desc'));
+
+      } else if( _from && _till ) {
+
+        let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+        let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+
+        return esb.requestBodySearch()
+        .query(
+                esb.boolQuery()
+                .must(esb.rangeQuery('trace_Date')
+                    .gte(from)
+                    .lte(till)
               )
-              .sort(esb.sort('trace_Date', 'desc'));
+              .filter(esb.multiMatchQuery(searchFields,
+                            searchText)
+                            .lenient(true))
+        )
+        .sort(esb.sort('trace_Date', 'desc'));
 
-            } else if( _from && _till ) {
+      } else if( _from ) {
 
-              let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
-              let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
-
-              return esb.requestBodySearch()
-              .query(
-                      esb.boolQuery()
-                      .must(esb.rangeQuery('trace_Date')
-                          .gte(from)
-                          .lte(till)
-                    )
-                    .filter(esb.multiMatchQuery(searchFields,
-                                  searchText)
-                                  .lenient(true))
-              )
-              .sort(esb.sort('trace_Date', 'desc'));
-
-            } else if( _from ) {
-
-                let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
-                return esb.requestBodySearch()
-                .query(
-                        esb.boolQuery()
-                        .must(esb.rangeQuery('trace_Date')
-                            .gte(from)
-                      )
-                      .filter(esb.multiMatchQuery(searchFields,
-                                    searchText)
-                                    .lenient(true))
+          let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+          return esb.requestBodySearch()
+          .query(
+                  esb.boolQuery()
+                  .must(esb.rangeQuery('trace_Date')
+                      .gte(from)
                 )
-                .sort(esb.sort('trace_Date', 'desc'));
+                .filter(esb.multiMatchQuery(searchFields,
+                              searchText)
+                              .lenient(true))
+          )
+          .sort(esb.sort('trace_Date', 'desc'));
 
-            } else if( _till ) {
+      } else if( _till ) {
 
-              let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+        let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
 
-              return esb.requestBodySearch()
-              .query(
-                      esb.boolQuery()
-                      .must(esb.rangeQuery('trace_Date')
-                          .lte(till)
-                    )
-                    .filter(esb.multiMatchQuery(searchFields,
-                                  searchText)
-                                  .lenient(true))
+        return esb.requestBodySearch()
+        .query(
+                esb.boolQuery()
+                .must(esb.rangeQuery('trace_Date')
+                    .lte(till)
               )
-              .sort(esb.sort('trace_Date', 'desc'));
-            }
+              .filter(esb.multiMatchQuery(searchFields,
+                            searchText)
+                            .lenient(true))
+        )
+        .sort(esb.sort('trace_Date', 'desc'));
+      }
   }
 
   _search() {
@@ -254,6 +262,10 @@ class Search extends React.Component<Props, State> {
 
   componentDidMount() {
 
+    if( this.props.match.params.searchText && this.props.match.params.searchText != '∆' ) {
+      this.searchText = this.props.match.params.searchText;
+    }
+
     const searchAllowedFields = ['ip', 'keyword', 'text'];
     const self = this;
 
@@ -296,6 +308,11 @@ class Search extends React.Component<Props, State> {
           fields: _fields
         })
 
+        if( self.searchText ) {
+          self._searchField.value = self.searchText;
+          self._search();
+        }
+
       }
 
     });
@@ -311,11 +328,11 @@ class Search extends React.Component<Props, State> {
                   null;
 
     let fromDateClassName = classNames('', {
-      'inputValidatorError': this.state.isFromDateInvalid
+      'inputValidationError': this.state.isFromDateInvalid
     });
 
     let tillDateClassName = classNames('', {
-      'inputValidatorError': this.state.isTillDateInvalid
+      'inputValidationError': this.state.isTillDateInvalid
     });
 
     return (<div className='row'>
@@ -397,7 +414,7 @@ class Search extends React.Component<Props, State> {
                               this.state.hits.map( (hit, index) => {
                                 return <Link key={index}
                                              storyid={hit._source.message_guid}
-                                             to={match.url + '/story/' + hit._source.message_guid}>
+                                             to={'/analyze/story/' + hit._source.message_guid}>
                                           <Hit source={hit._source}/>
                                        </Link>
 
