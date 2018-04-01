@@ -19,6 +19,7 @@
 .graphqlConnectionError {
   font-size: xx-large;
   color: red;
+  text-align: center;
 }
 
 .esbCard {
