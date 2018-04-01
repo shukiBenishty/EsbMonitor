@@ -36,16 +36,16 @@ async function fetchQuery(operation, variables = {}, cacheConfig) {
 
   const queryId = operation.name;
   const cachedData = cache.get(queryId, variables);
-  const isMutation = operation.query.operation === 'mutation';
-  const isQuery = operation.query.operation === 'query';
+  //const isMutation = operation.query.operation === 'mutation';
+  //const isQuery = operation.query.operation === 'query';
 
-  const forceFetch = cacheConfig && cacheConfig.force;
+  // const forceFetch = cacheConfig && cacheConfig.force;
+  //
+  // if( isQuery && cachedData != null && !forceFetch ) {
+  //   return cachedData;
+  // }
 
-  if( isQuery && cachedData != null && !forceFetch ) {
-    return cachedData;
-  }
-
-  return fetch('http://localhost:3001/graphql', {
+  return fetch('http://185.10.2.55:3001/graphql', {
     method: 'POST',
     headers: {
        'Accept':'application/json',
@@ -59,23 +59,26 @@ async function fetchQuery(operation, variables = {}, cacheConfig) {
     return response.json()
   }).then( json => {
 
-    if( isQuery && json ) {
-      cache.set(queryId, variables, json);
-    }
+    // if( isQuery && json ) {
+    //   cache.set(queryId, variables, json);
+    // }
+    //
+    // if( isMutation ) {
+    //   cache.clear();
+    // }
 
-    if( isMutation ) {
-      cache.clear();
-    }
+    if( json.errors )
+      throw json.errors[0];
 
     return json;
 
   }).catch( error => {
-    return error;
+    throw error;
   })
 
 };
 
-const websocketURL = 'ws://localhost:3001/subscriptions';
+const websocketURL = 'ws://185.10.2.55:3001/subscriptions';
 
 function setupSubscription(
   config,
