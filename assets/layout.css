@@ -7,7 +7,7 @@ body {
 }
 
 button,input,optgroup,select,textarea {
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font: 14px 'Helvetica Neue', "Segoe UI", Arial, sans-serif;
     font-weight: 300
 }
 
@@ -96,7 +96,7 @@ small a:hover,time a:hover,.small a:hover {
 
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
     /* font-family: Roboto,sans-serif; */
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font: 14px 'Helvetica Neue', "Segoe UI", Arial, sans-serif;
     font-weight: 300;
     color: #313944;
     line-height: 1.5;
@@ -4803,13 +4803,14 @@ progress {
 }
 
 .spinner-dots {
-    width: 70px;
+    width: 100%;
     text-align: center
 }
 
 .spinner-dots span {
-    width: 12px;
+    width: 4%;
     height: 12px;
+    margin-top: 245px;
     background-color: #33cabb;
     border-radius: 100%;
     display: inline-block;
@@ -4820,11 +4821,25 @@ progress {
 .spinner-dots .dot1 {
     -webkit-animation-delay: -0.32s;
     animation-delay: -0.32s
+
+    width: 60px !important;
+    height: 60px;
 }
 
 .spinner-dots .dot2 {
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s
+
+    width: 60px !important
+    height: 60px;
+}
+
+.spinner-dots .dot3 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.16s
+
+    width: 60px !important
+    height: 60px;
 }
 
 @-webkit-keyframes spinner-dots {
