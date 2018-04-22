@@ -1,7 +1,14 @@
 import React from 'react';
-import { createFragmentContainer, graphql} from 'react-relay';
-
+import { createRefetchContainer, graphql} from 'react-relay';
+import _ from 'lodash';
+var BarChart = require("react-chartjs").Bar;
 var LineChart = require("react-chartjs").Line;
+
+import ServicesSelector from './ServicesSelector';
+import seriesColors from './seriesColors';
+
+// @import "~slick-carousel/slick/slick.css";
+// @import "~slick-carousel/slick/slick-theme.css";
 
 //
 // Chart data should be shaped as follows:
@@ -43,56 +50,110 @@ var chartOptions = {
   datasetFill : true,
 }
 
-const SummaryDistribution = ({title, totals, relay}) => {
+//const SummaryDistribution = ({title, totals, repository}) => {
+class SummaryDistribution extends React.Component {
 
-	let distribution = totals.distribution;
-	let _chartData = {};
+    constructor(props) {
+      super(props);
 
-	if( distribution ) {
-		let datasets = distribution.datasets.map( (ds, index) => {
+      this.refetcher = this.refetcher.bind(this);
+    }
 
-			return {
-				data: ds.data,
-				label: ds.label,
-				fillColor: "rgba(151,187,205,0.2)",
-				strokeColor: "rgba(151,187,205,1)",
-				pointColor: "rgba(151,187,205,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(151,187,205,1)"
-			}
-		});
+    refetcher = (services) => {
 
-		_chartData = {
-			labels: distribution.labels,
-			datasets: datasets
-		};
-	} else {
-		_chartData ={
-			labels: [],
-			datasets: []
-		}
-	}
+      if( services ) {
 
-  return (
-    <div className="col-12">
-      <div className="card esbCard">
-        <div className="card-header">
-          <h5>
-            <strong className="text-uppercase esbCaption">{title} </strong>
-          </h5>
-        </div>
-        <div className="card-body">
-          <LineChart data={_chartData} options={chartOptions}
-            width="1100" height="460"/>
-        </div>
-      </div>
-    </div>
-  );
+        let servicesIds = services.split(",").map(Number);
 
+        let variables = {
+          servicesIds: servicesIds
+        }
+
+        this.props.relay.refetch(variables,
+          null,
+          () => {
+          },
+          {force: false}
+        );
+      }
+
+    };
+
+    render() {
+
+        let todayDistribution = this.props.totals.todayDistribution;
+      	let distribution = this.props.totals.distribution;
+        let labels = _.concat(todayDistribution.labels, distribution.labels);
+
+      	let datasets = distribution.datasets.map( (ds, index) => {
+
+      		return {
+      			data: ds.data,
+      			label: ds.label,
+      			fillColor: seriesColors[index].color,
+      			strokeColor: seriesColors[index].auxColor,
+      			pointColor: seriesColors[index].auxColor,
+      			pointStrokeColor: "#fff",
+      			pointHighlightFill: "#fff",
+      			pointHighlightStroke: seriesColors[index].auxColor //"rgba(151,187,205,1)"
+      		}
+      	});
+
+        for(let i = 0; i < datasets.length; i++ ) {
+          datasets[i].data = _.concat(todayDistribution.datasets[i].data, datasets[i].data);
+        }
+
+      	let _chartData = {
+      		labels: labels, // distribution.labels,
+      		datasets: datasets
+      	};
+
+        var sliderSettings = {
+          dots: true,
+          infinite: true,
+          speed: 500,
+          slidesToShow: 1,
+          slidesToScroll: 1
+        };
+
+        const styles = {
+          legend: {
+            float: 'right',
+            right: '60px',
+            width: '100%'
+          },
+          legendService: {
+            backgroundColor: '#00223E',
+            opacity: '.5',
+            height: '2px',
+            width: '14px'
+          }
+        }
+
+        return (
+          <div className="col-12">
+            <div className="card esbCard">
+              <div className="card-header">
+                <h5>
+                  <strong className="text-uppercase esbCaption">{this.props.title} </strong>
+                </h5>
+              </div>
+              <div className="card-body">
+                  <div style={styles.legend}>
+                      <ServicesSelector services={this.props.repository}
+                                       categories={this.props.repository.categories}
+                                       refetcher={this.refetcher}/>
+                  </div>
+                  <LineChart redraw data={_chartData} options={chartOptions}
+                      width="1100" height="460"/>
+              </div>
+            </div>
+          </div>
+        );
+    }
 }
 
-export default createFragmentContainer(SummaryDistribution,
+export default createRefetchContainer(SummaryDistribution,
 graphql`
   fragment SummaryDistribution_totals on Runtime
 	@argumentDefinitions(
@@ -100,7 +161,17 @@ graphql`
 		servicesIds: { type: "[Int]!", defaultValue: [1,2] }
 	)
 	{
-  	distribution(daysBefore: $daysBefore, servicesIds: $servicesIds) {
+    todayDistribution: distribution(daysBefore: 0,
+                                    servicesIds: $servicesIds) {
+      labels
+      datasets: series {
+        label
+        data
+        serviceId
+      }
+    }
+  	distribution(daysBefore: $daysBefore,
+                  servicesIds: $servicesIds) {
       labels
       datasets: series { #alias
         label
@@ -109,4 +180,17 @@ graphql`
       }
     }
   }
+`,
+graphql`
+query SummaryDistribution_RefetchQuery
+(
+  $daysBefore: Int,
+  $servicesIds: [Int]!
+)
+{
+  runtime {
+    ...SummaryDistribution_totals @arguments(daysBefore: $daysBefore,
+                                             servicesIds: $servicesIds)
+  }
+}
 `);
