@@ -6078,9 +6078,9 @@ react-transition-group@^2.2.1:
     prop-types "^15.5.8"
     warning "^3.0.0"
 
-react-vertical-timeline-component@^2.0.5:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/react-vertical-timeline-component/-/react-vertical-timeline-component-2.0.5.tgz#0bab4ba07a80d53b622204a532bc2567846a5643"
+react-vertical-timeline-component@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/react-vertical-timeline-component/-/react-vertical-timeline-component-2.0.6.tgz#976df70cf9b4818241d683c4889c6497c23e7fda"
   dependencies:
     react-visibility-sensor "^3.11.0"
 
