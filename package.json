@@ -5,8 +5,6 @@
   "author": "Oleg Kleiman",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js --exec babel-node",
-    "start-mock": "nodemon server-mock.js --exec babel-node",
     "relay": "node scripts/getSchema.js && relay-compiler --src ./src --schema schemas/schema.graphql --extensions=jsx",
     "build": "webpack -d --watch",
     "test": "jest",
@@ -19,7 +17,7 @@
   },
   "license": "ISC",
   "dependencies": {
-    "babel-core": "^6.26.0",
+    "babel-core": "6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -63,7 +61,6 @@
     "subscriptions-transport-ws": "0.8.3",
     "tls": "0.0.1",
     "webpack": "^4.6.0",
-    "webpack-dev-server": "^2.11.1",
     "xml-formatter": "^1.0.1"
   },
   "devDependencies": {
@@ -74,7 +71,7 @@
     "file-loader": "^1.1.6",
     "flow-bin": "^0.66.0",
     "jest": "^22.1.4",
-    "nodemon": "^1.14.7",
+    "nodemon": "^1.17.3",
     "uuid": "^3.1.0",
     "webpack-cli": "^2.0.15"
   }
