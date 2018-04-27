@@ -20,7 +20,7 @@ var config = {
       extensions: ['.js', '.jsx', '.css']
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.jsx$/,
         loader: 'babel-loader',
@@ -28,17 +28,17 @@ var config = {
       },
       {
         test: /\.css$/,
-         loader: ExtractTextPlugin.extract({
-              loader: 'css-loader',
-              query: {
-                modules: false
-              }
-            })
+        loader: ExtractTextPlugin.extract({
+            loader: 'css-loader',
+            query: {
+              modules: false
+            }
+          })
       },
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      },
+      // {
+      //   test: /\.json$/,
+      //   loader: 'json-loader'
+      // },
       {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         loader: 'file-loader?name=fonts/[name].[ext]'
