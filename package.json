@@ -61,7 +61,7 @@
     "should": "^13.2.0",
     "subscriptions-transport-ws": "0.8.3",
     "tls": "0.0.1",
-    "webpack": "^3.10.0",
+    "webpack": "^4.6.0",
     "webpack-dev-server": "^2.11.1",
     "xml-formatter": "^1.0.1"
   },
@@ -69,12 +69,13 @@
     "babel-jest": "^22.1.0",
     "babel-plugin-relay": "^1.4.1",
     "babel-plugin-transform-function-bind": "^6.22.0",
-    "extract-text-webpack-plugin": "^3.0.2",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^1.1.6",
     "flow-bin": "^0.66.0",
     "jest": "^22.1.4",
     "nodemon": "^1.14.7",
     "relay-compiler": "^1.4.1",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "webpack-cli": "^2.0.15"
   }
 }
