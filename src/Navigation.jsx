@@ -45,7 +45,7 @@ class Navigation extends React.Component<{}, State> {
                 <header className="sidebar-header bg-info">
                   <span className="logo">ESB Monitor</span>
                   <img style={this.styles.logoStyle}
-                        src='./assets/images/reactlogo.png' alt='ESB Monitor Logo' />
+                        src='./assets/images/logo-white.svg' alt='ESB Monitor Logo' />
                 </header>
                 <nav style={this.styles.navDivider} className="sidebar-navigation ps-container">
                   <ul className="menu menu-sm">
