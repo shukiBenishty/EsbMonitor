@@ -8,7 +8,7 @@ var BUILD_DIR = path.resolve(__dirname, 'assets');
 var config = {
   entry: [
     'babel-polyfill',
-    path.resolve(__dirname, 'client.jsx')
+    path.resolve(__dirname, './src/index.jsx')
   ],
   output: {
       path: BUILD_DIR,
