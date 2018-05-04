@@ -10,4 +10,4 @@ When you are done with GraphQL Server and Elastic,
 1. git pull, <code>$ npm i</code> (under Windows, try <code>$ npm i --no-optional</code>) to install all dependencies
 2. <code>$ yarn relay</code> to compile graphql templates
 3. Point Web Server for Chrome or IIS to file system folder to host <code>index.html</code>
-4. <code>$ yarn build</code> - to create <code>bundle.js</code> referenced in <code>index.html</code>
+4. <code>$ yarn build</code> to create <code>bundle.js</code> referenced in <code>index.html</code>
