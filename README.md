@@ -9,5 +9,6 @@
 When you are done with GraphQL Server and Elastic,
 1. git pull, <code>$ npm i</code> (under Windows, try <code>$ npm i --no-optional</code>) to install all dependencies
 2. <code>$ yarn relay</code> to compile graphql templates. This will issue introspection query aganst running GrphQL server, so make sure GraphQL Server for TLV ESB is running at time of executing this script. If needed, adjust graphql endpoint URL passed as a parameter to the <code>getSchema</code> script.
-3. Point Web Server for Chrome or IIS to file system folder to host <code>index.html</code>
-4. <code>$ yarn build</code> to create <code>bundle.js</code> referenced in <code>index.html</code>
+3. <code>$ yarn build</code> to create <code>bundle.js</code> referenced in <code>index.html</code>
+4. Start browsing by running <code>yarn start:dev</code>. Alternatively, you may point the HTTP server of your choice (Web Server for Chrome, IIS etc.) to file system folder <code>public</code> to host <code>index.html</code>.
+
