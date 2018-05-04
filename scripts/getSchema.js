@@ -1,24 +1,39 @@
-var fetch = require('node-fetch');
-var fs = require('fs');
-const {
+import fetch from 'node-fetch';
+var argv = require('minimist')(process.argv.slice(2));
+import chalk from 'chalk';
+import {
   buildClientSchema,
   introspectionQuery,
   printSchema,
-} = require('graphql/utilities');
+} from 'graphql/utilities';
 
-console.log(introspectionQuery);
+const log = console.log;
+const errror = console.error;
 
-fetch('http://localhost:3001/graphql', {
-  method: 'POST',
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ 'query': introspectionQuery }),
-})
-.then(res => res.json())
-  .then(res => {
-    console.log(res);
-    const schemaString = printSchema(buildClientSchema(res.data));
-    fs.writeFileSync('./schemas/schema.graphql', schemaString);
-  });
+const usage = ` Usage: getSchema ENDPOINT_URL > schema.graphql`;
+
+async function main() {
+
+  if (argv._.length < 1) {
+    log(chalk.blue(usage));
+    return;
+  }
+
+  const endpoint = argv._[0]
+
+  fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ 'query': introspectionQuery }),
+  })
+  .then(res => res.json())
+    .then(res => {
+      const schemaString = printSchema(buildClientSchema(res.data));
+      log( schemaString );
+    });
+}
+
+main().catch( e => error(e) );
