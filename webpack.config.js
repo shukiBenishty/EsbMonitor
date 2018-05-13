@@ -3,7 +3,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var jsName = 'bundle.js';
 
-var BUILD_DIR = path.resolve(__dirname, 'assets');
+var BUILD_DIR = path.resolve(__dirname, 'public/assets');
 
 var config = {
   entry: [
@@ -13,7 +13,7 @@ var config = {
   output: {
       path: BUILD_DIR,
       filename: 'bundle.js',
-      publicPath: '/assets/',
+      publicPath: 'assets/',
       chunkFilename: '[name].bundle.js'
   },
   resolve: {
@@ -40,12 +40,15 @@ var config = {
       //   loader: 'json-loader'
       // },
       {
-        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        test: /\.(eot|ttf|woff|woff2)$/,
         loader: 'file-loader?name=fonts/[name].[ext]'
       },
       {
-        test: /\.(gif|png)$/,
-        loader: 'file-loader'
+        test: /\.(gif|png|svg)$/,
+        loader: 'file-loader',
+        options: {
+          outputPath: 'images/'
+        }
       }
     ]
   },
