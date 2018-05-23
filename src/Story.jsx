@@ -24,7 +24,8 @@ const customStyles = {
 
 type State = {
   modalIsOpen: boolean,
-  events: []
+  events: [],
+  curentEventIndex: number
 }
 
 type Props = {
@@ -41,7 +42,8 @@ class Story extends React.Component<Props, State> {
 
     this.state = {
       events: [],
-      modalIsOpen: false
+      modalIsOpen: false,
+      curentEventIndex: 0
     }
 
     this.styles = {
@@ -53,15 +55,24 @@ class Story extends React.Component<Props, State> {
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-
+    //this.afterOpenModal = this.afterOpenModal.bind(this);
   }
 
-  openModal() {
-    this.setState({modalIsOpen: true});
+  openModal(index: number) {
+
+    this.setState({
+      modalIsOpen: true,
+      curentEventIndex: index}
+    );
   }
 
   closeModal() {
     this.setState({modalIsOpen: false});
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    this.payload.textContent = this.state.events[this.state.curentEventIndex]._source.payload;
   }
 
   componentDidMount() {
@@ -113,41 +124,46 @@ class Story extends React.Component<Props, State> {
 
     return (
       <VerticalTimeline>
+        <Modal
+           style={customStyles}
+           onRequestClose={this.closeModal}
+           onAfterOpen={::this.afterOpenModal}
+           isOpen={this.state.modalIsOpen}
+           ariaHideApp={false}
+           currentEventIndex = {1}
+           contentLabel="Payload">
+           <h2>Payload</h2>
+           <div ref={ div => this.payload = div }>Message</div>
+        </Modal>
+
         {
+
           this.state.events.map( (esbEvent, index) => {
 
-            let iconStyle = ( esbEvent._source.status == 'Success' ) ?
+            let iconStyle = ( esbEvent._source.status == 'success' ) ?
                               { background: 'rgb(33, 150, 243)', color: '#fff' } :
                               { background: 'rgb(233, 30, 99)', color: '#fff' };
 
-            let iconType = ( esbEvent._source.status == 'Success' )  ?
+            let iconType = ( esbEvent._source.status == 'success' )  ?
                             'icon ti-info' :
                             'icon ti-alert';
 
             let latency = moment.duration(moment(esbEvent._source.end_date).diff(moment(esbEvent._source.start_date)));
-            let environment = ( esbEvent._source.environment == 2 ) ? 'External' : 'Internal';
+            let environment = ( esbEvent._source.environment == 'INT1' ) ? 'External' : 'Internal';
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS')}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
                       <h3 className="vertical-timeline-element-title"><b>{esbEvent._source.message}</b></h3>
-                      <h4 className="vertical-timeline-element-subtitle"><b>by {environment} environment</b></h4>
+                      <h4 className="vertical-timeline-element-subtitle"><b>by Router at {environment} environment</b></h4>
                       <div>From {esbEvent._source.client_ip}</div>
                       <div>User {esbEvent._source.client_user}</div>
                       <p>
                         <button className='btn'
-                              onClick={this.openModal}>Payload</button>
-                        <Modal
-                           style={customStyles}
-                           onRequestClose={this.closeModal}
-                           isOpen={this.state.modalIsOpen}
-                           ariaHideApp={false}
-                           contentLabel="Payload">
-                           <div>{esbEvent._source.payload}</div>
-                        </Modal>
+                              onClick={ () => this.openModal(index) }>Payload</button>
                       </p>
                    </VerticalTimelineElement>
           })
