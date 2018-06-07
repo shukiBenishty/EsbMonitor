@@ -16,8 +16,7 @@ type Props = {
     url: string
   },
   styles: {},
-  _searchField: HTMLInputElement,
-  searchText: string
+  _searchField: HTMLInputElement
 }
 
 type State = {
@@ -39,9 +38,9 @@ class Search extends React.Component<Props, State> {
     isTillDateInvalid: false
   }
 
-  constructor(props) {
+  constructor() {
 
-    super(props);
+    super();
 
     this.styles = {
       searchBoxStyle: {
@@ -130,74 +129,67 @@ class Search extends React.Component<Props, State> {
                   searchFields: string[],
                   searchText: string) {
 
-  let tokens = searchText.split('∑');
-  if( tokens.length > 1 ) {
-    let sortField = tokens[1];
-    return esb.requestBodySearch()
-          .sort(esb.sort(sortField, 'desc'));
-  }
+        if( !_from && !_till) {
 
-  if( !_from && !_till) {
-
-        return esb.requestBodySearch()
-        .query(
-            esb.multiMatchQuery(searchFields,
-                                searchText)
-                .lenient(true) // lenient allows to ignore exceptions caused by
-                               // data-type mismatches such as trying
-                               // to query a numeric field with a text query string
-        )
-        .sort(esb.sort('trace_Date', 'desc'));
-
-      } else if( _from && _till ) {
-
-        let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
-        let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
-
-        return esb.requestBodySearch()
-        .query(
-                esb.boolQuery()
-                .must(esb.rangeQuery('trace_Date')
-                    .gte(from)
-                    .lte(till)
+              return esb.requestBodySearch()
+              .query(
+                  esb.multiMatchQuery(searchFields,
+                                      searchText)
+                      .lenient(true) // lenient allows to ignore exceptions caused by
+                                     // data-type mismatches such as trying
+                                     // to query a numeric field with a text query string
               )
-              .filter(esb.multiMatchQuery(searchFields,
-                            searchText)
-                            .lenient(true))
-        )
-        .sort(esb.sort('trace_Date', 'desc'));
+              .sort(esb.sort('trace_Date', 'desc'));
 
-      } else if( _from ) {
+            } else if( _from && _till ) {
 
-          let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
-          return esb.requestBodySearch()
-          .query(
-                  esb.boolQuery()
-                  .must(esb.rangeQuery('trace_Date')
-                      .gte(from)
+              let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+              let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+
+              return esb.requestBodySearch()
+              .query(
+                      esb.boolQuery()
+                      .must(esb.rangeQuery('trace_Date')
+                          .gte(from)
+                          .lte(till)
+                    )
+                    .filter(esb.multiMatchQuery(searchFields,
+                                  searchText)
+                                  .lenient(true))
+              )
+              .sort(esb.sort('trace_Date', 'desc'));
+
+            } else if( _from ) {
+
+                let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+                return esb.requestBodySearch()
+                .query(
+                        esb.boolQuery()
+                        .must(esb.rangeQuery('trace_Date')
+                            .gte(from)
+                      )
+                      .filter(esb.multiMatchQuery(searchFields,
+                                    searchText)
+                                    .lenient(true))
                 )
-                .filter(esb.multiMatchQuery(searchFields,
-                              searchText)
-                              .lenient(true))
-          )
-          .sort(esb.sort('trace_Date', 'desc'));
+                .sort(esb.sort('trace_Date', 'desc'));
 
-      } else if( _till ) {
+            } else if( _till ) {
 
-        let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+              let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
 
-        return esb.requestBodySearch()
-        .query(
-                esb.boolQuery()
-                .must(esb.rangeQuery('trace_Date')
-                    .lte(till)
+              return esb.requestBodySearch()
+              .query(
+                      esb.boolQuery()
+                      .must(esb.rangeQuery('trace_Date')
+                          .lte(till)
+                    )
+                    .filter(esb.multiMatchQuery(searchFields,
+                                  searchText)
+                                  .lenient(true))
               )
-              .filter(esb.multiMatchQuery(searchFields,
-                            searchText)
-                            .lenient(true))
-        )
-        .sort(esb.sort('trace_Date', 'desc'));
-      }
+              .sort(esb.sort('trace_Date', 'desc'));
+            }
   }
 
   _search() {
@@ -262,11 +254,7 @@ class Search extends React.Component<Props, State> {
 
   componentDidMount() {
 
-    // As alternative to Gang's Delta,
-    // ∆ means 'nothing' here, indicates that browsed from navigation menu
-    if( this.props.match.params.searchText && this.props.match.params.searchText != '∆' ) {
-      this.searchText = this.props.match.params.searchText;
-    }
+    let { match } = this.props;
 
     const searchAllowedFields = ['ip', 'keyword', 'text'];
     const self = this;
@@ -309,11 +297,6 @@ class Search extends React.Component<Props, State> {
         self.setState({
           fields: _fields
         })
-
-        if( self.searchText ) {
-          self._searchField.value = self.searchText;
-          self._search();
-        }
 
       }
 
@@ -416,7 +399,7 @@ class Search extends React.Component<Props, State> {
                               this.state.hits.map( (hit, index) => {
                                 return <Link key={index}
                                              storyid={hit._source.message_guid}
-                                             to={'/analyze/story/' + hit._source.message_guid}>
+                                             to={match.url + '/story/' + hit._source.message_guid}>
                                           <Hit source={hit._source}/>
                                        </Link>
 
