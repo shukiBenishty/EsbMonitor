@@ -14,10 +14,7 @@ const realtimeEventsSubscription = graphql`
       id
       storyId
       time
-      serviceName
       serviceId
-      message
-      eventId
       status
     }
   }
@@ -68,9 +65,11 @@ class AppLayout extends React.Component {
         let runtimeRecord = root.getLinkedRecord('runtime');
         if( runtimeRecord ) {
 
+          let daysBefore = 7;
+
           let distributionRecord =
             runtimeRecord.getOrCreateLinkedRecord('distribution', 'Series',
-                                                  {daysBefore: 0, servicesIds: [1,3]});
+                                                  {daysBefore: daysBefore, servicesIds: [1,3]});
 
           if( distributionRecord ) {
               let seriesRecords = distributionRecord.getLinkedRecords('series');
@@ -94,19 +93,20 @@ class AppLayout extends React.Component {
               }
           }
 
-          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 0});
+          let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
           if( totalCallsRecords && totalCallsRecords.length > 0
               && totalCallsRecords[0] ) {
             let totalCalls = totalCallsRecords[0].getValue('value');
             totalCallsRecords[0].setValue( ++totalCalls, "value");
           }
 
-          if( __status == 'ERROR' ) {
-            let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 0});
-            if( errorsRecors && errorsRecors.length > 0
-                && errorsRecors[0]) {
-              let totalErrors = errorsRecors[0].getValue('value');
-              errorsRecors[0].setValue( ++totalErrors, 'value');
+          if( __status.toLowerCase() == 'Error'.toLowerCase() ) {
+            let errorsRecords = runtimeRecord.getLinkedRecords('errors', {before: 1});
+            if( errorsRecords && errorsRecords.length > 0
+                && errorsRecords[1]) {
+              let _totalErrors = errorsRecords[0].getValue('value');
+              let totalErrors = errorsRecords[1].getValue('value');
+              errorsRecords[1].setValue( ++totalErrors, 'value');
             }
 
           }
