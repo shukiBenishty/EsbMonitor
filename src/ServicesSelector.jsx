@@ -43,7 +43,9 @@ class ServicesSelector extends React.Component<Props, State> {
     });
 
     let variables = {
-      categoryId: newCategory.value
+      filter: {
+        categoryId: newCategory.value
+      }
     }
 
     this.props.relay.refetch(
@@ -59,7 +61,7 @@ class ServicesSelector extends React.Component<Props, State> {
 
   render() {
 
-    let services = this.props.services.services;
+    let services = this.props.services._services.list;
     let categories = this.props.categories.map( category => {
       return {
         value: category.objectId,
@@ -95,11 +97,9 @@ class ServicesSelector extends React.Component<Props, State> {
 export default createRefetchContainer(ServicesSelector,
 graphql`
   fragment ServicesSelector_services on Repository
-  @argumentDefinitions(
-    categoryId: { type: Int }
-  )
+  @argumentDefinitions(filter: { type: ServicesFilter } )
   {
-    services(categoryId: $categoryId) {
+    _services(filter: $filter) {
       list{
         objectId
         name
@@ -108,9 +108,9 @@ graphql`
   }
 `,
 graphql`
-  query ServicesSelector_Query ($categoryId: Int) {
+  query ServicesSelector_Query ($filter: ServicesFilter) {
     repository {
-      ...ServicesSelector_services @arguments(categoryId: $categoryId)
+      ...ServicesSelector_services @arguments(filter: $filter)
     }
   }
 `);
