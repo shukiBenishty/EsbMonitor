@@ -7,13 +7,16 @@ import EsbServices from './EsbServices';
 
 type Props = {
   categories: Array<{
-    name: string,
-    objectId: number
+    name: String,
+    objectId: Number
   }>
 };
 
 type State = {
-  selectedCategory: Object
+  selectedCategory: {
+    value: Number,
+    label: String
+  }
 }
 
 class ServicesSelector extends React.Component<Props, State> {
@@ -22,17 +25,15 @@ class ServicesSelector extends React.Component<Props, State> {
     super(props);
 
     this.state = {
-      selectedCategory: null,
-      refetcher: props.refetcher
+      selectedCategory: null
     }
 
-    this.categoryChanged = this.categoryChanged.bind(this);
   }
 
   servicesChanged = (services) => {
 
-    if( this.state.refetcher ) {
-      this.state.refetcher(services);
+    if( this.props.refetcher ) {
+      this.props.refetcher(services);
     }
   }
 
@@ -52,7 +53,7 @@ class ServicesSelector extends React.Component<Props, State> {
       variables,
       null,
       () => {
-        console.log('Refetch done');
+        console.log('Services refetch done');
       },
       {force: false}
     );
@@ -79,7 +80,7 @@ class ServicesSelector extends React.Component<Props, State> {
                 placeholder="Select services' group"
                 options={categories}
                 value={_value}
-                onChange={this.categoryChanged}
+                onChange={::this.categoryChanged}
               />
 
               <EsbServices
@@ -87,7 +88,7 @@ class ServicesSelector extends React.Component<Props, State> {
                   className='col-10 align-self-center'
                   disabled={!this.state.selectedCategory}
                   services={services}
-                  onChange={this.servicesChanged}
+                  onChange={::this.servicesChanged}
               />
            </div>
   }
