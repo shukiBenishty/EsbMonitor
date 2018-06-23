@@ -231,13 +231,11 @@ class EsbAdmin extends React.Component<Props, State> {
     style
   }) {
 
-    //this.vServiceRequestList.scrollToRow(index);
-
-    let requests = this.props.repository.serviceRequests
-                   .filter( sReq => sReq != null);
-
-    return <EsbServiceRequest key={index}
-                              serviceRequest={requests[index]} />
+    // let requests = this.props.repository.serviceRequests
+    //                .filter( sReq => sReq != null);
+    //
+    // return <EsbServiceRequest key={index}
+    //                           serviceRequest={requests[index]} />
 
   }
 
@@ -259,9 +257,6 @@ class EsbAdmin extends React.Component<Props, State> {
 
     const { selectedCategory } = this.state;
     const _value = selectedCategory && selectedCategory.value;
-
-    let _serviceRequests = this.props.repository.serviceRequests
-                           .filter( sReq => sReq != null );
 
     return (<main className="main-container maxHeight">
                 <ToastContainer />
@@ -341,30 +336,6 @@ class EsbAdmin extends React.Component<Props, State> {
                           </AutoSizer>
 
                         </div>
-                        <div className="card tab-pane fade" id="tab2">
-                          <h4 style={this.styles.listTitle}
-                              className="card-title fw-400">Publish Requests</h4>
-
-                            <AutoSizer>
-                              {
-                                ({height, width}) => (
-
-                                  <List className="esbRepositoryList"
-                                    ref={ c => { this.vServiceRequestList = c; }}
-                                    width={width}
-                                    height={height}
-                                    autoHeight={true}
-                                    rowHeight={60}
-                                    rowGetter={ ({index}) => _serviceRequests[index] }
-                                    rowCount={_serviceRequests.length}
-                                    rowRenderer={this.rowRequestRenderer}
-                                  />
-
-                                )
-                              }
-                            </AutoSizer>
-
-                        </div>
                       </div>
 
                     </div>
@@ -398,14 +369,12 @@ graphql`
     pageSize: { type: Int, defaultValue: 10}
   )
   {
-    services (categoryId: $categoryId, page: $page, pageSize: $pageSize){
+    services (categoryId: $categoryId
+           page: $page, pageSize: $pageSize){
       totalItems
       list {
         ...EsbService_service
       }
-    }
-    serviceRequests {
-      ...EsbServiceRequest_serviceRequest
     }
 }
 `,
