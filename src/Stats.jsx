@@ -206,7 +206,7 @@ class Stats extends React.Component<Props, State> {
                             className={servicesSelectorClassName}
                             ref={c => { this.refEsbCategories = c; }}
                             disabled={!this.state.selectedCategory}
-                            services={repository._services.list}
+                            services={repository.services.list}
                         />
 
                         <div className="align-items-center flexbox timePickerArea">
@@ -246,7 +246,7 @@ Stats,
         filter: { type: ServicesFilter }
       )
       {
-        _services(filter: $filter) {
+        services(filter: $filter) {
           list{
             objectId
             name
