@@ -1,4 +1,5 @@
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var jsName = 'bundle.js';
@@ -59,6 +60,9 @@ var config = {
    new ExtractTextPlugin({
      filename: 'styles.css',
      allChunks: true
+   }),
+   new webpack.DefinePlugin({
+     'process.env.NODE_ENV': JSON.stringify('production')
    })
  ]
 };
