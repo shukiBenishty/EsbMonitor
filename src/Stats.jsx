@@ -72,7 +72,11 @@ class Stats extends React.Component<Props, State> {
 
     this.props.relay.refetch(
       (prev) => (
-        { categoryId: newCategory ? newCategory.value : null }
+        {
+          filter: {
+            categoryId: newCategory ? newCategory.value : null
+          }
+        }
       ),
       null,
       null,
@@ -202,7 +206,7 @@ class Stats extends React.Component<Props, State> {
                             className={servicesSelectorClassName}
                             ref={c => { this.refEsbCategories = c; }}
                             disabled={!this.state.selectedCategory}
-                            services={repository.services}
+                            services={repository._services.list}
                         />
 
                         <div className="align-items-center flexbox timePickerArea">
@@ -239,10 +243,10 @@ Stats,
   repository: graphql`
       fragment Stats_repository on Repository
       @argumentDefinitions(
-        categoryId: { type: Int }
+        filter: { type: ServicesFilter }
       )
       {
-        services(categoryId: $categoryId) {
+        _services(filter: $filter) {
           list{
             objectId
             name
@@ -252,9 +256,9 @@ Stats,
   `
 },
 graphql`
-    query Stats_Query ($categoryId: Int) {
+    query Stats_Query ($filter: ServicesFilter) {
       repository {
-        ...Stats_repository @arguments(categoryId: $categoryId)
+        ...Stats_repository @arguments(filter: $filter)
       }
     }
 `);
