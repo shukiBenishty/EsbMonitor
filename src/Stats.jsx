@@ -199,10 +199,11 @@ class Stats extends React.Component<Props, State> {
                         />
 
                         <EsbServices
-                          className={servicesSelectorClassName}
-                          ref={c => { this.refEsbCategories = c; }}
-                          disabled={!this.state.selectedCategory}
-                          services={repository.services} />
+                            className={servicesSelectorClassName}
+                            ref={c => { this.refEsbCategories = c; }}
+                            disabled={!this.state.selectedCategory}
+                            services={repository.services}
+                        />
 
                         <div className="align-items-center flexbox timePickerArea">
                           <div>From</div>
