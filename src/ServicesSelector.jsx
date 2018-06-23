@@ -61,7 +61,7 @@ class ServicesSelector extends React.Component<Props, State> {
 
   render() {
 
-    let services = this.props.services._services.list;
+    let services = this.props.services.services.list;
     let categories = this.props.categories.map( category => {
       return {
         value: category.objectId,
@@ -99,7 +99,7 @@ graphql`
   fragment ServicesSelector_services on Repository
   @argumentDefinitions(filter: { type: ServicesFilter } )
   {
-    _services(filter: $filter) {
+    services(filter: $filter) {
       list{
         objectId
         name
