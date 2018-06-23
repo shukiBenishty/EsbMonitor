@@ -6,11 +6,12 @@ import classNames from 'classnames';
 
 class EsbServices extends React.Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
-      selectedServices: null
+      selectedServices: props.selectedServices,
+      onChange: props.onChange
     }
 
     this._serviceChanged = this._serviceChanged.bind(this);
@@ -24,6 +25,10 @@ class EsbServices extends React.Component {
     this.setState({
       selectedServices: services
     })
+
+    if( this.state.onChange ) {
+      this.state.onChange(services);
+    }
   }
 
   render() {
