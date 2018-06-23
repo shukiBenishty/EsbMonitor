@@ -171,7 +171,9 @@ class EsbAdmin extends React.Component<Props, State> {
     this.props.relay.refetch(
       (prev) => (
         {
-          categoryId: newCategory ? newCategory.value : null,
+          filter: {
+            categoryId: newCategory ? newCategory.value : null
+          },
           page: this.state.currentServicesPage,
           pageSize: 10
         }
@@ -217,7 +219,7 @@ class EsbAdmin extends React.Component<Props, State> {
 
     //this.vServicesList.scrollToRow(index);
 
-    let _services = this.props.repository.services.list;
+    let _services = this.props.repository._services.list;
 
     return <EsbService key={index}
                        service={_services[index]} />
@@ -248,8 +250,8 @@ class EsbAdmin extends React.Component<Props, State> {
         }
     })
 
-    let _services = this.props.repository.services.list;
-    let totalServices = this.props.repository.services.totalItems;
+    let _services = this.props.repository._services.list;
+    let totalServices = this.props.repository._services.totalItems;
 
     var servicePanelClass = classNames('quickview', 'quickview-lg', {
        'reveal': this.state.servicePanelVisible
@@ -364,12 +366,12 @@ EsbAdmin,
 graphql`
   fragment EsbAdmin_repository on Repository
   @argumentDefinitions(
-    categoryId: { type: Int }
+    filter: { type: ServicesFilter }
     page: { type: Int, defaultValue: 1 }
     pageSize: { type: Int, defaultValue: 10}
   )
   {
-    services (categoryId: $categoryId
+    _services (filter: $filter
            page: $page, pageSize: $pageSize){
       totalItems
       list {
@@ -381,13 +383,13 @@ graphql`
 graphql`
   query EsbAdmin_Query
   (
-    $categoryId: Int
+    $filter: ServicesFilter
     $page: Int
     $pageSize: Int
   )
   {
     repository {
-    	...EsbAdmin_repository @arguments(categoryId: $categoryId,
+    	...EsbAdmin_repository @arguments(filter: $filter,
                                         page: $page,
                                         pageSize: $pageSize)
     }
