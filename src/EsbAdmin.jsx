@@ -277,20 +277,8 @@ class EsbAdmin extends React.Component<Props, State> {
                       </div>
                     </header>
                     <div className="row">
-                      <div className="col-lg-3 tab-content">
-                          <div className="card">
-                            <ul className="nav nav-tabs nav-lg _flexColumn">
-                              <li className="active">
-                                <a data-toggle="tab" className="nav-link active show" href="#tab1">Services</a>
-                              </li>
-                              <li>
-                                <a data-toggle="tab" className="nav-link" href="#tab2">Requests</a>
-                              </li>
-                            </ul>
-                          </div>
-                      </div>
 
-                      <div className="col-lg-9 tab-content maxHeight">
+                      <div className="col-lg-12 tab-content maxHeight">
                         <div className="card tab-pane maxHeight fade in active show" id="tab1">
                           <h4 style={this.styles.listTitle}
                               className="card-title fw-400">Published Services</h4>
