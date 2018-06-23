@@ -219,7 +219,7 @@ class EsbAdmin extends React.Component<Props, State> {
 
     //this.vServicesList.scrollToRow(index);
 
-    let _services = this.props.repository._services.list;
+    let _services = this.props.repository.services.list;
 
     return <EsbService key={index}
                        service={_services[index]} />
@@ -250,8 +250,8 @@ class EsbAdmin extends React.Component<Props, State> {
         }
     })
 
-    let _services = this.props.repository._services.list;
-    let totalServices = this.props.repository._services.totalItems;
+    let _services = this.props.repository.services.list;
+    let totalServices = this.props.repository.services.totalItems;
 
     var servicePanelClass = classNames('quickview', 'quickview-lg', {
        'reveal': this.state.servicePanelVisible
@@ -371,7 +371,7 @@ graphql`
     pageSize: { type: Int, defaultValue: 10}
   )
   {
-    _services (filter: $filter
+    services (filter: $filter
            page: $page, pageSize: $pageSize){
       totalItems
       list {
