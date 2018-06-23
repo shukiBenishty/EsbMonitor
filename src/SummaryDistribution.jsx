@@ -1,3 +1,4 @@
+// @flow
 import React from 'react';
 import { createRefetchContainer, graphql} from 'react-relay';
 import _ from 'lodash';
@@ -51,12 +52,10 @@ var chartOptions = {
 }
 
 //const SummaryDistribution = ({title, totals, repository}) => {
-class SummaryDistribution extends React.Component {
+class SummaryDistribution extends React.PureComponent {
 
     constructor(props) {
       super(props);
-
-      this.refetcher = this.refetcher.bind(this);
     }
 
     refetcher = (services) => {
@@ -142,7 +141,7 @@ class SummaryDistribution extends React.Component {
                   <div style={styles.legend}>
                       <ServicesSelector services={this.props.repository}
                                        categories={this.props.repository.categories}
-                                       refetcher={this.refetcher}/>
+                                       refetcher={::this.refetcher}/>
                   </div>
                   <LineChart redraw data={_chartData} options={chartOptions}
                       width="1100" height="460"/>
