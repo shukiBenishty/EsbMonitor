@@ -74,7 +74,6 @@ class EventList extends React.Component<Props, State> {
                       storyId: esbEvent.storyId,
                       serviceName: esbEvent.serviceName,
                       message: esbEvent.message,
-                      eventId: esbEvent.eventId,
                       issued: esbEvent.issued,
                       status: esbEvent.status
                     }
@@ -84,7 +83,6 @@ class EventList extends React.Component<Props, State> {
     this.search.addDocuments({
                     storyId: esbEvent.storyId,
                     serviceName: esbEvent.serviceName,
-                    eventId: esbEvent.eventId.toString(),
                     issued: esbEvent.issued
                   });
     this.search.addIndex('eventId');
