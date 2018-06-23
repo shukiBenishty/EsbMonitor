@@ -21,12 +21,28 @@ const summariesQuery = graphql`
 			...SummaryErrors_totals @arguments(before: $totalErrorsBefore)
 			...SummaryDistribution_totals @arguments(daysBefore: $daysBefore,
 																							 servicesIds: $servicesIds)
-		}
-	}
+	 }
+
+	 repository {
+		 ...ServicesSelector_services
+
+		 categories {
+				name
+				objectId
+		 }
+
+   }
+}
 `;
 
 class Dashboard extends React.Component<{}> {
 
+	constructor() {
+
+    super();
+
+    this.renderSummaries = this.renderSummaries.bind(this);
+  }
 
 	renderSummaries({error, props}) {
 		if( error ) {
@@ -40,7 +56,9 @@ class Dashboard extends React.Component<{}> {
 								<SummaryCalls title='Total Calls' totals={props.runtime} />
 								<SummaryLatency title='Latency' totals={props.runtime} />
 								<SummaryErrors title='Errors' totals={props.runtime}/>
-								<SummaryDistribution title='Calls Distribution' totals={props.runtime} />
+								<SummaryDistribution title='Calls Distribution'
+								 										 totals={props.runtime}
+								 										 repository={props.repository} />
 						 </React.Fragment>
 		}
 
@@ -53,7 +71,7 @@ class Dashboard extends React.Component<{}> {
 			totalCallsBefore: 1,
 			totalLatencyBefore: 1,
 			totalErrorsBefore: 1,
-			daysBefore: 7,
+			daysBefore: 6,
 			servicesIds: [1,3]
 		}
 
@@ -64,7 +82,7 @@ class Dashboard extends React.Component<{}> {
 										environment={environment}
 										query={summariesQuery}
 										variables={queryVariables}
-										render={this.renderSummaries}
+										render={::this.renderSummaries}
 									/>
                 </div>
               </div>
