@@ -1,4 +1,6 @@
+// @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { css } from 'glamor';
 
@@ -6,11 +8,9 @@ const SummaryErrors = ({title, totals, relay}) => {
 
   let todayErrors = 0;
   let percentage = 0;
-  if( totals.errors && totals.errors.length > 0 ){
-    todayErrors = totals.errors[1].value.toLocaleString();
-    if( totals.errors.length > 1 ) {
-      percentage = Math.floor(totals.errors[1].value / totals.errors[0].value * 100) ;
-    }
+  if( totals.errors && totals.errors.length > 0 && totals.todayErrors.length > 0 ){
+    todayErrors = totals.todayErrors[0].value.toLocaleString();
+    percentage = Math.floor(totals.todayErrors[0].value / totals.errors[0].value * 100) ;
   }
 
   let progressBarWidth =  percentage + '%';
@@ -25,7 +25,10 @@ const SummaryErrors = ({title, totals, relay}) => {
                 <h6>
                   <span className="text-uppercase esbCaption">{title}</span>
                   <span className="float-right">
-                    <a className="btn btn-xs btn-primary" href="#analyze/Failure">View</a>
+                    <Link to='/analyze/Failure'>
+                      <button className='btn btn-xs btn-primary'>View</button>
+                    </Link>
+
                   </span>
                 </h6>
                 <br />
@@ -50,6 +53,9 @@ fragment SummaryErrors_totals on Runtime
   before: { type: "Date", defaultValue: 2 }
 )
 {
+  todayErrors: errors(before: 0) {
+    value
+  }
   errors(before: $before) {
     date
     value
