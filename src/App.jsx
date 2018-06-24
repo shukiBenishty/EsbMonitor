@@ -16,7 +16,6 @@ const realtimeEventsSubscription = graphql`
       received
       serviceName
       serviceId
-      message
       status
     }
   }
