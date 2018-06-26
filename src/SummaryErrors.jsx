@@ -25,7 +25,7 @@ const SummaryErrors = ({title, totals, relay}) => {
                 <h6>
                   <span className="text-uppercase esbCaption">{title}</span>
                   <span className="float-right">
-                    <Link to='/analyze/Failure'>
+                    <Link to='/analyze/error'>
                       <button className='btn btn-xs btn-primary'>View</button>
                     </Link>
 
