@@ -271,12 +271,14 @@ class Search extends React.Component<Props, State> {
       let today = moment().startOf('day');
       this.fromDateCtrl.setState({
         viewDate: today,
-        selectedDate: today
+        selectedDate: today,
+        inputValue: today.format('DD/MM/YYYY HH:mm')
       });
       let tomorrow = moment(new Date()).add(1,'days').startOf('day');
       this.tillDateCtrl.setState({
         viewDate: tomorrow,
-        selectedDate: tomorrow
+        selectedDate: tomorrow,
+        inputValue: tomorrow.format('DD/MM/YYYY HH:mm')
       });
 
       this.setState({
