@@ -1,0 +1,10 @@
+{
+		"test": {
+			"raw_index_name": "esb_ppr_row",
+			"summary_index_name": "esb_ppr_summary"
+		},
+		"production": {
+			"raw_index_name": "esb_row",
+			"summary_index_name": "esb_summary"
+		}
+}
