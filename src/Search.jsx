@@ -269,9 +269,15 @@ class Search extends React.Component<Props, State> {
     if( this.props.match.params.searchText && this.props.match.params.searchText != '∆' ) {
       this.searchText = this.props.match.params.searchText;
       let today = moment().startOf('day');
-      this.fromDateCtrl.setDate(today);
-      let tomorrow = moment(new Date()).add(1,'days');
-      this.tillDateCtrl.setDate(tomorrow);
+      this.fromDateCtrl.setState({
+        viewDate: today,
+        selectedDate: today
+      });
+      let tomorrow = moment(new Date()).add(1,'days').startOf('day');
+      this.tillDateCtrl.setState({
+        viewDate: tomorrow,
+        selectedDate: tomorrow
+      });
 
       this.setState({
         fromDate: today.toDate(),
