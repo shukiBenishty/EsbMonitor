@@ -11,12 +11,23 @@ const INITIAL_STATE = {
   issued: Date(),
   status: '',
   filterValue: '',
-  categories: []
+  categories: [],
+  activeEnvironment: 'test',
+  inactiveEnvironment: 'production'
 };
 
 const reducers = (state = INITIAL_STATE, action) => {
 
   switch( action.type ) {
+
+    case 'ENVIRONMENT_CHANGED': {
+
+      state = _.assign({}, state, {
+        inactiveEnvironment: state.activeEnvironment,
+        activeEnvironment: action.data.environment
+      })
+    }
+    break;
 
     case 'NEW_EVENT': {
 
