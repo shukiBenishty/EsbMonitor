@@ -72,7 +72,7 @@ class Search extends React.Component<Props, State> {
 
   }
 
-  _fromDateChaged(_date: Date) {
+  _fromDateChanged(_date: Date) {
 
     if( !_date ) { // null/empty value
 
@@ -268,6 +268,17 @@ class Search extends React.Component<Props, State> {
     // ∆ means 'nothing' here, indicates that browsed from navigation menu
     if( this.props.match.params.searchText && this.props.match.params.searchText != '∆' ) {
       this.searchText = this.props.match.params.searchText;
+      let today = moment().startOf('day');
+      this.fromDateCtrl.setDate(today);
+      let tomorrow = moment(new Date()).add(1,'days');
+      this.tillDateCtrl.setDate(tomorrow);
+
+      this.setState({
+        fromDate: today.toDate(),
+        isFromDateInvalid: false,
+        tillDate: tomorrow.toDate(),
+        isTillDateInvalid: false
+      });
     }
 
     const searchAllowedFields = ['ip', 'keyword', 'text'];
@@ -370,8 +381,9 @@ class Search extends React.Component<Props, State> {
                                 <div className='col-3'>From
                                 </div>
                                 <div className='col-9'>
-                                  <Datetime className={fromDateClassName}
-                                            onChange={::this._fromDateChaged}
+                                  <Datetime ref={ (el) => {this.fromDateCtrl = el} }
+                                            className={fromDateClassName}
+                                            onChange={::this._fromDateChanged}
                                             closeOnSelect={true}
                                             local='he' />
                                 </div>
@@ -380,7 +392,8 @@ class Search extends React.Component<Props, State> {
                               <div className='row'>
                                   <div className='col-3'>Until</div>
                                   <div className='col-9'>
-                                    <Datetime className={tillDateClassName}
+                                    <Datetime ref={ (el) => {this.tillDateCtrl = el} }
+                                              className={tillDateClassName}
                                               onChange={::this._tillDateChanged}
                                               closeOnSelect={true}
                                               local='he' />
