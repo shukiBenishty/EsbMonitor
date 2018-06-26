@@ -67,9 +67,12 @@ class Search extends React.Component<Props, State> {
       },
       rigthAligned: {
         marginLeft: 'auto'
+      },
+      verticalAlign: {
+        display: 'flex',
+        alignItems: 'center'
       }
     }
-
   }
 
   _fromDateChanged(_date: Date) {
@@ -386,7 +389,8 @@ class Search extends React.Component<Props, State> {
                             </ul>
                             <div className='card-footer'>
                               <div className='row'>
-                                <div className='col-3'>From
+                                <div className='col-3'
+                                     style={this.styles.verticalAlign}>From
                                 </div>
                                 <div className='col-9'>
                                   <Datetime ref={ (el) => {this.fromDateCtrl = el} }
@@ -398,7 +402,8 @@ class Search extends React.Component<Props, State> {
                               </div>
                               <br />
                               <div className='row'>
-                                  <div className='col-3'>Until</div>
+                                  <div className='col-3'
+                                       style={this.styles.verticalAlign}>Until</div>
                                   <div className='col-9'>
                                     <Datetime ref={ (el) => {this.tillDateCtrl = el} }
                                               className={tillDateClassName}
