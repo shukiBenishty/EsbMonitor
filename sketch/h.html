@@ -1,0 +1,56 @@
+<html>
+  <head>
+
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/styles/default.min.css">
+    <!-- <link rel="stylesheet" src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/vs.min.css'></script> -->
+    <!-- <link rel="stylesheet" href='hl.css' /> -->
+
+    <link rel="alternate stylesheet" title="Atom One Light" href="atom-one-light.css">
+
+</head>
+<body>
+  <pre>
+    <code class="js">
+      function Foo(num) {
+        return num + 1;
+      }
+    </code>
+  </pre>
+  <pre>
+    <code class="xml">
+      <s:Envelope xmlns:s='http://schemas.xmlsoap.org/soap/envelope'>
+        <s:Header>
+        </s:Header>
+        <s:Body>
+          <GetCustomerHistory xmlns='http://TAD-CRM.muni.il'>
+          </GetCustomerHistory>
+        </s:Body>
+      </s:Envelope>
+    </code>
+  </pre>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+  <!-- <script src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js'></script> -->
+
+  <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore-min.js'></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
+
+  <script type='text/javascript'>
+
+       $(document).ready(function() {
+           $('pre code').each(function(i, block) {
+             hljs.highlightBlock(block);
+           });
+      (function() {
+        // Select node, and escape special characters
+        var el = document.querySelector('.xml'),
+        esc = _.escape(el.innerHTML);
+
+        // Reasign escaped to node and initialize highlight.js
+        el.innerHTML = esc;
+        hljs.highlightBlock(el);
+      })();
+     });
+  </script>
+
+</body>
+</html>
