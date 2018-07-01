@@ -120,20 +120,19 @@ class Story extends React.Component<Props, State> {
         {
           this.state.events.map( (esbEvent, index) => {
 
-            let iconStyle = ( esbEvent._source.status == 'Success' ) ?
+            let iconStyle = ( esbEvent._source.status.toLowerCase() == 'Success'.toLowerCase() ) ?
                               { background: 'rgb(33, 150, 243)', color: '#fff' } :
                               { background: 'rgb(233, 30, 99)', color: '#fff' };
 
-            let iconType = ( esbEvent._source.status == 'Success' )  ?
+            let iconType = ( esbEvent._source.status.toLowerCase() == 'Success'.toLowerCase() )  ?
                             'icon ti-info' :
                             'icon ti-alert';
 
-            let latency = moment.duration(moment(esbEvent._source.end_date).diff(moment(esbEvent._source.start_date)));
             let environment = ( esbEvent._source.environment == 2 ) ? 'External' : 'Internal';
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS') + ' Latency: ' + latency + ' ms.'}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, HH:mm:ss.SSS')}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
