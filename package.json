@@ -9,7 +9,7 @@
     "build": "webpack -d --watch",
     "start:dev": "webpack-dev-server --content-base public/ --mode development --colors --watch",
     "test": "jest",
-    "mocha": "mocha --require babel-core/register --reporter spec --timeout 40000 ./test/login.js",
+    "mocha": "mocha --require babel-core/register --reporter spec --timeout 60000 -s 0 ./test/login.js",
     "get-schema": "node ./scripts/getSchema.js"
   },
   "jest": {
