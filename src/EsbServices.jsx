@@ -39,10 +39,16 @@ class EsbServices extends React.Component {
     const { selectedServices } = this.state;
 
     let services = this.props.services.map( service => (
-        {
-          value: service.objectId,
-          label: service.name
-        }
+
+      ( service) ? {
+        value: service.objectId,
+        label: service.name
+      } :
+      {
+        value: 0,
+        label: '<no name>'
+      }
+
     ))
 
     return <Select
