@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { connect } from 'react-redux';
 import moment from 'moment';
 import Modal from 'react-modal';
 import elasticClient from '../elastic/connection';
@@ -9,7 +8,6 @@ import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timel
 import Icon from './Icon';
 import 'react-vertical-timeline-component/style.min.css';
 
-import settings from './settings.json';
 import sampleStory from './SampleStory';
 
 const customStyles = {
@@ -26,24 +24,27 @@ const customStyles = {
 
 type State = {
   modalIsOpen: boolean,
-  events: []
+  events: [],
+  curentEventIndex: number
 }
 
 type Props = {
-  storyId: string,
-  styles: {}
+  storyId: string
 }
 
 class Story extends React.Component<Props, State> {
 
-  state = {
-    events: [],
-    modalIsOpen: false
-  }
+  constructor(props) {
 
-  constructor() {
+    super(props);
 
-    super();
+    const { match } = this.props;
+
+    this.state = {
+      events: [],
+      modalIsOpen: false,
+      curentEventIndex: 0
+    }
 
     this.styles = {
       noDataStyle: {
@@ -51,21 +52,41 @@ class Story extends React.Component<Props, State> {
         margin: '0 auto'
       }
     }
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    //this.afterOpenModal = this.afterOpenModal.bind(this);
   }
 
-  openModal() {
-    this.setState({modalIsOpen: true});
+  openModal(index: number) {
+
+    this.setState({
+      modalIsOpen: true,
+      curentEventIndex: index}
+    );
   }
 
   closeModal() {
     this.setState({modalIsOpen: false});
   }
 
-  componentDidMount() {
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    this.payload.textContent = this.state.events[this.state.curentEventIndex]._source.payload;
+  }
 
+  componentDidMount() {
     let storyId = this.props.match.params.storyId;
 
-    const requestBody = esb.requestBodySearch()
+    let requestBody = esb.requestBodySearch()
+    elasticClient.search({
+      index: 'esb_ppr_repository',
+      type: 'services',
+    }).then( response => {
+
+    });
+
+    requestBody = esb.requestBodySearch()
     .query(
       esb.matchQuery('message_guid',
                      storyId)
@@ -73,10 +94,9 @@ class Story extends React.Component<Props, State> {
     .sort(esb.sort('start_date', 'asc'));
 
     const self = this;
-    console.log(settings[this.props.activeEnvironment].raw_index_name);
 
     elasticClient.search({
-        index: settings[this.props.activeEnvironment].raw_index_name,
+        index: 'esb_ppr_row',
         type: 'track',
         body: requestBody.toJSON()
     }).then( response => {
@@ -110,62 +130,56 @@ class Story extends React.Component<Props, State> {
               )
     }
 
-    const { location } = this.props;
-    let serviceName = location.serviceName;
-
     return (
-      <React.Fragment>
-        <h2 style={this.styles.noDataStyle}>Story for {serviceName}</h2>
-        <VerticalTimeline>
+      <VerticalTimeline>
+        <Modal
+           style={customStyles}
+           onRequestClose={this.closeModal}
+           onAfterOpen={::this.afterOpenModal}
+           isOpen={this.state.modalIsOpen}
+           ariaHideApp={false}
+           currentEventIndex = {1}
+           contentLabel="Payload">
+           <h2>Payload</h2>
+           <div ref={ div => this.payload = div }>Message</div>
+        </Modal>
+
         {
+
           this.state.events.map( (esbEvent, index) => {
 
-            let iconStyle = ( esbEvent._source.status.toLowerCase() == 'Success'.toLowerCase() ) ?
+            let iconStyle = ( esbEvent._source.status == 'success' ) ?
                               { background: 'rgb(33, 150, 243)', color: '#fff' } :
                               { background: 'rgb(233, 30, 99)', color: '#fff' };
 
-            let iconType = ( esbEvent._source.status.toLowerCase() == 'Success'.toLowerCase() )  ?
+            let iconType = ( esbEvent._source.status == 'success' )  ?
                             'icon ti-info' :
                             'icon ti-alert';
 
-            let environment = ( esbEvent._source.environment == 2 ) ? 'External' : 'Internal';
+            let latency = moment.duration(moment(esbEvent._source.end_date).diff(moment(esbEvent._source.start_date)));
+            let environment = ( esbEvent._source.environment == 'INT1' ) ? 'External' : 'Internal';
 
             return <VerticalTimelineElement key={index}
                       className="vertical-timeline-element"
-                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, HH:mm:ss.SSS')}
+                      date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, h:mm:ss.SS')}
                       iconStyle={iconStyle}
                       icon={<Icon type={iconType}/>}
                       >
                       <h3 className="vertical-timeline-element-title"><b>{esbEvent._source.message}</b></h3>
-                      <h4 className="vertical-timeline-element-subtitle"><b>by {environment} environment</b></h4>
+                      <h4 className="vertical-timeline-element-subtitle"><b>by Router at {environment} environment</b></h4>
                       <div>From {esbEvent._source.client_ip}</div>
                       <div>User {esbEvent._source.client_user}</div>
                       <p>
                         <button className='btn'
-                              onClick={::this.openModal}>Payload</button>
-                        <Modal
-                           style={customStyles}
-                           onRequestClose={::this.closeModal}
-                           isOpen={this.state.modalIsOpen}
-                           ariaHideApp={false}
-                           contentLabel="Payload">
-                           <div>{esbEvent._source.payload}</div>
-                        </Modal>
+                              onClick={ () => this.openModal(index) }>Payload</button>
                       </p>
                    </VerticalTimelineElement>
           })
         }
       </VerticalTimeline>
-      </React.Fragment>
     )
   }
 
 }
 
-const mapStateToProps = state => {
-  return {
-    activeEnvironment: state.activeEnvironment
-  }
-}
-
-export default connect(mapStateToProps)(Story);
+export default Story;
