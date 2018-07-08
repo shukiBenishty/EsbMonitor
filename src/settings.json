@@ -1,10 +1,12 @@
 {
 		"test": {
 			"raw_index_name": "esb_ppr_row",
-			"summary_index_name": "esb_ppr_summary"
+			"summary_index_name": "esb_ppr_summary",
+			"services_index_name": "esb_ppr_services"
 		},
 		"production": {
 			"raw_index_name": "esb_row",
-			"summary_index_name": "esb_summary"
+			"summary_index_name": "esb_summary",
+			"services_index_name": "esb_services"
 		}
 }
