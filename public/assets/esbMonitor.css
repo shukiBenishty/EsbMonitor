@@ -19,6 +19,7 @@
 .graphqlConnectionError {
   font-size: xx-large;
   color: red;
+  text-align: center;
 }
 
 .esbCard {
@@ -124,4 +125,13 @@
 .vertical-timeline-element:nth-child(even):not(.vertical-timeline-element--left) .vertical-timeline-element-content .vertical-timeline-element-date {
   right: 150%;
   left: auto !important;
+}
+
+.noData {
+  width: '36%',
+  margin: '0 auto'
+}
+
+.serviceNameCaption {
+  text-align: center;
 }
