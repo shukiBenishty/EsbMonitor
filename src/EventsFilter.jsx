@@ -8,7 +8,7 @@ type Props = {
 
 type State = {
   filterValue: String,
-  socketSwitch: Boolean
+  activeTracing: Boolean
 }
 
 class EventsFilter extends React.Component<Props, State> {
@@ -26,11 +26,8 @@ class EventsFilter extends React.Component<Props, State> {
 
     this.state ={
       filterValue: '',
-      socketSwitch: true
+      activeTracing: true
     }
-
-    this._toggleSocket = this._toggleSocket.bind(this);
-    this._cleanEvents = this._cleanEvents.bind(this);
   }
 
   updateFilterValue(evt) {
@@ -47,15 +44,17 @@ class EventsFilter extends React.Component<Props, State> {
     })
   }
 
-  _toggleSocket() {
+  _toggleActiveTracing() {
 
     this.setState({
-      socketSwitch: !this.state.socketSwitch
+      activeTracing: !this.state.activeTracing
     }, () => { // supply callback because setState is async,
-               // so change to socketSwitch is not applied immediately
+               // so change to activeTracing is not applied immediately
       this.props.dispatch({
-        type: 'TOOGLE_SOCKET',
-        switch: this.state.socketSwitch
+        type: 'ACTIVE_TRACING',
+        data: {
+          activeTracing: this.state.activeTracing
+        }
       });
     })
 
@@ -70,15 +69,15 @@ class EventsFilter extends React.Component<Props, State> {
   render() {
     return(
       <div style={this.styles.filterStyle}>
-        <button className="btn btn-danger btn-round btn-square"
-          onClick={this._toggleSocket}>
+        <button className='btn btn-danger btn-round btn-square btn-filter'
+          onClick={::this._toggleActiveTracing}>
           <i className="ti-power-off"></i>
         </button>
-        <button className="btn btn-info btn-round btn-square"
-          onClick={this._cleanEvents}>
+        <button className='btn btn-info btn-round btn-square btn-filter'
+          onClick={::this._cleanEvents}>
           <i className="ti-eraser"></i>
         </button>
-        <input type="text"
+        <input type="text" className='btn-filter'
                value={this.state.filterValue}
                placeholder="Filter"
                onChange={evt => this.updateFilterValue(evt)}  />
