@@ -12,6 +12,7 @@ const INITIAL_STATE = {
   status: '',
   filterValue: '',
   categories: [],
+  activeTracing: true,
   activeEnvironment: 'test',
   inactiveEnvironment: 'production'
 };
@@ -46,6 +47,13 @@ const reducers = (state = INITIAL_STATE, action) => {
                               errorsCount: ++state.errorsCount
                             })
       }
+    }
+    break;
+
+    case 'ACTIVE_TRACING': {
+      state = _.assign({}, state, {
+                              activeTracing: action.data.activeTracing
+                            })
     }
     break;
 
