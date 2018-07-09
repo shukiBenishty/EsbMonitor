@@ -135,3 +135,14 @@
 .serviceNameCaption {
   text-align: center;
 }
+
+.esbBox {
+  background-color: #fff;
+  border: 1px solid;
+  border-color: rgb(235, 235, 235);
+  justify-content: flex-start;
+  cursor: pointer;
+}
+.btn-filter {
+  margin: 10px;
+}
