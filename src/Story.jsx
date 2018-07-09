@@ -121,9 +121,9 @@ class Story extends React.Component<Props, State> {
       console.error(err);
 
       // Only for tests purpose
-      self.setState({
-        events: sampleStory
-      })
+      // this.setState({
+      //   events: sampleStory
+      // })
 
     }
 
