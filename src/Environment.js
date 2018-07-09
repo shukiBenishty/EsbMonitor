@@ -93,6 +93,10 @@ function setupSubscription(
     (error, result) => {
       observer.onNext({data: result})
     })
+
+  return {
+    dispose: subscriptionClient.unsubscribe
+  };
 }
 
 const environment = new Environment({
