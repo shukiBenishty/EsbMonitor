@@ -114,7 +114,7 @@ class AppLayout extends React.Component<Props> {
       }
     },
     onError: error => {
-      console.log(`An error occured:`, error);
+      console.log(`An error occured: ${error}`);
     }
   }
 
