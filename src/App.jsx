@@ -114,7 +114,7 @@ class AppLayout extends React.Component {
       }
     };
 
-    requestSubscription(
+    this.subscription = requestSubscription(
       environment,
       subscriptionConfig
     )
@@ -124,7 +124,7 @@ class AppLayout extends React.Component {
   render() {
     return (<div className="maxHeight">
               <NavigationRenderer />
-              <Header userName='Oleg Kleiman'/>
+              <Header userName='User name'/>
               <MainContent />
             </div>);
   }
