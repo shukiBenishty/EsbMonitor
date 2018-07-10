@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
 
 type Props = {
 
@@ -13,6 +14,11 @@ type State = {
 
 class EventsFilter extends React.Component<Props, State> {
 
+  state = {
+    filterValue: '',
+    activeTracing: true
+  }
+
   constructor(props) {
     super(props);
 
@@ -24,10 +30,6 @@ class EventsFilter extends React.Component<Props, State> {
       }
     }
 
-    this.state ={
-      filterValue: '',
-      activeTracing: true
-    }
   }
 
   updateFilterValue(evt) {
@@ -67,16 +69,32 @@ class EventsFilter extends React.Component<Props, State> {
   }
 
   render() {
+
+    let playButtonClass = 'ti-control-pause';
+    let playButtonText = 'Stop collecting events';
+    if( !this.state.activeTracing ) {
+      playButtonClass = 'ti-control-play';
+      playButtonText = 'Start collecting events';
+    }
+
     return(
       <div style={this.styles.filterStyle}>
-        <button className='btn btn-danger btn-round btn-square btn-filter'
+        <button data-tip data-for='btnPlayStop'
+           className='btn btn-danger btn-round btn-square btn-filter'
           onClick={::this._toggleActiveTracing}>
-          <i className="ti-power-off"></i>
+          <i className={playButtonClass}></i>
         </button>
-        <button className='btn btn-info btn-round btn-square btn-filter'
+        <ReactTooltip id='btnPlayStop' aria-haspopup='true'>
+          <span>{playButtonText}</span>
+        </ReactTooltip>
+        <button data-tip data-for='btnClear'
+          className='btn btn-info btn-round btn-square btn-filter'
           onClick={::this._cleanEvents}>
           <i className="ti-eraser"></i>
         </button>
+        <ReactTooltip id='btnClear' aria-haspopup='true'>
+          <span>Clear events list</span>
+        </ReactTooltip>
         <input type="text" className='btn-filter'
                value={this.state.filterValue}
                placeholder="Filter"
