@@ -27,7 +27,10 @@ class NavigationRenderer extends React.Component{
   render() {
 
     let queryVariables = {
-			daysBefore: 0 // get errors just for today
+			daysBefore: 1 // Actually we want to get errors just for today,
+										// but in order to not duplicate GQL queries with Dashbord,
+										// we're quering with {before: 1}. Hence, Relay Store will remember
+										// only one linkedRecord for both
 		}
 
      return <QueryRenderer
