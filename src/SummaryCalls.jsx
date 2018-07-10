@@ -2,16 +2,15 @@
 import React from 'react';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { css } from 'glamor';
+import DocumentTitle from 'react-document-title';
 
 const SummaryCalls = ({title, totals, relay}) => {
 
     let todayCalls = 0;
     let percentage = 0;
-    if(  totals.totalCalls && totals.totalCalls.length > 0 ){
-      todayCalls = totals.totalCalls[0].value.toLocaleString();
-      if( totals.totalCalls.length > 1 ) {
-        percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[1].value * 100) ;
-      }
+    if( totals.totalCalls && totals.totalCalls.length > 0 && totals.todayTotalCalls.length > 0 ){
+      todayCalls = totals.todayTotalCalls[0].value.toLocaleString();
+      percentage = Math.floor(totals.todayTotalCalls[0].value / totals.totalCalls[0].value * 100) ;
     }
 
     let progressBarWidth = percentage + '%';
@@ -21,7 +20,8 @@ const SummaryCalls = ({title, totals, relay}) => {
         backgroundColor: "#33cabb"
     });
 
-    return (<div className="col-lg-4">
+    return (<DocumentTitle title='Dashboard - ESB Monitor'>
+            <div className="col-lg-4">
               <div className="card card-body esbCard">
               <h6>
                 <span className="text-uppercase esbCaption">{title}</span>
@@ -40,7 +40,8 @@ const SummaryCalls = ({title, totals, relay}) => {
                 {percentage}% increase from last day
               </div>
             </div>
-          </div>);
+          </div>
+        </DocumentTitle>);
 
 
 }
@@ -52,6 +53,9 @@ graphql`
     before: { type: "Date", defaultValue: 2 }
   )
   {
+    todayTotalCalls: totalCalls(before: 0) {
+      value
+    }
     totalCalls(before: $before) {
       date
       value
