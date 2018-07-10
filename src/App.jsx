@@ -96,6 +96,9 @@ class AppLayout extends React.Component<Props> {
         }
 
         let totalCallsRecords = runtimeRecord.getLinkedRecords('totalCalls', {before: 1});
+        // When subscription invoked after new QueryRenderer, it is possible that
+        // there is no such a record 'totalCalls', because no one yet
+        // stored the results of the query in the Relay Store
         if( totalCallsRecords && totalCallsRecords.length > 0
             && totalCallsRecords[0] ) {
           let totalCalls = totalCallsRecords[0].getValue('value');
@@ -103,11 +106,12 @@ class AppLayout extends React.Component<Props> {
         }
 
         if( __status == 'ERROR' ) {
-          let errorsRecors = runtimeRecord.getLinkedRecords('errors', {before: 1});
-          if( errorsRecors && errorsRecors.length > 0
-              && errorsRecors[0]) {
-            let totalErrors = errorsRecors[0].getValue('value');
-            errorsRecors[0].setValue( ++totalErrors, 'value');
+
+          let errorsRecords = runtimeRecord.getLinkedRecords('errors', {before: 1});
+          if( errorsRecords && errorsRecords.length > 0
+              && errorsRecords[0]) {
+            let totalErrors = errorsRecords[0].getValue('value');
+            errorsRecords[0].setValue( ++totalErrors, 'value');
           }
 
         }
