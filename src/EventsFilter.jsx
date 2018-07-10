@@ -46,7 +46,7 @@ class EventsFilter extends React.Component<Props, State> {
     })
   }
 
-  _toggleActiveTracing() {
+  toggleActiveTracing() {
 
     this.setState({
       activeTracing: !this.state.activeTracing
@@ -62,7 +62,7 @@ class EventsFilter extends React.Component<Props, State> {
 
   }
 
-  _cleanEvents() {
+  cleanEvents() {
     this.props.dispatch({
       type: 'CLEAN_EVENTS'
     })
@@ -81,7 +81,7 @@ class EventsFilter extends React.Component<Props, State> {
       <div style={this.styles.filterStyle}>
         <button data-tip data-for='btnPlayStop'
            className='btn btn-danger btn-round btn-square btn-filter'
-          onClick={::this._toggleActiveTracing}>
+          onClick={::this.toggleActiveTracing}>
           <i className={playButtonClass}></i>
         </button>
         <ReactTooltip id='btnPlayStop' aria-haspopup='true'>
@@ -89,7 +89,7 @@ class EventsFilter extends React.Component<Props, State> {
         </ReactTooltip>
         <button data-tip data-for='btnClear'
           className='btn btn-info btn-round btn-square btn-filter'
-          onClick={::this._cleanEvents}>
+          onClick={::this.cleanEvents}>
           <i className="ti-eraser"></i>
         </button>
         <ReactTooltip id='btnClear' aria-haspopup='true'>
