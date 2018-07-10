@@ -3,6 +3,7 @@ import React from 'react';
 import { graphql, requestSubscription } from 'react-relay';
 import { connect } from 'react-redux'
 import * as JsSearch from 'js-search';
+import DocumentTitle from 'react-document-title';
 
 import EventsFilter from './EventsFilter';
 import EsbEvent from './EsbEvent';
@@ -114,7 +115,8 @@ class EventList extends React.Component<Props, State> {
 
   render() {
 
-    return(<main className="main-container maxHeight">
+    return(<DocumentTitle title='Realtime - ESB Monitor'>
+            <main className="main-container maxHeight">
               <div className="main-content maxHeight">
                 <EventsFilter />
                 <div style={this.styles.eventListFrame}>
@@ -131,9 +133,10 @@ class EventList extends React.Component<Props, State> {
                         )}
                   </AutoSizer>
                 </div>
-              <EsbStatus filter={this.props.filterValue}/>
-            </div>
-          </main>)
+                <EsbStatus filter={this.props.filterValue}/>
+              </div>
+            </main>
+          </DocumentTitle>)
   }
 
 }
