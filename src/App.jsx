@@ -139,8 +139,8 @@ class AppLayout extends React.Component<Props> {
         this.subscription = null;
         } else {
 
-          // this.subscription = requestSubscription(environment,
-          //                                         this.subscriptionConfig)
+          this.subscription = requestSubscription(environment,
+                                                  this.subscriptionConfig)
         }
     }
   }
