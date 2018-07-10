@@ -8,9 +8,9 @@ const SummaryErrors = ({title, totals, relay}) => {
 
   let todayErrors = 0;
   let percentage = 0;
-  if( totals.errors && totals.errors.length > 0 && totals.todayErrors.length > 0 ){
-    todayErrors = totals.todayErrors[0].value.toLocaleString();
-    percentage = Math.floor(totals.todayErrors[0].value / totals.errors[0].value * 100) ;
+  if( totals.errors && totals.errors.length > 0 ){
+    todayErrors = totals.errors[0].value.toLocaleString();
+    percentage = Math.floor(totals.errors[0].value / totals.errors[0].value * 100) ;
   }
 
   let progressBarWidth =  percentage + '%';
@@ -39,7 +39,7 @@ const SummaryErrors = ({title, totals, relay}) => {
                 </div>
                 <div className="text-gray fs-12">
                   <i className="ti-stats-down text-danger mr-1"></i>
-                  {percentage}% decrease from last hour
+                  {percentage}% decrease from last day
                 </div>
               </div>
             </div>);
@@ -53,9 +53,6 @@ fragment SummaryErrors_totals on Runtime
   before: { type: "Date", defaultValue: 2 }
 )
 {
-  todayErrors: errors(before: 0) {
-    value
-  }
   errors(before: $before) {
     date
     value
