@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createFragmentContainer, graphql} from 'react-relay';
+import { connect } from 'react-redux';
 import { css } from 'glamor';
 
-const SummaryLatency = ({title, totals, relay}) => {
+const SummaryLatency = ({dispatch, title, totals, relay}) => {
 
   let todayLatency = 0;
   let percentage = 0;
@@ -26,7 +27,15 @@ const SummaryLatency = ({title, totals, relay}) => {
                   <span className="text-uppercase esbCaption">{title}</span>
                   <span className="float-right">
                     <Link to='/analyze/∑esb_Latency'>
-                      <button className='btn btn-xs btn-primary'>View</button>
+                      <button onClick={ () => {
+                                  dispatch({
+                                    type: 'PAGE_CHANGED',
+                                    data: {
+                                      pageId: 4
+                                    }
+                                  })
+                              }}
+                        className='btn btn-xs btn-primary'>View</button>
                     </Link>
                   </span>
                 </h6>
@@ -45,7 +54,7 @@ const SummaryLatency = ({title, totals, relay}) => {
 
 }
 
-export default createFragmentContainer(SummaryLatency,
+export default createFragmentContainer(connect()(SummaryLatency),
 graphql`
   fragment SummaryLatency_totals on Runtime
   @argumentDefinitions(
