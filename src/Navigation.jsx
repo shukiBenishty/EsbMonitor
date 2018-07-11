@@ -1,20 +1,18 @@
 // @flow
 import React from 'react';
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux';
 import { createFragmentContainer, graphql} from 'react-relay';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 
 import navigationLinks from './NavigationLinks.json'
 
-type State = {
-  currentLink: number
+type Props = {
+  pageId: number
 }
 
-class Navigation extends React.Component<{}, State> {
-
-  state = {
-    currentLink: 1
-  }
+class Navigation extends React.Component<Props> {
 
   constructor(props) {
     super(props);
@@ -30,16 +28,27 @@ class Navigation extends React.Component<{}, State> {
     }
   }
 
-  linkClicked = (linkNumber: number) => {
-    this.setState({
-      currentLink: linkNumber
+  pageIdChanged = (pageId: number) => {
+
+    this.props.dispatch({
+      type: 'PAGE_CHANGED',
+      data: {
+        pageId: pageId
+      }
     })
   }
 
   render() {
 
+    // const tokens = this.props.history.location.pathname.split('/');
+    // if( tokens.length > 1 ) {
+    //   ::this.getPageId(tokens[1]);
+    // }
+
     let _totalErrors = ( this.props.totals.errors ) ?
                 this.props.totals.errors : [{value:0}];
+
+    const self = this;
 
     return (<aside className="sidebar sidebar-expand-lg sidebar-light sidebar-sm sidebar-color-info">
                 <header className="sidebar-header bg-info">
@@ -50,10 +59,11 @@ class Navigation extends React.Component<{}, State> {
                 <nav style={this.styles.navDivider} className="sidebar-navigation ps-container">
                   <ul className="menu menu-sm">
                   {
+
                     navigationLinks.map( (link, index) => {
 
                         let linkClassName = classNames('menu-item', {
-                          'active': link.id == this.state.currentLink
+                          'active': link.id == self.props.pageId
                         })
 
                         if( link.type == 'menu-divider' ) {
@@ -69,7 +79,7 @@ class Navigation extends React.Component<{}, State> {
 
                           return (<li key={index} className={linkClassName}>
                                     <Link className="menu-link"
-                                      onClick={ () => this.linkClicked(index+1) }
+                                      onClick={ () => this.pageIdChanged(index+1) }
                                       to={link.to}>
                                         <span className={link.icon}></span>
                                         <span className="title">{link.title}</span>
@@ -87,7 +97,14 @@ class Navigation extends React.Component<{}, State> {
 
 };
 
-export default createFragmentContainer(Navigation,
+
+function mapStateToProps(state) {
+  return {
+      pageId: state.pageId
+  }
+}
+
+export default createFragmentContainer(connect(mapStateToProps)(withRouter(Navigation)),
 graphql`
 fragment Navigation_totals on Runtime
 @argumentDefinitions(
