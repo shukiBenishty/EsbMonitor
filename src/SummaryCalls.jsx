@@ -1,10 +1,12 @@
 // @flow
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { createFragmentContainer, graphql} from 'react-relay';
+import { connect } from 'react-redux';
 import { css } from 'glamor';
 import DocumentTitle from 'react-document-title';
 
-const SummaryCalls = ({title, totals, relay}) => {
+const SummaryCalls = ({dispatch, title, totals, relay}) => {
 
     let todayCalls = 0;
     let percentage = 0;
@@ -26,7 +28,17 @@ const SummaryCalls = ({title, totals, relay}) => {
               <h6>
                 <span className="text-uppercase esbCaption">{title}</span>
                 <span className="float-right">
-                  <a className="btn btn-xs btn-primary" href="#">View</a>
+                  <Link to='/analyze/∆'>
+                    <button onClick={ () => {
+                                dispatch({
+                                  type: 'PAGE_CHANGED',
+                                  data: {
+                                    pageId: 4
+                                  }
+                                })
+                            }}
+                      className='btn btn-xs btn-primary'>View</button>
+                  </Link>
                 </span>
               </h6>
               <br />
@@ -46,7 +58,7 @@ const SummaryCalls = ({title, totals, relay}) => {
 
 }
 
-export default createFragmentContainer(SummaryCalls,
+export default createFragmentContainer(connect()(SummaryCalls),
 graphql`
   fragment SummaryCalls_totals on Runtime
   @argumentDefinitions(
