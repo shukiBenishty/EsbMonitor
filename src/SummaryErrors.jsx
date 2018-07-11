@@ -2,9 +2,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createFragmentContainer, graphql} from 'react-relay';
+import { connect } from 'react-redux';
 import { css } from 'glamor';
 
-const SummaryErrors = ({title, totals, relay}) => {
+const SummaryErrors = ({dispatch, title, totals, relay}) => {
 
   let todayErrors = 0;
   let percentage = 0;
@@ -26,7 +27,15 @@ const SummaryErrors = ({title, totals, relay}) => {
                   <span className="text-uppercase esbCaption">{title}</span>
                   <span className="float-right">
                     <Link to='/analyze/error'>
-                      <button className='btn btn-xs btn-primary'>View</button>
+                      <button onClick={ () => {
+                                  dispatch({
+                                    type: 'PAGE_CHANGED',
+                                    data: {
+                                      pageId: 4
+                                    }
+                                  })
+                              }}
+                        className='btn btn-xs btn-primary'>View</button>
                     </Link>
 
                   </span>
@@ -46,7 +55,7 @@ const SummaryErrors = ({title, totals, relay}) => {
 
 };
 
-export default createFragmentContainer(SummaryErrors,
+export default createFragmentContainer(connect()(SummaryErrors),
 graphql`
 fragment SummaryErrors_totals on Runtime
 @argumentDefinitions(
