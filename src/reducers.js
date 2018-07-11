@@ -14,7 +14,8 @@ const INITIAL_STATE = {
   categories: [],
   activeTracing: true,
   activeEnvironment: 'test',
-  inactiveEnvironment: 'production'
+  inactiveEnvironment: 'production',
+  pageId: 1
 };
 
 const reducers = (state = INITIAL_STATE, action) => {
@@ -26,7 +27,14 @@ const reducers = (state = INITIAL_STATE, action) => {
       state = _.assign({}, state, {
         inactiveEnvironment: state.activeEnvironment,
         activeEnvironment: action.data.environment
-      })
+      });
+    }
+    break;
+
+    case 'PAGE_CHANGED': {
+      state = _.assign({}, state, {
+        pageId: action.data.pageId
+      });
     }
     break;
 
