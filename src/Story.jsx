@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import elasticClient from '../elastic/connection';
 import esb from 'elastic-builder';
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
+import Highlight from 'react-highlight';
 import Icon from './Icon';
 import settings from './settings.json';
 import 'react-vertical-timeline-component/style.min.css';
@@ -27,8 +28,8 @@ const customStyles = {
 type State = {
   modalIsOpen: boolean,
   events: [],
-  curentEventIndex: number,
-  serviceName: String
+  serviceName: String,
+  payloadContent: String
 }
 
 type Props = {
@@ -40,50 +41,26 @@ class Story extends React.Component<Props, State> {
   state = {
     events: [],
     modalIsOpen: false,
-    curentEventIndex: 0,
-    serviceName: ''
+    serviceName: '',
+    payloadContent: ''
   }
 
   constructor(props) {
 
     super(props);
 
-    //const { match } = this.props;
-
-    // this.state = {
-    //   events: [],
-    //   modalIsOpen: false,
-    //   curentEventIndex: 0,
-    //   serviceName: ''
-    // }
-
-    // this.styles = {
-    //   noDataStyle: {
-    //     width: '36%',
-    //     margin: '0 auto'
-    //   }
-    // }
-
-    //this.openModal = this.openModal.bind(this);
-    //this.closeModal = this.closeModal.bind(this);
-    //this.afterOpenModal = this.afterOpenModal.bind(this);
   }
 
   openModal(index: number) {
 
     this.setState({
       modalIsOpen: true,
-      curentEventIndex: index}
-    );
+      payloadContent: this.state.events[index]._source.payload
+    });
   }
 
   closeModal() {
     this.setState({modalIsOpen: false});
-  }
-
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    this.payload.textContent = this.state.events[this.state.curentEventIndex]._source.payload;
   }
 
   async getStoryEvents(storyId: number, rawIndexName: String) {
@@ -177,7 +154,7 @@ class Story extends React.Component<Props, State> {
 
   }
 
-   componentDidMount() {
+  componentDidMount() {
 
     let storyId = this.props.match.params.storyId;
 
@@ -199,10 +176,9 @@ class Story extends React.Component<Props, State> {
 
   render() {
 
-    if( this.state.events.length == 0 ) {
-      return (<h4 className='noData'>No data was collected for this invocation</h4>
 
-              )
+    if( this.state.events.length == 0 ) {
+      return (<h4 className='noData'>No data was collected for this invocation</h4>)
     }
 
     return (
@@ -213,13 +189,14 @@ class Story extends React.Component<Props, State> {
           <Modal
              style={customStyles}
              onRequestClose={::this.closeModal}
-             onAfterOpen={::this.afterOpenModal}
              isOpen={this.state.modalIsOpen}
              ariaHideApp={false}
              currentEventIndex = {1}
              contentLabel="Payload">
              <h2>Payload</h2>
-             <div ref={ div => this.payload = div }>Message</div>
+              <Highlight language='xml'>
+                {this.state.payloadContent}
+              </Highlight>
           </Modal>
 
           {
@@ -239,7 +216,7 @@ class Story extends React.Component<Props, State> {
 
               return <VerticalTimelineElement key={index}
                         className="vertical-timeline-element"
-                        date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, hh:mm:ss.SS')}
+                        date={moment(esbEvent._source.start_date).format('DD/MM/YYYY, HH:mm:ss.SSS')}
                         iconStyle={iconStyle}
                         icon={<Icon type={iconType}/>}
                         >
