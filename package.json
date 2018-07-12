@@ -12,7 +12,7 @@
     "selenium": "babel-node ./test/selenium/launch.js",
     "mocha": "mocha --require babel-core/register --reporter spec --timeout 10000 ./tests/login.test.js",
     "jasmine": "babel-node ./test/jasmine/run.js",
-    "get-schema": "node ./scripts/getSchema.js"
+    "get-schema": "babel-node ./scripts/getSchema.js http://localhost:3001/graphql"
   },
   "jest": {
     "testEnvironment": "node",
@@ -50,6 +50,7 @@
     "react-document-title": "^2.0.3",
     "react-dom": "^16.3.2",
     "react-google-charts": "^1.5.5",
+    "react-highlight": "^0.12.0",
     "react-highlight.js": "^1.0.7",
     "react-loadable": "^5.3.1",
     "react-modal": "^3.3.1",
