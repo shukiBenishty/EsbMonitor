@@ -203,7 +203,7 @@ class Story extends React.Component<Props, State> {
 
             this.state.events.map( (esbEvent, index) => {
 
-              let iconStyle = ( esbEvent._source.status == 'success' ) ?
+              let iconStyle = ( esbEvent._source.status.toLowerCase() == 'success' ) ?
                                 { background: 'rgb(33, 150, 243)', color: '#fff' } :
                                 { background: 'rgb(233, 30, 99)', color: '#fff' };
 
