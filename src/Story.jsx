@@ -127,25 +127,8 @@ class Story extends React.Component<Props, State> {
         return;
       }
 
-      const serviceId = response.hits.hits[0]._source.service_id;
-
-      requestBody = esb.requestBodySearch()
-      .query(
-        esb.matchQuery('service_id',
-                       serviceId)
-      );
-      response = await elasticClient.search({
-         index: servicesIndexName,
-         body: requestBody.toJSON()
-      });
-
-      if( response.hits.hits.length == 0  ) {
-        console.error(`No results from ${servicesIndexName}`);
-        return;
-      }
-
       this.setState({
-        serviceName: response.hits.hits[0]._source.name
+        serviceName: response.hits.hits[0]._source.service_name
       });
 
     } catch( err ){
