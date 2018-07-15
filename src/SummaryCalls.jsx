@@ -10,9 +10,9 @@ const SummaryCalls = ({dispatch, title, totals, relay}) => {
 
     let todayCalls = 0;
     let percentage = 0;
-    if( totals.totalCalls && totals.totalCalls.length > 0 && totals.todayTotalCalls.length > 0 ){
-      todayCalls = totals.todayTotalCalls[0].value.toLocaleString();
-      percentage = Math.floor(totals.todayTotalCalls[0].value / totals.totalCalls[0].value * 100) ;
+    if( totals.totalCalls && totals.totalCalls.length > 0 ){
+      todayCalls = totals.totalCalls[0].value.toLocaleString();
+      percentage = Math.floor(totals.totalCalls[0].value / totals.totalCalls[0].value * 100) ;
     }
 
     let progressBarWidth = percentage + '%';
@@ -28,7 +28,7 @@ const SummaryCalls = ({dispatch, title, totals, relay}) => {
               <h6>
                 <span className="text-uppercase esbCaption">{title}</span>
                 <span className="float-right">
-                  <Link to='/analyze/∆'>
+                  <Link to='/analyze/∑'>
                     <button onClick={ () => {
                                 dispatch({
                                   type: 'PAGE_CHANGED',
@@ -65,9 +65,6 @@ graphql`
     before: { type: "Date", defaultValue: 2 }
   )
   {
-    todayTotalCalls: totalCalls(before: 0) {
-      value
-    }
     totalCalls(before: $before) {
       date
       value
