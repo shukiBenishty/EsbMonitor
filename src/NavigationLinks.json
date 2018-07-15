@@ -22,7 +22,7 @@
 }, {
   "id": 4,
   "type": "menu-item",
-  "to": "/analyze",
+  "to": "/analyze/0",
   "title": "Analyze",
   "icon": "icon ti-search",
   "badge": null
