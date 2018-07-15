@@ -135,11 +135,23 @@ class Search extends React.Component<Props, State> {
                   searchFields: string[],
                   searchText: string) {
 
-  let tokens = searchText.split('∑');
-  if( tokens.length > 1 ) {
-    let sortField = tokens[1];
+  if( searchText.indexOf('∑') != -1 ) {
+
+    let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+    let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+
     return esb.requestBodySearch()
-          .sort(esb.sort(sortField, 'desc'));
+          .query(
+            esb.boolQuery()
+            .must(esb.rangeQuery('trace_Date')
+                  .gte(from)
+                  .lte(till)
+               )
+            .filter(
+               esb.matchAllQuery()
+            )
+          )
+          .sort(esb.sort('trace_Date', 'desc'));
   }
 
   if( !_from && !_till) {
@@ -165,10 +177,10 @@ class Search extends React.Component<Props, State> {
                 .must(esb.rangeQuery('trace_Date')
                     .gte(from)
                     .lte(till)
-              )
-              .filter(esb.multiMatchQuery(searchFields,
-                            searchText)
-                            .lenient(true))
+                 )
+                .filter(esb.multiMatchQuery(searchFields,
+                              searchText)
+                              .lenient(true))
         )
         .sort(esb.sort('trace_Date', 'desc'));
 
@@ -269,7 +281,7 @@ class Search extends React.Component<Props, State> {
 
     // As alternative to Gang's Delta,
     // ∆ means 'nothing' here, indicates that browsed from navigation menu
-    if( this.props.match.params.searchText && this.props.match.params.searchText != '∆' ) {
+    if( this.props.match.params.searchText && this.props.match.params.searchText != '0' ) {
       this.searchText = this.props.match.params.searchText;
       let today = moment().startOf('day');
       this.fromDateCtrl.setState({
