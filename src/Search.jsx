@@ -6,6 +6,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import moment from 'moment';
 import Datetime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
 import elasticsearch from 'elasticsearch';
 import esb from 'elastic-builder';
 import elasticClient from '../elastic/connection';
