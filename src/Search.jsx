@@ -6,6 +6,7 @@ import _ from 'lodash';
 import classNames from 'classnames';
 import moment from 'moment';
 import Datetime from 'react-datetime';
+import 'react-datetime/css/react-datetime.css';
 import elasticsearch from 'elasticsearch';
 import esb from 'elastic-builder';
 import elasticClient from '../elastic/connection';
@@ -135,26 +136,26 @@ class Search extends React.Component<Props, State> {
                   searchFields: string[],
                   searchText: string) {
 
-    if( searchText.indexOf('∑') != -1 ) {
+  if( searchText.indexOf('∑') != -1 ) {
 
-      let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
-      let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
+    let from = moment(_from).format('YYYY-MM-DDTHH:mm:ssZZ');
+    let till = moment(_till).format('YYYY-MM-DDTHH:mm:ssZZ');
 
-      return esb.requestBodySearch()
-            .query(
-              esb.boolQuery()
-              .must(esb.rangeQuery('trace_Date')
-                    .gte(from)
-                    .lte(till)
-                 )
-              .filter(
-                 esb.matchAllQuery()
-              )
+    return esb.requestBodySearch()
+          .query(
+            esb.boolQuery()
+            .must(esb.rangeQuery('trace_Date')
+                  .gte(from)
+                  .lte(till)
+               )
+            .filter(
+               esb.matchAllQuery()
             )
-            .sort(esb.sort('trace_Date', 'desc'));
-    }
+          )
+          .sort(esb.sort('trace_Date', 'desc'));
+  }
 
-    if( !_from && !_till) {
+  if( !_from && !_till) {
 
         return esb.requestBodySearch()
         .query(
@@ -279,7 +280,8 @@ class Search extends React.Component<Props, State> {
 
   componentDidMount() {
 
-    // '0' means 'nothing' here, indicates that browsed from navigation menu
+    // As alternative to Gang's Delta,
+    // ∆ means 'nothing' here, indicates that browsed from navigation menu
     if( this.props.match.params.searchText && this.props.match.params.searchText != '0' ) {
       this.searchText = this.props.match.params.searchText;
       let today = moment().startOf('day');
