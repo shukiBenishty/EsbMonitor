@@ -5,11 +5,16 @@ import moment from 'moment';
 
 const Hit = ({source}) => {
 
-    const statusClass = classNames('lead text-fade mr-25 d-none d-md-block', {
-      'infoText': source.status == "Success",
-      'warningText': source.status == "Warning",
-      'errorText': source.status == "Failure"
+    const _status = source.status.toLowerCase();
+    const statusClass = classNames('lead mr-25 d-none d-md-block', {
+      'infoText': _status == "success",
+      'warningText': _status == "warning",
+      'errorText': _status == "error"
     });
+
+    const arrowClass = classNames('icon ti-control-forward', {
+      'errorText': _status == "error"
+    })
 
     return <div className='media align-items-center bg-white b-1'>
             <div className='flexbox align-items-center flex-grow gap-items'>
@@ -17,7 +22,7 @@ const Hit = ({source}) => {
                 <h6>{source.service_name}</h6>
                 <small>
                   <span>
-                  {moment(source.trace_Date).format('DD-MM-YYYY hh:mm:ss')}
+                  {moment(source.trace_Date).format('DD-MM-YYYY HH:mm:ss')}
                   </span>
                   <span className='divider-dash'>
                   {source.client_ip}
@@ -31,7 +36,7 @@ const Hit = ({source}) => {
             <span className={statusClass}>
               {source.status}
             </span>
-            <div className='icon ti-control-forward'>
+            <div className={arrowClass}>
             </div>
       </div>
 };
