@@ -1,0 +1,148 @@
+.ReactVirtualized__Grid {
+  /* height: 620px !important; */
+}
+.ReactVirtualized__Grid__innerScrollContainer {
+  /* height: auto !important; */
+  /* height: 100% !important; */
+  /* max-height: none !important; */
+}
+
+.esbRepositoryList {
+
+}
+
+.esbRepositoryList div {
+  height: auto !important;
+  max-height: none !important;
+}
+
+.graphqlConnectionError {
+  font-size: xx-large;
+  color: red;
+  text-align: center;
+}
+
+.esbCard {
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: #e4e7ea !important;
+
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2),
+            0 8px 0 -3px #f6f6f6,
+            0 9px 1px -3px rgba(0, 0, 0, 0.2),
+            0 16px 0 -6px #f6f6f6,
+            0 17px 2px -6px rgba(0, 0, 0, 0.2) !important;
+}
+
+.esbList div {
+  height: auto !important;
+}
+
+.esbCaption {
+  font-size: 22px;
+}
+
+.wizard {
+  display: table;
+  table-layout: fixed;
+  width: auto;
+  margin: 15px auto 0;
+}
+
+.step {
+  display: block;
+  text-align: center;
+  position: relative;
+  border-right: 20px solid rgb(245, 246, 250);
+  font-weight: 300;
+  line-height: 14px;
+  letter-spacing: 1px;
+  float: left;
+}
+
+.step:last-child {
+  border-right: 0px;
+}
+
+.step a {
+  display: block;
+  background-color: #b3b3b3;
+  color: #fff;
+  padding: 13px 6px;
+  margin: 0;
+  text-decoration: none;
+}
+
+.nav-arrow {
+  display: block;
+  width: 0;
+  height: 0;
+
+  position: absolute;
+  right: -20px;
+
+  border-color: transparent transparent transparent #b3b3b3;
+  border-style: solid;
+  border-width: 20px 0 20px 20px;
+}
+
+._row {
+  display: flex;
+  flex-direction: row;
+}
+
+.esbSearch-appear {
+  opacity: 0.01;
+}
+
+.esbSearch-appear.esbSearch-appear-active {
+  opacity: 1;
+  transition: opacity .5s ease-in;
+}
+
+.esbSearch-enter {
+  opacity: 0.01;
+}
+
+.esbSearch-enter.esbSearch-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.esbSearch-leave {
+  opacity: 1;
+}
+
+.esbSearch-leave.esbSearch-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.vertical-timeline-element-content .vertical-timeline-element-date {
+  left: 150% !important;
+}
+
+.vertical-timeline-element:nth-child(even):not(.vertical-timeline-element--left) .vertical-timeline-element-content .vertical-timeline-element-date {
+  right: 150%;
+  left: auto !important;
+}
+
+.noData {
+  width: '36%',
+  margin: '0 auto'
+}
+
+.serviceNameCaption {
+  text-align: center;
+}
+
+.esbBox {
+  background-color: #fff;
+  border: 1px solid;
+  border-color: rgb(235, 235, 235);
+  justify-content: flex-start;
+  cursor: pointer;
+}
+.btn-filter {
+  margin: 10px;
+}
