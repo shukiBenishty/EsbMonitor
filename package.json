@@ -64,6 +64,7 @@
     "react-tooltip": "^3.6.1",
     "react-vertical-timeline-component": "^2.0.6",
     "react-virtualized": "^9.15.0",
+    "reactstrap": "^6.3.0",
     "redux": "^4.0.0-rc.1",
     "relay-compiler": "1.6.0",
     "relay-devtools": "^1.4.0",
