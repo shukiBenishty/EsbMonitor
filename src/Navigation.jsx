@@ -55,7 +55,7 @@ class Navigation extends React.Component<Props> {
                      </div>
                   </a>
                   <a href='#' className='simple-text logo-normal'>
-                    ESb Now
+                    ESB Now
                   </a>
               </div>
               <div className='sidebar-wrapper' ref='sidebar'>
