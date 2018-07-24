@@ -9,6 +9,7 @@ import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import elasticsearch from 'elasticsearch';
 import esb from 'elastic-builder';
+import { Row, Col } from 'reactstrap';
 import elasticClient from '../elastic/connection';
 
 import Hit from './Hit';
@@ -55,10 +56,6 @@ class Search extends React.Component<Props, State> {
       },
       fieldsSelector: {
         flexGrow: '1'
-      },
-      fieldLabel: {
-        fontWeight: '300',
-        fontSize: '13px'
       },
       selfAligned: {
         alignSelf: 'center'
@@ -387,15 +384,18 @@ class Search extends React.Component<Props, State> {
                                   let isSelected = field.isSelected;
 
                                   return <li className='form-check' key={index}>
-                                            <label style={this.styles.fieldLabel}>
+                                            <Row>
+                                            <label className='form-check-label'>
                                               <input type='checkbox'
                                                      checked={isSelected}
                                                      title={field.name}
-                                                     className='form-check-input'
+                                                     className='checkbox'
                                                      onChange={::this.toggleField}
                                               />
-                                            {field.name}
+                                              <span className='form-check-sign'></span>
                                             </label>
+                                            <div>{field.name}</div>
+                                          </Row>
                                          </li>
                                 })
                               }
