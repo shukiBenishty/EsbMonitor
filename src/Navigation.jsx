@@ -3,9 +3,9 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { createFragmentContainer, graphql} from 'react-relay';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import classNames from 'classnames';
-
+import { Row, Col, Nav } from 'reactstrap';
 import navigationLinks from './NavigationLinks.json'
 
 type Props = {
@@ -21,9 +21,6 @@ class Navigation extends React.Component<Props> {
       logoStyle: {
         width: "48px",
         height: "48px"
-      },
-      navDivider: {
-        marginTop: "1px"
       }
     }
   }
@@ -50,16 +47,20 @@ class Navigation extends React.Component<Props> {
 
     const self = this;
 
-    return (<aside className="sidebar sidebar-expand-lg sidebar-light sidebar-sm sidebar-color-info">
-                <header className="sidebar-header bg-info">
-                  <span className="logo">ESB Monitor</span>
-                  <img style={this.styles.logoStyle}
-                        src='./assets/images/logo-white.svg' alt='ESB Monitor Logo' />
-                </header>
-                <nav style={this.styles.navDivider} className="sidebar-navigation ps-container">
-                  <ul className="menu menu-sm">
+    return (<div className='sidebar' data-color='blue'>
+              <div className="logo">
+                  <a href='#' style={this.styles.logoStyle} className='simple-text logo-mini'>
+                     <div className='logo-img'>
+                        <img src='./assets/images/logo-white.svg' alt='ESB Monitor Logo' />
+                     </div>
+                  </a>
+                  <a href='#' className='simple-text logo-normal'>
+                    ESb Now
+                  </a>
+              </div>
+              <div className='sidebar-wrapper' ref='sidebar'>
+                <Nav className="sidebar-navigation ps-container">
                   {
-
                     navigationLinks.map( (link, index) => {
 
                         let linkClassName = classNames('menu-item', {
@@ -78,21 +79,23 @@ class Navigation extends React.Component<Props> {
                           }
 
                           return (<li key={index} className={linkClassName}>
-                                    <Link className="menu-link"
+                                    <NavLink className="nav-link"
                                       onClick={ () => this.pageIdChanged(index+1) }
                                       to={link.to}>
-                                        <span className={link.icon}></span>
-                                        <span className="title">{link.title}</span>
-                                        {badge}
-                                    </Link>
+                                        <i className={"now-ui-icons " + link.icon}></i>
+                                        <Row>
+                                          <Col md='9'>{link.title}</Col>
+                                          <Col md='3'>{badge}</Col>
+                                        </Row>
+
+                                    </NavLink>
                                  </li>)
                         }
                     })
                   }
-                  </ul>
-
-                </nav>
-            </aside>);
+                </Nav>
+              </div>
+            </div>);
   }
 
 };
