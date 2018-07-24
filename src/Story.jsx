@@ -190,8 +190,8 @@ class Story extends React.Component<Props, State> {
                                 { background: 'rgb(33, 150, 243)', color: '#fff' } :
                                 { background: 'rgb(233, 30, 99)', color: '#fff' };
 
-              let iconType = ( esbEvent._source.status == 'success' )  ?
-                              'icon ti-info' :
+              let iconType = ( esbEvent._source.status.toLowerCase() == 'success' )  ?
+                              'icon ti-check' :
                               'icon ti-alert';
 
               let latency = moment.duration(moment(esbEvent._source.end_date).diff(moment(esbEvent._source.start_date)));
@@ -203,14 +203,14 @@ class Story extends React.Component<Props, State> {
                         iconStyle={iconStyle}
                         icon={<Icon type={iconType}/>}
                         >
-                        <h3 className="vertical-timeline-element-title"><b>{esbEvent._source.message}</b></h3>
-                        <h4 className="vertical-timeline-element-subtitle"><b>by Router at {environment} environment</b></h4>
-                        <div>From {esbEvent._source.client_ip}</div>
-                        <div>User {esbEvent._source.client_user}</div>
-                        <p>
-                          <button className='btn'
-                                onClick={ () => ::this.openModal(index) }>Payload</button>
-                        </p>
+                          <h3 className="vertical-timeline-element-title"><b>{esbEvent._source.message}</b></h3>
+                          <h4 className="vertical-timeline-element-subtitle"><b>by Router at {environment} environment</b></h4>
+                          <div>From {esbEvent._source.client_ip}</div>
+                          <div>User {esbEvent._source.client_user}</div>
+                          <p>
+                            <button className='btn'
+                                  onClick={ () => ::this.openModal(index) }>Payload</button>
+                          </p>
                      </VerticalTimelineElement>
             })
           }
