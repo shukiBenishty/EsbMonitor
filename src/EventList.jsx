@@ -71,14 +71,7 @@ class EventList extends React.Component<Props, State> {
     }
 
     this.setState( prevState => ({
-      esbEvents: [...this.state.esbEvents, {
-                      storyId: esbEvent.storyId,
-                      serviceName: esbEvent.serviceName,
-                      message: esbEvent.message,
-                      issued: esbEvent.issued,
-                      status: esbEvent.status
-                    }
-                ]
+      esbEvents: [ esbEvent, ...this.state.esbEvents]
     }));
 
     this.search.addDocuments({
