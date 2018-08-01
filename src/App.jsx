@@ -105,7 +105,7 @@ class AppLayout extends React.Component<Props> {
           totalCallsRecords[0].setValue( ++totalCalls, "value");
         }
 
-        if( __status == 'ERROR' ) {
+        if( __status.toLowerCase() == 'error' ) {
 
           let errorsRecords = runtimeRecord.getLinkedRecords('errors', {before: 1});
           if( errorsRecords && errorsRecords.length > 0
