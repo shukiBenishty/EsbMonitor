@@ -91,6 +91,7 @@ class UserPermissions extends React.Component<{}, State> {
           <Col md='6'>
             <DropdownList
                 filter
+                textField = {item => item.firstName + ' ' + item.lastName}
                 data={this.state.groupRoles}
                 value={this.state.selectedGroup}
                 onChange={ name => this.setState({
