@@ -45,7 +45,7 @@ async function fetchQuery(operation, variables = {}, cacheConfig) {
     return cachedData;
   }
 
-  return fetch('http://localhost:3001/graphql', {
+  return fetch('http://biztest01:3001/graphql', {
     method: 'POST',
     headers: {
        'Accept':'application/json',
@@ -75,7 +75,7 @@ async function fetchQuery(operation, variables = {}, cacheConfig) {
 
 };
 
-const websocketURL = 'ws://localhost:3001/subscriptions';
+const websocketURL = 'ws://biztest01:3001/subscriptions';
 
 function setupSubscription(
   config,
